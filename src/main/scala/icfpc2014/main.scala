@@ -33,7 +33,7 @@ case class VAR(s: String) extends Instruction {
         throw new Exception("Unknown variable")
 
       case i =>
-        if (s == "this")
+        if (s == "self")
           Vector(s"LDF ${labels(i)(s)}")
         else
           Vector(s"LD $i ${labels(i)(s)}")
@@ -112,7 +112,7 @@ case class LET(definitions: (String, Instruction)*)(i: Instruction) extends Inst
 
 case class DEFUN(args: String*)(i: Instruction) extends Instruction {
   def transpile(pos: Int, labels: Labels) = {
-    val s = i.transpile(pos + 3, (args.zipWithIndex.toMap + ("this" -> (pos + 3))) :: labels) :+ "RTN"
+    val s = i.transpile(pos + 3, (args.zipWithIndex.toMap + ("self" -> (pos + 3))) :: labels) :+ "RTN"
     Vector(s"LDF ${pos + 3}", "LDC 1", s"TSEL ${pos + s.length + 3} 0") ++ s
   }
 }
@@ -179,10 +179,10 @@ object main extends App {
     ("mul", DEFUN("v1", "v2")(MUL("v1", "v2"))))(FUNCALL("sum")(FUNCALL("mul")(2, 3), 4)))
 
   Program(LET(
-    ("rec", DEFUN("v")(TFUNCALL("this")(ADD("v", 1)))))(FUNCALL("rec")(1)))
+    ("rec", DEFUN("v")(TFUNCALL("self")(ADD("v", 1)))))(FUNCALL("rec")(1)))
 
   Program(LET(
-    ("rec", DEFUN("v")(TIF(EQ("v", 10), "v", TFUNCALL("this")(ADD("v", 1))))))(FUNCALL("rec")(1)))
+    ("rec", DEFUN("v")(TIF(EQ("v", 10), "v", TFUNCALL("self")(ADD("v", 1))))))(FUNCALL("rec")(1)))
 
 //  Program(LET(("x", DEFUN("a1", "a2")(ADD("a1", "a2"))), ("y", 2))(FUNCALL("x")(10, "y")))
   //LET(("body", n), FUNCALL("body", )ADD(ADD("4", 2), SUB(2, MUL(3, 5))))
