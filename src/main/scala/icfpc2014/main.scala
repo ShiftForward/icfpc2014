@@ -4,11 +4,11 @@ object Tests extends App {
   // code goes here
   //Program(LET(("x", 3), ("y", 2))(ADD("x", "y")))
   Program(LET(
-    ("sum", DEFUN("v1", "v2")(ADD("v1", "v2"))),
+    ("sum", DEFUN("v1", "v2")(ADD("v1", "xpto"))),
     ("mul", DEFUN("v1", "v2")(MUL("v1", "v2"))))(FUNCALL("sum")(FUNCALL("mul")(2, 3), 4)))
 
   Program(LET(
-    ("rec", DEFUN("v")(TFUNCALL("self")(ADD("v", 1)))))(FUNCALL("rec")(1)))
+    ("rec", DEFUN("v")(TFUNCALL("self")(ADD("v", 1)))))(FUNCALL("rec")("xpto")))
 
   Program(LET(
     ("rec", DEFUN("v")(TIF(EQ("v", 10), "v", TFUNCALL("self")(ADD("v", 1))))))(FUNCALL("rec")(1)))
