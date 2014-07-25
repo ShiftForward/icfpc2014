@@ -1,49 +1,47 @@
 package icfpc2014
 
 sealed trait Instruction {
-  type Definition = (String, Instruction)
-  type Labels = List[Map[String, Int]]
-
-  def transpile(pos: Int, labels: Labels): Vector[String]
+  def transpile(pos: Int, locals: Locals, globals: Globals): (Vector[String], Globals)
 }
 
 trait BinaryOp extends Instruction {
   def i1: Instruction
   def i2: Instruction
   def op: String
-  def transpile(pos: Int, labels: Labels) = {
-    val s1 = i1.transpile(pos, labels)
-    val s2 = i2.transpile(pos + s1.length, labels)
-    s1 ++ s2 :+ op
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (s1, g1) = i1.transpile(pos, locals, globals)
+    val (s2, g2) = i2.transpile(pos + s1.length, locals, g1)
+    (s1 ++ s2 :+ op, g2)
   }
 }
 
 trait UnaryOp extends Instruction {
   def i: Instruction
   def op: String
-  def transpile(pos: Int, labels: Labels) = {
-    i.transpile(pos, labels) :+ op
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (s, g) = i.transpile(pos, locals, globals)
+    (s :+ op, g)
   }
 }
 
 case class VAR(s: String) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    labels.indexWhere(m =>  m.contains(s)) match {
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    locals.indexWhere(m =>  m.contains(s)) match {
       case -1 =>
         throw new Exception("Unknown variable")
 
       case i =>
         if (s == "self")
-          Vector(s"LDF ${labels(i)(s)}")
+          (Vector(s"LDF ${locals(i)(s)}"), globals)
         else
-          Vector(s"LD $i ${labels(i)(s)}")
+          (Vector(s"LD $i ${locals(i)(s)}"), globals)
     }
   }
 }
 
 case class CONSTANT(v: Int) extends Instruction {
-  def transpile(pos: Int, labels: Labels) =
-    Vector(s"LDC $v")
+  def transpile(pos: Int, locals: Locals, globals: Globals) =
+    (Vector(s"LDC $v"), globals)
 }
 
 case class ADD(i1: Instruction, i2: Instruction) extends BinaryOp {
@@ -99,81 +97,89 @@ case class CDR(i: CONS) extends UnaryOp {
 }
 
 case class LET(definitions: (String, Instruction)*)(i: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    val (p, instructions, nextLabels, _) =
-      definitions.foldLeft((pos, Vector[String](), Map[String, Int](), 0)) { case ((pos, instructions, nextLabels, i), (label, defin)) =>
-        val s = defin.transpile(pos, labels)
-        (pos + s.length, instructions ++ s, nextLabels + (label -> i), i + 1)
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (p, instructions, nextLocals, nextGlobals, _) =
+      definitions.foldLeft((pos, Vector[String](), Map[String, Int](), globals, 0)) { case ((pos, instructions, nextLocals, nextGlobals, j), (label, defin)) =>
+        val (s, g) = defin.transpile(pos, locals, nextGlobals)
+        (pos + s.length, instructions ++ s, nextLocals + (label -> j), g, j + 1)
       }
     val newPos = p + 3
-    instructions ++ Vector(s"LDF $newPos", s"AP ${definitions.length}") ++ Vector("RTN") ++ i.transpile(newPos, nextLabels :: labels)
+    val (s, g) = i.transpile(newPos, nextLocals :: locals, nextGlobals)
+    (instructions ++ Vector(s"LDF $newPos", s"AP ${definitions.length}") ++ Vector("RTN") ++ s, g)
   }
 }
 
 case class DEFUN(args: String*)(i: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    val s = i.transpile(pos + 3, (args.zipWithIndex.toMap + ("self" -> (pos + 3))) :: labels) :+ "RTN"
-    Vector(s"LDF ${pos + 3}", "LDC 1", s"TSEL ${pos + s.length + 3} 0") ++ s
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (st, g) = i.transpile(pos + 3, (args.zipWithIndex.toMap + ("self" -> (pos + 3))) :: locals, globals)
+    val s = st :+ "RTN"
+    (Vector(s"LDF ${pos + 3}", "LDC 1", s"TSEL ${pos + s.length + 3} 0") ++ s, g)
   }
 }
 
 case class FUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    val (p, instructions) = parameters.foldLeft((pos, Vector[String]())) { case ((pos, instructions), parameter) =>
-      val s = parameter.transpile(pos, labels)
-      (pos + s.length, instructions ++ s)
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (p, instructions, nextGlobals) = parameters.foldLeft((pos, Vector[String](), globals)) { case ((pos, instructions, globals), parameter) =>
+      val (s, g) = parameter.transpile(pos, locals, globals)
+      (pos + s.length, instructions ++ s, g)
     }
-    instructions ++ label.transpile(p, labels) :+ s"AP ${parameters.length}"
+    val (s, g) = label.transpile(p, locals, nextGlobals)
+    (instructions ++ s :+ s"AP ${parameters.length}", g)
   }
 }
 
 case class TFUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    val (p, instructions) = parameters.foldLeft((pos, Vector[String]())) { case ((pos, instructions), parameter) =>
-      val s = parameter.transpile(pos, labels)
-      (pos + s.length, instructions ++ s)
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (p, instructions, nextGlobals) = parameters.foldLeft((pos, Vector[String](), globals)) { case ((pos, instructions, globals), parameter) =>
+      val (s, g) = parameter.transpile(pos, locals, globals)
+      (pos + s.length, instructions ++ s, g)
     }
-    instructions ++ label.transpile(p, labels) :+ s"TAP ${parameters.length}"
+    val (s, g) = label.transpile(p, locals, nextGlobals)
+    (instructions ++ s :+ s"TAP ${parameters.length}", g)
   }
 }
 
 case class IF(pred: Instruction, thenInst: Instruction, elseInst: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    val ps = pred.transpile(pos, labels)
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (ps, g1) = pred.transpile(pos, locals, globals)
     val pi = pos + ps.length + 3
-    val ts = thenInst.transpile(pi, labels) :+ "JOIN"
+    val (tst, g2)  = thenInst.transpile(pi, locals, g1)
+    val ts = tst :+ "JOIN"
     val ti = pi + ts.length
-    val es = elseInst.transpile(ti, labels) :+ "JOIN"
+    val (est, g3) = elseInst.transpile(ti, locals, g2)
+    val es = est :+ "JOIN"
     val ei = ti + es.length
-    ps ++ Vector(s"SEL $pi $ti", "LDC 1", s"TSEL $ei 0") ++ ts ++ es
+    (ps ++ Vector(s"SEL $pi $ti", "LDC 1", s"TSEL $ei 0") ++ ts ++ es, g3)
   }
 }
 
 case class TIF(pred: Instruction, thenInst: Instruction, elseInst: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) = {
-    val ps = pred.transpile(pos, labels)
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (ps, g1) = pred.transpile(pos, locals, globals)
     val pi = pos + ps.length + 1
-    val ts = thenInst.transpile(pi, labels) :+ "RTN"
+    val (tst, g2)  = thenInst.transpile(pi, locals, g1)
+    val ts = tst :+ "RTN"
     val ti = pi + ts.length
-    val es = elseInst.transpile(ti, labels) :+ "RTN"
+    val (est, g3) = elseInst.transpile(ti, locals, g2)
+    val es = est :+ "RTN"
     val ei = ti + es.length
-    ps ++ Vector(s"TSEL $pi $ti") ++ ts ++ es
+    (ps ++ Vector(s"TSEL $pi $ti") ++ ts ++ es, g3)
   }
 }
 
 case class OR(i1: Instruction, i2: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) =
-    GT(ADD(i1, i2), CONSTANT(0)).transpile(pos, labels)
+  def transpile(pos: Int, locals: Locals, globals: Globals) =
+    GT(ADD(i1, i2), CONSTANT(0)).transpile(pos, locals, globals)
 }
 
 case class AND(i1: Instruction, i2: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) =
-    EQ(ADD(i1, i2), CONSTANT(2)).transpile(pos, labels)
+  def transpile(pos: Int, locals: Locals, globals: Globals) =
+    EQ(ADD(i1, i2), CONSTANT(2)).transpile(pos, locals, globals)
 }
 
 case class NOT(i: Instruction) extends Instruction {
-  def transpile(pos: Int, labels: Labels) =
-    EQ(i, CONSTANT(0)).transpile(pos, labels)
+  def transpile(pos: Int, locals: Locals, globals: Globals) =
+    EQ(i, CONSTANT(0)).transpile(pos, locals, globals)
 }
 
 object Instruction {
@@ -182,8 +188,31 @@ object Instruction {
 }
 
 object Program {
-  def apply(i: Instruction): String =
-    i.transpile(0, List()).mkString("\n") + "\nRTN\n"
+  def allocGlobalSpace(space: Int) =
+    Vector(
+      s"DUM $space",
+      "LDC 0",
+      "LDF 7",
+      "AP 1",
+      "LDF 18",
+      s"RAP $space",
+      "RTN",
+      "LDC 0",
+      "LD 0 0",
+      s"LDC ${space - 1}",
+      "CEQ",
+      "TSEL 17 12",
+      "LD 0 0",
+      "LDC 1",
+      "ADD",
+      "LDF 7",
+      "AP 1",
+      "RTN")
+
+  def apply(i: Instruction): String = {
+    val preSteps = allocGlobalSpace(10)
+    (preSteps ++ i.transpile(preSteps.length, List(), Map())._1 :+ "RTN\n").mkString("\n")
+  }
 }
 
 object main extends App {
