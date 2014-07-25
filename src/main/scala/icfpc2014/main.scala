@@ -206,6 +206,14 @@ case class DEFVAR(label: String, i: Instruction) extends Instruction {
   }
 }
 
+case class DEBUG(i: Instruction) extends Instruction {
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (s, g1) = DEFVAR("debug", i).transpile(pos, locals, globals)
+    val (v, g2) = VAR("debug").transpile(pos + s.length + 1, locals, g1)
+    (s ++ Vector("DBUG") ++ v, g2)
+  }
+}
+
 object Instruction {
   implicit def intToCONSTANT(i: Int) = CONSTANT(i)
   implicit def stringToVAR(s: String) = VAR(s)
