@@ -223,7 +223,7 @@ case class NOT(i: Instruction) extends Instruction {
 
 case class PROGN(i: Instruction*) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
-    val (_, instructions, nextGlobals) = i.foldLeft((pos, Vector[String]("LDC 0"), globals)) { case ((pos, instructions, globals), instruction) =>
+    val (_, instructions, nextGlobals) = i.foldLeft((pos + 1, Vector[String]("LDC 0"), globals)) { case ((pos, instructions, globals), instruction) =>
       val (st, g) = instruction.transpile(pos, locals, globals)
       val s = st ++ Vector("CONS", "CDR")
       (pos + s.length, instructions ++ s, g)
