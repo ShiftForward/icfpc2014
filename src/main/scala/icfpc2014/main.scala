@@ -202,7 +202,7 @@ case class DEFVAR(label: String, i: Instruction) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
     val (s, g) = i.transpile(pos, locals, globals)
     val nextGlobal = g + (label -> g.getOrElse(label, g.size))
-    (s ++ Vector(s"ST ${locals.length} ${g.size}", s"LD ${locals.length} ${g.size}"), nextGlobal)
+    (s ++ Vector(s"ST ${locals.length} ${nextGlobal(label)}", s"LD ${locals.length} ${nextGlobal(label)}"), nextGlobal)
   }
 }
 
@@ -234,7 +234,7 @@ object Program {
       "RTN")
 
   def apply(i: Instruction): String = {
-    val preSteps = allocGlobalSpace(10)
+    val preSteps = allocGlobalSpace(3)
     (preSteps ++ i.transpile(preSteps.length, List(), Map())._1 :+ "RTN\n").mkString("\n")
   }
 }
