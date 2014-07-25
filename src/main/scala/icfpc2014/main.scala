@@ -251,14 +251,25 @@ object main extends App {
   // code goes here
   //Program(LET(("x", 3), ("y", 2))(ADD("x", "y")))
   Program(LET(
-    ("sum", DEFUN("v1", "v2")(ADD("v1", "v2"))),
+    ("sum", DEFUN("v1", "v2")(ADD("v1", "xpto"))),
     ("mul", DEFUN("v1", "v2")(MUL("v1", "v2"))))(FUNCALL("sum")(FUNCALL("mul")(2, 3), 4)))
 
   Program(LET(
-    ("rec", DEFUN("v")(TFUNCALL("self")(ADD("v", 1)))))(FUNCALL("rec")(1)))
+    ("rec", DEFUN("v")(TFUNCALL("self")(ADD("v", 1)))))(FUNCALL("rec")("xpto")))
 
   Program(LET(
     ("rec", DEFUN("v")(TIF(EQ("v", 10), "v", TFUNCALL("self")(ADD("v", 1))))))(FUNCALL("rec")(1)))
+
+  Program(LET(
+    ("main", DEFUN("map")(ADD(2, "xpto"))))(CONS("main", 0)))
+
+  Program(OR(EQ(1, 0), EQ(0, 0)))
+  Program(AND(EQ(1, 0), EQ(0, 0)))
+
+  Program(NOT(OR(EQ(1, 0), EQ(0, 0))))
+  Program(NOT(AND(EQ(1, 0), EQ(0, 0))))
+
+  Program(PROGN(DEBUG(DEFVAR("x", 3)), DEBUG(DEFVAR("y", 2)), ADD("x", "y")))
 
 //  Program(LET(("x", DEFUN("a1", "a2")(ADD("a1", "a2"))), ("y", 2))(FUNCALL("x")(10, "y")))
   //LET(("body", n), FUNCALL("body", )ADD(ADD("4", 2), SUB(2, MUL(3, 5))))
