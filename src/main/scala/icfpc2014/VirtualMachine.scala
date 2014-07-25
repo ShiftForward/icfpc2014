@@ -107,12 +107,12 @@ case class CONS(i1: Instruction, i2: Instruction) extends BinaryOp {
   override def toString = s"(cons $i1 $i2)"
 }
 
-case class CAR(i: CONS) extends UnaryOp {
+case class CAR(i: Instruction) extends UnaryOp {
   val op = "CAR"
   override def toString = s"(car $i)"
 }
 
-case class CDR(i: CONS) extends UnaryOp {
+case class CDR(i: Instruction) extends UnaryOp {
   val op = "CDR"
   override def toString = s"(cdr $i)"
 }
