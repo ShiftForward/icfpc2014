@@ -161,6 +161,21 @@ case class TIF(pred: Instruction, thenInst: Instruction, elseInst: Instruction) 
   }
 }
 
+case class OR(i1: Instruction, i2: Instruction) extends Instruction {
+  def transpile(pos: Int, labels: Labels) =
+    GT(ADD(i1, i2), CONSTANT(0)).transpile(pos, labels)
+}
+
+case class AND(i1: Instruction, i2: Instruction) extends Instruction {
+  def transpile(pos: Int, labels: Labels) =
+    EQ(ADD(i1, i2), CONSTANT(2)).transpile(pos, labels)
+}
+
+case class NOT(i: Instruction) extends Instruction {
+  def transpile(pos: Int, labels: Labels) =
+    EQ(i, CONSTANT(0)).transpile(pos, labels)
+}
+
 object Instruction {
   implicit def intToCONSTANT(i: Int) = CONSTANT(i)
   implicit def stringToVAR(s: String) = VAR(s)
