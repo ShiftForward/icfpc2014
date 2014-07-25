@@ -182,6 +182,17 @@ case class NOT(i: Instruction) extends Instruction {
     EQ(i, CONSTANT(0)).transpile(pos, locals, globals)
 }
 
+case class PROGN(i: Instruction*) extends Instruction {
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (_, instructions, nextGlobals) = i.foldLeft((pos, Vector[String]("LDC 0"), globals)) { case ((pos, instructions, globals), instruction) =>
+      val (st, g) = instruction.transpile(pos, locals, globals)
+      val s = st ++ Vector("CONS", "CDR")
+      (pos + s.length, instructions ++ s, g)
+    }
+    (instructions, nextGlobals)
+  }
+}
+
 object Instruction {
   implicit def intToCONSTANT(i: Int) = CONSTANT(i)
   implicit def stringToVAR(s: String) = VAR(s)
