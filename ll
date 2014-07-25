@@ -1,0 +1,2 @@
+#!/bin/sh
+java -cp target/scala-2.11/icfpc2014-assembly-0.1.jar icfpc2014.Transpiler
