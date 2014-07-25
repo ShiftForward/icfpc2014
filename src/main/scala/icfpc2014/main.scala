@@ -28,7 +28,12 @@ case class VAR(s: String) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
     locals.indexWhere(m =>  m.contains(s)) match {
       case -1 =>
-        throw new Exception("Unknown variable")
+        globals.get(s) match {
+          case None =>
+            throw new Exception("Unknown variable")
+          case Some(i) =>
+            (Vector(s"LD ${locals.length} ${i}"), globals)
+        }
 
       case i =>
         if (s == "self")
@@ -190,6 +195,14 @@ case class PROGN(i: Instruction*) extends Instruction {
       (pos + s.length, instructions ++ s, g)
     }
     (instructions, nextGlobals)
+  }
+}
+
+case class DEFVAR(label: String, i: Instruction) extends Instruction {
+  def transpile(pos: Int, locals: Locals, globals: Globals) = {
+    val (s, g) = i.transpile(pos, locals, globals)
+    val nextGlobal = g + (label -> g.getOrElse(label, g.size))
+    (s ++ Vector(s"ST ${locals.length} ${g.size}", s"LD ${locals.length} ${g.size}"), nextGlobal)
   }
 }
 
