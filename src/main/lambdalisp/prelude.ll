@@ -2,25 +2,32 @@
 (seed: 1)
 (zero?: [x] (= x 0))
 (empty?: [l] (if (atom? l) (= l nil) 0))
+(true: 1)
+(false: 0)
 
-(reverse: [l]
-  (let ((reverseaux [l res]
-          (tif (empty? l)
-               res
-               (recur (cdr l) (cons (car l) res)))))
-       (reverseaux l nil)))
+(foldLeft: [b l f]
+  (let ((foldaux [l f res]
+           (tif (empty? l)
+                res
+                (recur (cdr l) f (f res (car l))))))
+       (foldaux l f b)))
+
+(reverse: [l f] (foldLeft nil l [acc e] (cons e acc)))
+
+(map: [l f] (reverse (foldLeft nil l [acc e] (cons (f e) acc))))
+
+(filter: [l f] (reverse (foldLeft nil l [acc e] (if (f e) (cons e acc) acc))))
+
+(length: [l] (foldLeft 0 l [acc e] (+ acc 1)))
+
+(forall: [l f] (foldLeft 1 l [acc e] (and (f e) acc)))
+
+(exists: [l f] (foldLeft 0 l [acc e] (or (f e) acc)))
 
 (nth: [li n]
   (tif (zero? n)
        (car li)
        (recur (cdr li) (- n 1))))
-
-(map: [l f]
-  (let ((mapaux [l f res]
-           (tif (empty? l)
-                (reverse res)
-                (recur (cdr l) f (cons (f (car l)) res)))))
-       (mapaux l f nil)))
 
 (nth: [li n]
   (tif (zero? n)
@@ -31,15 +38,6 @@
   (tif (zero? i)
        (nth (car li) j)
        (recur (cdr li) (- i 1) j)))
-
-(filter: [l f]
-  (let ((filteraux [l f res]
-           (tif (empty? l)
-                (reverse res)
-                (recur (cdr l) f (if (f (car l)) 
-                                     (cons (car l) res)
-                                     res)))))
-       (filteraux l f nil)))
 
 (find: [l f]
   (let ((findaux [l f n]
@@ -57,10 +55,3 @@
 
 (mod: [n m]
   (- n (* (/ n m) m)))
-
-(length: [l]
-  (let ((lengthaux [l s]
-           (tif (empty? l)
-                s
-                (recur (cdr l) (+ s 1)))))
-    (lengthaux l 0)))
