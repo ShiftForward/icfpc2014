@@ -1,10 +1,13 @@
-(nil: -2147483648)
-(seed: 1)
-(zero?: [x] (= x 0))
-(empty?: [l] (if (atom? l) (= l nil) 0))
+; Some constants
+(nil: -2147483648) ; basically -2^31
 (true: 1)
 (false: 0)
 
+; Basic tests
+(zero?: [x] (= x 0))
+(empty?: [l] (and (atom? l) (= l nil)))
+
+; Higher-order functions over lists
 (foldLeft: [b l f]
   (let ((foldaux [l f res]
            (tif (empty? l)
@@ -13,16 +16,25 @@
        (foldaux l f b)))
 
 (reverse: [l f] (foldLeft nil l [acc e] (cons e acc)))
-
 (map: [l f] (reverse (foldLeft nil l [acc e] (cons (f e) acc))))
-
 (filter: [l f] (reverse (foldLeft nil l [acc e] (if (f e) (cons e acc) acc))))
+(forall: [l f] (foldLeft true l [acc e] (and (f e) acc)))
+(exists: [l f] (foldLeft false l [acc e] (or (f e) acc)))
 
+(takeWhile: [l f]
+  (let ((takeWhileAux [l f res]
+           (tif (or (empty? l) (not (f (car l))))
+                (reverse res)
+                (recur (cdr l) f (cons (car l) res)))))
+       (takeWhileAux l f nil)))
+
+(dropWhile: [l f]
+   (tif (or (empty? l) (not (f (car l))))
+        l
+        (recur (cdr l) f)))
+
+; List manipulation
 (length: [l] (foldLeft 0 l [acc e] (+ acc 1)))
-
-(forall: [l f] (foldLeft 1 l [acc e] (and (f e) acc)))
-
-(exists: [l f] (foldLeft 0 l [acc e] (or (f e) acc)))
 
 (nth: [li n]
   (tif (zero? n)
@@ -48,8 +60,16 @@
                      (recur (cdr l) f (+ n 1))))))
        (findaux l f 0)))
 
-(expt: [v n]
-   (if (= n 0)
+(range: [n m]
+  (let ((rangeaux [m res]
+          (tif (= m 0)
+               res 
+               (recur (- m 1) (cons m res)))))
+        (rangeaux (- m n) nil)))
+
+; Math
+(pow: [v n]
+   (if (zero? n)
        1
        (* v (self v (- n 1)))))
 

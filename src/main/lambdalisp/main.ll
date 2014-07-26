@@ -1,3 +1,3 @@
 (include prelude.ll)
 
-(exists (list 1 2 3) [x] (= x 2))
+(dropWhile (range 1 10) [x] (< x 5))
