@@ -36,10 +36,7 @@ case class VAR(s: String) extends Instruction {
         }
 
       case i =>
-        if (s == "self")
-          (Vector(s"LDF ${locals(i)(s)}"), globals)
-        else
-          (Vector(s"LD $i ${locals(i)(s)}"), globals)
+        (Vector(s"LD $i ${locals(i)(s)}"), globals)
     }
   }
 
@@ -99,7 +96,7 @@ case class LTE(i2: Instruction, i1: Instruction) extends BinaryOp {
 
 case class ATOM(i: Instruction) extends UnaryOp {
   val op = "ATOM"
-  override def toString = s"(atom $i)"
+  override def toString = s"(atom? $i)"
 }
 
 case class CONS(i1: Instruction, i2: Instruction) extends BinaryOp {
@@ -124,9 +121,13 @@ case class LET(definitions: (String, Instruction)*)(i: Instruction) extends Inst
         val (s, g) = defin.transpile(pos, locals, nextGlobals)
         (pos + s.length, instructions ++ s, nextLocals + (label -> j), g, j + 1)
       }
-    val newPos = p + 3
+    val newPos = p + 4
     val (s, g) = i.transpile(newPos, nextLocals :: locals, nextGlobals)
-    (instructions ++ Vector(s"LDF $newPos", s"AP ${definitions.length}") ++ Vector("RTN") ++ s, g)
+    (instructions ++ Vector(
+      s"DUM ${definitions.length}",
+      s"LDF $newPos",
+      s"RAP ${definitions.length}",
+      "RTN") ++ s, g)
   }
 
   override def toString = s"(let (${definitions.map { case (s, i) => s"($s $i)" }.mkString(" ")}) $i)"
@@ -134,9 +135,13 @@ case class LET(definitions: (String, Instruction)*)(i: Instruction) extends Inst
 
 case class DEFUN(args: String*)(i: Instruction) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
-    val (st, g) = i.transpile(pos + 3, (args.zipWithIndex.toMap + ("self" -> (pos + 3))) :: locals, globals)
+    val (st, g) = i.transpile(pos + 3, (args.zipWithIndex.toMap.mapValues(_ + 1) + ("self" -> 0)) :: locals, globals)
     val s = st :+ "RTN"
-    (Vector(s"LDF ${pos + 3}", "LDC 1", s"TSEL ${pos + s.length + 3} 0") ++ s, g)
+    val pre = Vector(
+      s"LDF ${pos + 3}",
+      "LDC 1",
+      s"TSEL ${pos + s.length + 3} 0")
+    (pre ++ s, g)
   }
 
   override def toString = s"(defun (${args.mkString(" ")}) $i)"
@@ -144,12 +149,13 @@ case class DEFUN(args: String*)(i: Instruction) extends Instruction {
 
 case class FUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
-    val (p, instructions, nextGlobals) = parameters.foldLeft((pos, Vector[String](), globals)) { case ((pos, instructions, globals), parameter) =>
+    val (preLabel, g1) = label.transpile(pos, locals, globals)
+    val (p, instructions, nextGlobals) = parameters.foldLeft((pos + preLabel.length, Vector[String](), g1)) { case ((pos, instructions, globals), parameter) =>
       val (s, g) = parameter.transpile(pos, locals, globals)
       (pos + s.length, instructions ++ s, g)
     }
     val (s, g) = label.transpile(p, locals, nextGlobals)
-    (instructions ++ s :+ s"AP ${parameters.length}", g)
+    (preLabel ++ instructions ++ s :+ s"AP ${parameters.length + 1}", g)
   }
 
   override def toString = s"($label ${parameters.mkString(" ")})"
@@ -157,12 +163,13 @@ case class FUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {
 
 case class TFUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
-    val (p, instructions, nextGlobals) = parameters.foldLeft((pos, Vector[String](), globals)) { case ((pos, instructions, globals), parameter) =>
+    val (preLabel, g1) = label.transpile(pos, locals, globals)
+    val (p, instructions, nextGlobals) = parameters.foldLeft((pos + preLabel.length, Vector[String](), g1)) { case ((pos, instructions, globals), parameter) =>
       val (s, g) = parameter.transpile(pos, locals, globals)
       (pos + s.length, instructions ++ s, g)
     }
     val (s, g) = label.transpile(p, locals, nextGlobals)
-    (instructions ++ s :+ s"TAP ${parameters.length}", g)
+    (preLabel ++ instructions ++ s :+ s"TAP ${parameters.length + 1}", g)
   }
 
   override def toString = s"(recur ${parameters.mkString(" ")})"
