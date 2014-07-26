@@ -71,3 +71,9 @@
                 (reverse (cons v res))
                 (recur (cdr l) v (cons (car l) res)))))
       (appendaux l v nil)))
+(fill: [n v]
+   (let ((fillaux [n v res]
+            (tif (= n 0)
+                 res
+                 (recur (- n 1) v (cons v res)))))
+      (fillaux n v nil)))
