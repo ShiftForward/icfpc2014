@@ -32,10 +32,19 @@
     (let ((filteraux [l f res]
              (tif (empty? l)
                   (reverse res)
-                  (recur (cdr l) f (if (f (car l)) 
+                  (recur (cdr l) f (if (f (car l))
                                        (cons (car l) res)
                                        res)))))
          (filteraux l f nil)))
+
+  (find: [l f]
+    (let ((findaux [l f n]
+             (tif (empty? l)
+                  nil
+                  (tif (f (car l))
+                       n
+                       (recur (cdr l) f (+ n 1))))))
+         (findaux l f 0)))
 
   (expt: [v n]
      (if (= n 0)
