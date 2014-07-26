@@ -68,7 +68,7 @@ class Compiler(val input: ParserInput) extends Parser {
   def WhiteSpace = rule { zeroOrMore(ch(' ') | ch('\t') | ch('\n')) }
   def Literal    = rule { Variable | Number }
   def Text       = rule { capture(oneOrMore(CharPredicate.Alpha | ch('?'))) }
-  def TextN      = rule { oneOrMore(Text).separatedBy(WhiteSpace) }
+  def TextN      = rule { zeroOrMore(Text).separatedBy(WhiteSpace) }
   def Variable   = rule { Text ~> VAR }
   def Number     = rule { capture(Digits) ~> { d => CONSTANT(d.toInt) } }
   def Digits     = rule { optional("-") ~ oneOrMore(CharPredicate.Digit) }
