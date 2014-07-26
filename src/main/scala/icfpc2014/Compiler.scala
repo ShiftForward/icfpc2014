@@ -17,7 +17,11 @@ class Compiler(val input: ParserInput) extends Parser {
   def Call = rule {
     "atom?"  ~ Expression ~> ATOM  |
     "car"    ~ Expression ~> CAR   |
+    "caar"   ~ Expression ~> { l => CAR(CAR(l)) } |
+    "cadr"   ~ Expression ~> { l => CAR(CDR(l)) } |
     "cdr"    ~ Expression ~> CDR   |
+    "cddr"   ~ Expression ~> { l => CDR(CDR(l)) } |
+    "cdar"   ~ Expression ~> { l => CDR(CAR(l)) } |
     "debug"  ~ Expression ~> DEBUG |
     "not"    ~ Expression ~> NOT   |
     ">"      ~ Param2     ~> GT    |
