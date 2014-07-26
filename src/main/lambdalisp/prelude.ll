@@ -1,4 +1,4 @@
-(nil: -999)
+(nil: -2147483648)
 (seed: 1)
 (zero?: [x] (= x 0))
 (empty?: [l] (if (atom? l) (= l nil) 0))

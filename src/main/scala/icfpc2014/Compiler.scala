@@ -39,6 +39,7 @@ class Compiler(val input: ParserInput) extends Parser {
     "if"     ~ Param3     ~> IF     |
     "tif"    ~ Param3     ~> TIF    |
     "recur"  ~ ParamN     ~> { TFUNCALL("self")(_: _*) } |
+    "list"   ~ ParamN     ~> { (ps) => ps.reverse.foldLeft(CONSTANT(-2147483648): Instruction) { case (acc, e) => CONS(e, acc) } } |
     Text     ~ ParamN     ~> { FUNCALL(_)(_: _*) } }
 
   /* Deal with 'let' */
