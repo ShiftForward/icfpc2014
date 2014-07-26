@@ -15,6 +15,7 @@ class Compiler(val input: ParserInput) extends Parser {
   def Parens = rule { open ~ Expression ~ close }
 
   def Call = rule {
+    "atom?"  ~ Expression ~> ATOM   |
     "car"    ~ Expression ~> CAR    |
     "cdr"    ~ Expression ~> CDR    |
     "debug"  ~ Expression ~> DEBUG  |
@@ -61,7 +62,7 @@ class Compiler(val input: ParserInput) extends Parser {
   /* Parameters */
   def Param2 = rule { Expression ~ Expression }
   def Param3 = rule { Expression ~ Expression ~ Expression }
-  def ParamN = rule { oneOrMore(Expression).separatedBy(WhiteSpace) }
+  def ParamN = rule { zeroOrMore(Expression).separatedBy(WhiteSpace) }
 
   /* Lexic */
   def WhiteSpace = rule { zeroOrMore(ch(' ') | ch('\t') | ch('\n')) }
