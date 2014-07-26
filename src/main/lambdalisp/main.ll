@@ -1,3 +1,3 @@
 (include prelude.ll)
 
-(exists (list 1 2 3) [x] (= x 2))
+(* 1 2 3 4)

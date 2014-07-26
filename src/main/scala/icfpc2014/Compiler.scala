@@ -15,29 +15,25 @@ class Compiler(val input: ParserInput) extends Parser {
   def Parens = rule { open ~ Expression ~ close }
 
   def Call = rule {
-    "atom?"  ~ Expression ~> ATOM   |
-    "car"    ~ Expression ~> CAR    |
-    "cdr"    ~ Expression ~> CDR    |
-    "debug"  ~ Expression ~> DEBUG  |
-    "not"    ~ Expression ~> NOT    |
-    "+"      ~ Param2     ~> ADD    |
-    "add"    ~ Param2     ~> ADD    |
-    "-"      ~ Param2     ~> SUB    |
-    "sub"    ~ Param2     ~> SUB    |
-    "*"      ~ Param2     ~> MUL    |
-    "mul"    ~ Param2     ~> MUL    |
-    "/"      ~ Param2     ~> DIV    |
-    "div"    ~ Param2     ~> DIV    |
-    ">"      ~ Param2     ~> GT     |
-    ">="     ~ Param2     ~> GTE    |
-    "="      ~ Param2     ~> EQ     |
-    "<="     ~ Param2     ~> LTE    |
-    "<"      ~ Param2     ~> LT     |
-    "or"     ~ Param2     ~> OR     |
-    "and"    ~ Param2     ~> AND    |
-    "cons"   ~ Param2     ~> CONS   |
-    "if"     ~ Param3     ~> IF     |
-    "tif"    ~ Param3     ~> TIF    |
+    "atom?"  ~ Expression ~> ATOM  |
+    "car"    ~ Expression ~> CAR   |
+    "cdr"    ~ Expression ~> CDR   |
+    "debug"  ~ Expression ~> DEBUG |
+    "not"    ~ Expression ~> NOT   |
+    ">"      ~ Param2     ~> GT    |
+    ">="     ~ Param2     ~> GTE   |
+    "<="     ~ Param2     ~> LTE   |
+    "<"      ~ Param2     ~> LT    |
+    "cons"   ~ Param2     ~> CONS  |
+    "if"     ~ Param3     ~> IF    |
+    "tif"    ~ Param3     ~> TIF   |
+    "+"      ~ ParamN     ~> { _.reduceLeft { ADD } }   |
+    "-"      ~ ParamN     ~> { _.reduceLeft { SUB } }   |
+    "*"      ~ ParamN     ~> { _.reduceLeft { MUL } }   |
+    "/"      ~ ParamN     ~> { _.reduceLeft { DIV } }   |
+    "or"     ~ ParamN     ~> { _.reduceLeft { OR  } }   |
+    "and"    ~ ParamN     ~> { _.reduceLeft { AND } }   |
+    "="      ~ ParamN     ~> { _.reduceLeft { EQ  } }   |
     "recur"  ~ ParamN     ~> { TFUNCALL("self")(_: _*) } |
     "list"   ~ ParamN     ~> { _.foldRight(CONSTANT(-2147483648): Instruction) { CONS } } |
     Text     ~ ParamN     ~> { FUNCALL(_)(_: _*) } }
@@ -61,9 +57,9 @@ class Compiler(val input: ParserInput) extends Parser {
   def Lambdas2 = rule { openS ~ TextN ~ closeS }
 
   /* Parameters */
-  def Param2 = rule { Expression ~ Expression }
-  def Param3 = rule { Expression ~ Expression ~ Expression }
-  def ParamN = rule { zeroOrMore(Expression).separatedBy(WhiteSpace) }
+  def Param2  = rule { Expression ~ Expression }
+  def Param3  = rule { Expression ~ Expression ~ Expression }
+  def ParamN  = rule { zeroOrMore(Expression).separatedBy(WhiteSpace) }
 
   /* Lexic */
   def WhiteSpace = rule { zeroOrMore(ch(' ') | ch('\t') | ch('\n')) }
