@@ -23,6 +23,15 @@
                   (recur (cdr l) f (cons (f (car l)) res)))))
          (mapaux l f nil)))
 
+  (filter: [l f]
+    (let ((filteraux [l f res]
+             (tif (empty? l)
+                  (reverse res)
+                  (recur (cdr l) f (if (f (car l)) 
+                                       (cons (car l) res)
+                                       res)))))
+         (filteraux l f nil)))
+
   (expt: [v n]
      (if (= n 0)
          1
@@ -42,4 +51,5 @@
         nil
         (cons (random) (self (- n 1)))))
 
-  (genrandom 10))
+  (genrandom 10)
+)
