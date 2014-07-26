@@ -22,5 +22,14 @@
                   (recur (cdr l) f (cons (f (car l)) res)))))
          (mapaux l f nil)))
 
-  (map (cons 1 (cons 2 (cons 3 (cons 4 nil)))) [x] (+ 2 x))
+  (filter: [l f]
+    (let ((filteraux [l f res]
+             (tif (empty? l)
+                  (reverse res)
+                  (recur (cdr l) f (if (f (car l)) 
+                                       (cons (car l) res)
+                                       res)))))
+         (filteraux l f nil)))
+
+  (filter (cons 1 (cons 2 (cons 3 (cons 4 nil)))) [x] (> x 2))
 )
