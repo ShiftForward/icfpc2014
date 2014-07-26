@@ -65,3 +65,9 @@
                   (recur (cdr l) i v (cons (car l) res) (+ in 1))))))
      (setaux l i v nil 0)))
 
+(append: [l v]
+   (let ((appendaux [l v res]
+           (tif (empty? l)
+                (reverse (cons v res))
+                (recur (cdr l) v (cons (car l) res)))))
+      (appendaux l v nil)))
