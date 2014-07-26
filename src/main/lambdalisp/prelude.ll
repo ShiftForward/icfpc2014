@@ -21,6 +21,20 @@
 (forall: [l f] (foldLeft true l [acc e] (and (f e) acc)))
 (exists: [l f] (foldLeft false l [acc e] (or (f e) acc)))
 
+(takeWhile: [l f]
+  (let ((takeWhileAux [l f res]
+           (tif (or (empty? l) (not (f (car l))))
+                (reverse res)
+                (recur (cdr l) f (cons (car l) res)))))
+       (takeWhileAux l f nil)))
+
+(dropWhile: [l f]
+  (let ((dropWhileAux [l f]
+           (tif (or (empty? l) (not (f (car l))))
+                l
+                (recur (cdr l) f))))
+       (dropWhileAux l f)))
+
 ; List manipulation
 (length: [l] (foldLeft 0 l [acc e] (+ acc 1)))
 
