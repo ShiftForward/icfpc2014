@@ -48,6 +48,13 @@
                      (recur (cdr l) f (+ n 1))))))
        (findaux l f 0)))
 
+(range: [n m]
+  (let ((rangeaux [m res]
+          (tif (= m 0)
+               res 
+               (recur (- m 1) (cons m res)))))
+        (rangeaux (- m n) nil)))
+
 ; Math
 (pow: [v n]
    (if (zero? n)
