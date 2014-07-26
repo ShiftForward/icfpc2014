@@ -29,11 +29,9 @@
        (takeWhileAux l f nil)))
 
 (dropWhile: [l f]
-  (let ((dropWhileAux [l f]
-           (tif (or (empty? l) (not (f (car l))))
-                l
-                (recur (cdr l) f))))
-       (dropWhileAux l f)))
+   (tif (or (empty? l) (not (f (car l))))
+        l
+        (recur (cdr l) f)))
 
 ; List manipulation
 (length: [l] (foldLeft 0 l [acc e] (+ acc 1)))
