@@ -2,6 +2,9 @@
 
 (queue-create: [] nil)
 
+(queue-length: [q]
+  (length q))
+
 (queue-enqueue: [q v]
   (append q v))
 
