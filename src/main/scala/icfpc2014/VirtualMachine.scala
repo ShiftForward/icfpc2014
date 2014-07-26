@@ -30,7 +30,7 @@ case class VAR(s: String) extends Instruction {
       case -1 =>
         globals.get(s) match {
           case None =>
-            throw new Exception("Unknown variable")
+            throw new Exception(s"Unknown variable '$s'")
           case Some(i) =>
             (Vector(s"LD ${locals.length} ${i}"), globals)
         }
