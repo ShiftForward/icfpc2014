@@ -1,76 +1,67 @@
-(progn
-  (nil: -999)
-  (seed: 1)
-  (zero?: [x] (= x 0))
-  (empty?: [l] (if (atom? l) (= l nil) 0))
+(nil: -999)
+(seed: 1)
+(zero?: [x] (= x 0))
+(empty?: [l] (if (atom? l) (= l nil) 0))
+(true: 1)
+(false: 0)
 
-  (reverse: [l]
-    (let ((reverseaux [l res]
-            (tif (empty? l)
-                 res
-                 (recur (cdr l) (cons (car l) res)))))
-         (reverseaux l nil)))
+(foldLeft: [b l f]
+  (let ((foldaux [l f res]
+           (tif (empty? l)
+                res
+                (recur (cdr l) f (f res (car l))))))
+       (foldaux l f b)))
 
-  (nth: [li n]
-    (tif (zero? n)
-         (car li)
-         (recur (cdr li) (- n 1))))
+(reverse: [l f] (foldLeft nil l [acc e] (cons e acc)))
 
-  (nnth: [li i j]
-    (tif (zero? i)
-         (nth (car li) j)
-         (recur (cdr li) (- i 1) j)))
+(map: [l f] (reverse (foldLeft nil l [acc e] (cons (f e) acc))))
 
-  (map: [l f]
-    (let ((mapaux [l f res]
-             (tif (empty? l)
-                  (reverse res)
-                  (recur (cdr l) f (cons (f (car l)) res)))))
-         (mapaux l f nil)))
+(filter: [l f] (reverse (foldLeft nil l [acc e] (if (f e) (cons e acc) acc))))
 
-  (filter: [l f]
-    (let ((filteraux [l f res]
-             (tif (empty? l)
-                  (reverse res)
-                  (recur (cdr l) f (if (f (car l)) 
-                                       (cons (car l) res)
-                                       res)))))
-         (filteraux l f nil)))
+(length: [l] (foldLeft 0 l [acc e] (+ acc 1)))
 
-  (set: [l i v]
-     (let ((setaux [l i v res in]
-             (tif (empty? l)
-                  (reverse res)
-                  (tif (= i in)
-                    (recur (cdr l) i v (cons v res) (+ in 1))
-                    (recur (cdr l) i v (cons (car l) res) (+ in 1))))))
-       (setaux l i v nil 0)))
+(forall: [l f] (foldLeft 1 l [acc e] (and (f e) acc)))
 
-  (expt: [v n]
-     (if (= n 0)
-         1
-         (* v (self v (- n 1)))))
+(exists: [l f] (foldLeft 0 l [acc e] (or (f e) acc)))
 
-  (mod: [n m]
-    (- n (* (/ n m) m)))
+(nth: [li n]
+  (tif (zero? n)
+       (car li)
+       (recur (cdr li) (- n 1))))
 
-  (random: []
-    (let ((m (- (expt 2 31) 1))
-           (a 48271)
-           (c 1))
-      (defvar seed (mod (+ (* a seed) c) m))))
+(nth: [li n]
+  (tif (zero? n)
+       (car li)
+       (recur (cdr li) (- n 1))))
 
-  (genrandom: [n]
-    (if (= n 0)
-        nil
-        (cons (random) (self (- n 1)))))
+(nnth: [li i j]
+  (tif (zero? i)
+       (nth (car li) j)
+       (recur (cdr li) (- i 1) j)))
 
-  (length: [l]
-    (let ((lengthaux [l s]
-             (tif (empty? l)
-                  s
-                  (recur (cdr l) (+ s 1)))))
-      (lengthaux l 0)))
+(find: [l f]
+  (let ((findaux [l f n]
+           (tif (empty? l)
+                nil
+                (tif (f (car l))
+                     n
+                     (recur (cdr l) f (+ n 1))))))
+       (findaux l f 0)))
 
-  (nnth (cons (cons 1 (cons 2 (cons 3 (cons 4 nil)))) (cons (cons 4 (cons 5 (cons 6 (cons 7 nil)))) (cons (cons 8 (cons 9 (cons 10 (cons 11 nil)))) nil))) 2 3))
+(expt: [v n]
+   (if (= n 0)
+       1
+       (* v (self v (- n 1)))))
+
+(mod: [n m]
+  (- n (* (/ n m) m)))
+
+(set: [l i v]
+   (let ((setaux [l i v res in]
+           (tif (empty? l)
+                (reverse res)
+                (tif (= i in)
+                  (recur (cdr l) i v (cons v res) (+ in 1))
+                  (recur (cdr l) i v (cons (car l) res) (+ in 1))))))
+     (setaux l i v nil 0)))
 
