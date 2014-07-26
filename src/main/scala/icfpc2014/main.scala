@@ -15,6 +15,10 @@ object Tests extends App {
 
   Program(PROGN(DEBUG(DEFVAR("x", 3)), DEBUG(DEFVAR("y", 2)), ADD("x", "y")))
 
+  Program(PROGN(DEFVAR("fun", DEFUN("x")(MUL("x", "x"))), FUNCALL("fun")(2)))
+
+  Program(PROGN(DEFVAR("f", (DEFUN()(ADD(2, 2)))), FUNCALL("f")()))
+
   val p = new Compiler(
     """(let ((rec (defun (v) (recur (+ v 1)))))
       |  (rec 1))
