@@ -10,7 +10,7 @@ class Compiler(val input: ParserInput) extends Parser {
     WhiteSpace ~ (SExpr | OExpr | Parens) ~ WhiteSpace
   }
 
-  def OExpr  = rule { Defun2 | Defun3 | Literal }
+  def OExpr  = rule { Defun2 | Literal }
   def SExpr  = rule { open ~ (Let | Progn | Defun | Defvar | Defvar2 | Call) ~ close }
   def Parens = rule { open ~ Expression ~ close }
 
@@ -50,9 +50,8 @@ class Compiler(val input: ParserInput) extends Parser {
   def closeS  = rule { WhiteSpace ~ "]" ~ WhiteSpace }
 
   /* Deal with 'defun' */
-  def Defun    = rule { "defun" ~ Lambdas ~ Expression ~> { DEFUN(_: _*)(_) } }
-  def Defun2   = rule { "λ" ~ Lambdas ~ Expression ~> { DEFUN(_: _*)(_) } }
-  def Defun3   = rule { Lambdas2 ~ Expression ~> { DEFUN(_: _*)(_) } }
+  def Defun    = rule { ("defun" | "λ") ~ Lambdas ~ Expression ~> { DEFUN(_: _*)(_) } }
+  def Defun2   = rule { Lambdas2 ~ Expression ~> { DEFUN(_: _*)(_) } }
   def Defvar   = rule { ("defvar" | "setvar" | "let") ~ WhiteSpace ~ Text ~ Expression ~> DEFVAR }
   def Defvar2  = rule { Text ~ WhiteSpace ~ ":" ~ Expression ~> DEFVAR }
   def Progn    = rule { "progn" ~ ParamN ~> { PROGN(_: _*) } }
