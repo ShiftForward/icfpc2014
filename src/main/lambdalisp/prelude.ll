@@ -16,6 +16,11 @@
          (car li)
          (recur (cdr li) (- n 1))))
 
+  (nnth: [li i j]
+    (tif (zero? i)
+         (nth (car li) j)
+         (recur (cdr li) (- i 1) j)))
+
   (map: [l f]
     (let ((mapaux [l f res]
              (tif (empty? l)
@@ -51,5 +56,12 @@
         nil
         (cons (random) (self (- n 1)))))
 
-  (genrandom 10)
-)
+  (length: [l]
+    (let ((lengthaux [l s]
+             (tif (empty? l)
+                  s
+                  (recur (cdr l) (+ s 1)))))
+      (lengthaux l 0)))
+
+  (nnth (cons (cons 1 (cons 2 (cons 3 (cons 4 nil)))) (cons (cons 4 (cons 5 (cons 6 (cons 7 nil)))) (cons (cons 8 (cons 9 (cons 10 (cons 11 nil)))) nil))) 2 3))
+
