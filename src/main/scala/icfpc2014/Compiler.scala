@@ -48,12 +48,12 @@ class Compiler(val input: ParserInput) extends Parser {
   def Defun   = rule { open ~ "defun" ~ Lambdas ~ Expression ~ close ~> { (s, i) => DEFUN(s: _*)(i) } }
   def Defvar  = rule { open ~ "defvar" ~ WhiteSpace ~ Text ~ Expression ~ close ~> { (s, i) => DEFVAR(s, i) } }
   def Progn   = rule { open ~ "progn" ~ oneOrMore(Expression).separatedBy(WhiteSpace) ~ close ~> { (ps) => PROGN(ps: _*) } }
-  def Lambdas = rule { open ~ oneOrMore(Text).separatedBy(WhiteSpace) ~ close }
+  def Lambdas = rule { open ~ zeroOrMore(Text).separatedBy(WhiteSpace) ~ close }
 
   /* Parameters */
   def Param2      = rule { Expression ~ Expression }
   def Param3      = rule { Expression ~ Expression ~ Expression }
-  def ParamsArray = rule { oneOrMore(Expression).separatedBy(WhiteSpace) }
+  def ParamsArray = rule { zeroOrMore(Expression).separatedBy(WhiteSpace) }
 
   /* Lexic */
   def WhiteSpace  = rule { zeroOrMore(ch(' ') | ch('\t') | ch('\n')) }
