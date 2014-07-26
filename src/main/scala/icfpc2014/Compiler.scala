@@ -15,6 +15,7 @@ class Compiler(val input: ParserInput) extends Parser {
   def Parens = rule { open ~ Expression ~ close }
 
   def Call = rule {
+    "atom?"  ~ Expression ~> ATOM   |
     "car"    ~ Expression ~> CAR    |
     "cdr"    ~ Expression ~> CDR    |
     "debug"  ~ Expression ~> DEBUG  |
