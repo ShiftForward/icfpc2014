@@ -42,4 +42,11 @@
         nil
         (cons (random) (self (- n 1)))))
 
-  (genrandom 10))
+  (length: [l]
+    (let ((lengthaux [l s]
+             (tif (empty? l)
+                  s
+                  (recur (cdr l) (+ s 1)))))
+      (lengthaux l 0)))
+
+  (length (cons 1 (cons 2 (cons 3 (cons 4 nil))))))
