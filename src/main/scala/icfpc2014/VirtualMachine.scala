@@ -139,7 +139,7 @@ case class DEFUN(args: String*)(i: Instruction) extends Instruction {
     (Vector(s"LDF ${pos + 3}", "LDC 1", s"TSEL ${pos + s.length + 3} 0") ++ s, g)
   }
 
-  override def toString = s"(defun (${args.mkString(" ")}) $i)"
+  override def toString = s"[${args.mkString(" ")}] $i"
 }
 
 case class FUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {

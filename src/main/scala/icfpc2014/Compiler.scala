@@ -52,7 +52,7 @@ class Compiler(val input: ParserInput) extends Parser {
   /* Deal with 'defun' */
   def Defun    = rule { ("defun" | "λ") ~ Lambdas ~ Expression ~> { DEFUN(_: _*)(_) } }
   def Defun2   = rule { Lambdas2 ~ Expression ~> { DEFUN(_: _*)(_) } }
-  def Defvar   = rule { ("defvar" | "setvar" | "let") ~ WhiteSpace ~ Text ~ Expression ~> DEFVAR }
+  def Defvar   = rule { ("defvar" | "setvar") ~ WhiteSpace ~ Text ~ Expression ~> DEFVAR }
   def Defvar2  = rule { Text ~ WhiteSpace ~ ":" ~ Expression ~> DEFVAR }
   def Progn    = rule { "progn" ~ ParamN ~> { PROGN(_: _*) } }
   def Lambdas  = rule { open ~ TextN ~ close }
