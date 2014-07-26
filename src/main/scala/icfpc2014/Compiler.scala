@@ -46,7 +46,7 @@ class Compiler(val input: ParserInput) extends Parser {
 
   /* Deal with 'defun' */
   def Defun   = rule { open ~ "defun" ~ Lambdas ~ Expression ~ close ~> { (s, i) => DEFUN(s: _*)(i) } }
-  def Defvar  = rule { open ~ "defvar" ~ WhiteSpace ~ Text ~ Expression ~ close ~> { (s, i) => DEFVAR(s, i) } }
+  def Defvar  = rule { open ~ ("defvar" | "setvar") ~ WhiteSpace ~ Text ~ Expression ~ close ~> { (s, i) => DEFVAR(s, i) } }
   def Progn   = rule { open ~ "progn" ~ oneOrMore(Expression).separatedBy(WhiteSpace) ~ close ~> { (ps) => PROGN(ps: _*) } }
   def Lambdas = rule { open ~ oneOrMore(Text).separatedBy(WhiteSpace) ~ close }
 
