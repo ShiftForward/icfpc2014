@@ -120,3 +120,8 @@
       (if (atom? l)
           (cons l nil)
           (concat (self (car l)) (self (cdr l))))))
+
+(flatten1: [l]
+  (tif (empty? l)
+      nil
+      (concat (car l) (self (cdr l)))))
