@@ -24,7 +24,7 @@
 (state-lambdaman: [state]
   (cadr state))
 (state-ghosts: [state]
-  (caddr state))
+  (convert-list (caddr state)))
 
 (game-map: (convert-matrix (state-map initial-state)))
 (map-width: (length (car game-map)))

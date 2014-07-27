@@ -37,13 +37,17 @@
           ((coord-equal disp (coord-create 0 1)) (coord-create 0 2))
           (else (coord-create 0 3)))))
 
-(astar: [from to game-map map-width map-height]
-  (let ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
-        (update-values [matrix positions v]
-          (foldLeft matrix positions [m pos]
-            (set-matrix-pos m map-width pos v))))
+(update-values: [matrix positions v]
+  (foldLeft matrix positions [m pos]
+            (set-matrix-pos m map-width pos v)))
 
-    (let ((initial-details-matrix (update-values (binary-tree-create (flatten1 (fill map-height (fill map-width (cons false (cons -1 (cons -1 -1))))))) (list from) (astar-node true 0 (coord-create -1 -1))))
+(astar: [from to game-map map-width map-height state]
+  (let* ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
+         (ghosts (state-ghosts state))
+         (fright-mode? (exists ghosts [x] (= (car x) 1)))
+         (game-map (if fright-mode? game-map (update-values game-map (map ghosts [g] (cadr g)) 0))))
+    (let (
+          (initial-details-matrix (update-values (binary-tree-create (flatten1 (fill map-height (fill map-width (cons false (cons -1 (cons -1 -1))))))) (list from) (astar-node true 0 (coord-create -1 -1))))
           (astar-aux [q details-matrix]
 
             (tif (heap-empty? q)
@@ -72,8 +76,8 @@
       (astar-aux (heap-from-list (list (cons 0 from)))
                   initial-details-matrix))))
 
-(get-path: [from to game-map map-width map-height]
-  (astar-get-path (astar from to game-map map-width map-height) map-width map-height from to))
+(get-path: [from to game-map map-width map-height state]
+  (astar-get-path (astar from to game-map map-width map-height state) map-width map-height from to))
 
 (next-checkpoint: nil)
 (checkpoints: (heap-create))
@@ -83,7 +87,7 @@
     (defvar checkpoints (heap-create))
     (let* ((lambda-man (state-lambdaman state))
            (position (cadr lambda-man))
-           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height))
+           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height state))
            (game-map (state-map state))
            (row-update [row x y]
              (tif (empty? row)
@@ -123,10 +127,13 @@
          (location (car (cdr lambdaman)))
          (direction (car (cdr (cdr lambdaman))))
          (binary-tree-map (binary-tree-create (flatten1 game-map)))
-         (checkpoint (get-next-checkpoint location state binary-tree-map)))
+         (checkpoint (get-next-checkpoint location state binary-tree-map))
+         (path (get-path location checkpoint binary-tree-map map-width map-height state)))
 
       (progn
-        (direction-to location (car (get-path location checkpoint binary-tree-map map-width map-height))))))
+        (direction-to location (car path)))))
 
 (progn
   (cons 0 main))
+
+
