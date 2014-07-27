@@ -294,7 +294,7 @@ object Program {
   }
 
   def apply(i: Instruction, isBot: Boolean = false): String = {
-    val preSteps = allocGlobalSpace(100, isBot)
+    val preSteps = allocGlobalSpace(200, isBot)
     (preSteps ++ i.transpile(preSteps.length, List(), if (isBot) Map("initial-state" -> 0) else Map())._1 :+ "RTN\n").mkString("\n")
   }
 }
