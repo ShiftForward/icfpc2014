@@ -11,8 +11,8 @@ object Transpiler extends App {
   val source = if (args.length == 1) {
     val mainFile = new File(args(0))
     val path = mainFile.getParent + "/"
-    "(progn " + solveIncludes(path, io.Source.fromFile(mainFile).getLines()).mkString("\n") + ")"
-  } else io.Source.stdin.getLines().mkString("\n")
+    "(progn " + solveIncludes(path, io.Source.fromFile(mainFile).getLines()).map(_.takeWhile(_ != ';')).mkString("\n") + ")"
+  } else io.Source.stdin.getLines().map(_.takeWhile(_ != ';')).mkString("\n")
 
   println(Program(new Compiler(source).compile))
 }

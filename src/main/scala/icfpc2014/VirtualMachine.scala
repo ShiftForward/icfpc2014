@@ -209,14 +209,14 @@ case class TIF(pred: Instruction, thenInst: Instruction, elseInst: Instruction) 
 
 case class OR(i1: Instruction, i2: Instruction) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) =
-    GT(ADD(i1, i2), CONSTANT(0)).transpile(pos, locals, globals)
+    IF(i1, CONSTANT(1), i2).transpile(pos, locals, globals)
 
   override def toString = s"(or $i1 $i2)"
 }
 
 case class AND(i1: Instruction, i2: Instruction) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) =
-    EQ(ADD(i1, i2), CONSTANT(2)).transpile(pos, locals, globals)
+    IF(i1, i2, CONSTANT(0)).transpile(pos, locals, globals)
 
   override def toString = s"(and $i1 $i2)"
 }
