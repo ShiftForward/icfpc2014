@@ -53,8 +53,9 @@ class Compiler(val input: ParserInput) extends Parser {
   def LetDefs = rule { open ~ oneOrMore(Def).separatedBy(WhiteSpace) ~ close }
   def Def     = rule { open ~ Text ~ Expression ~ close ~> { (_, _) } }
 
-  def Cond     = rule { "cond" ~ oneOrMore(Conds).separatedBy(WhiteSpace) ~ CondElse ~> { _.foldRight(_) { case (e, acc) => IF(e._1, e._2, acc) } } }
-  def CondElse = rule { open ~ "else" ~ Expression ~ close }
+  def Cond     = rule { "cond" ~ oneOrMore(Conds).separatedBy(WhiteSpace) ~ CondElse ~>
+                        { _.foldRight(_) { case (e, acc) => IF(e._1, e._2, acc) } } }
+  def CondElse = rule { optional(open ~ "else" ~ Expression ~ close) ~> { _.getOrElse(CONSTANT(0)) } }
   def Conds    = rule { open ~ ! "else" ~ Expression ~ Expression ~ close ~> { (_, _) }}
 
   /* Deal with 'defun' */
