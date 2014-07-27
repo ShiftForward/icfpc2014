@@ -29,10 +29,10 @@ object Transpiler extends App {
     }
 
   def buildIncludeGraph(current: String, path: String, src: Iterator[String]): Set[(String, String)] = {
-    val (headers, body) = src.span(_.startsWith("(include"))
+    val (headers, _) = src.span(_.startsWith("(include"))
     val hs = headers.map(_.split(' ')(1).dropRight(1)).toSet
 
-    hs.map(h => (h -> current)) ++
+    hs.map(h => h -> current) ++
     hs.map(h => buildIncludeGraph(h, path, Source.fromFile(path + h).getLines())).flatten
   }
 
@@ -43,7 +43,7 @@ object Transpiler extends App {
     "(progn " + getSourceBody(path, includes).map(_.takeWhile(_ != ';')).mkString("\n") + ")"
   } else Source.stdin.getLines().map(_.takeWhile(_ != ';')).mkString("\n")
 
-  val isBot = (args.length >= 2 && args(1) == "--bot")
+  val isBot = args.length >= 2 && args(1) == "--bot"
 
   println(Program(new Compiler(source).compile, isBot))
 }
