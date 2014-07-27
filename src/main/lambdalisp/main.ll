@@ -1,3 +1,8 @@
 (include prelude.ll)
 
-(dropWhile (range 1 10) [x] (< x 5))
+
+(let* ((x 1)
+	   (y (+ x 1))
+	   (z (+ x 2)))
+
+	   z)

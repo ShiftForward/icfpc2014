@@ -4,6 +4,11 @@ import org.parboiled2._
 import scala.util._
 
 class Compiler(val input: ParserInput) extends Parser {
+  def open    = rule { WhiteSpace ~ "(" ~ WhiteSpace }
+  def close   = rule { WhiteSpace ~ ")" ~ WhiteSpace }
+  def openS   = rule { WhiteSpace ~ "[" ~ WhiteSpace }
+  def closeS  = rule { WhiteSpace ~ "]" ~ WhiteSpace }
+
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Instruction] = rule {
@@ -11,7 +16,7 @@ class Compiler(val input: ParserInput) extends Parser {
   }
 
   def OExpr  = rule { Defun2 | Literal }
-  def SExpr  = rule { open ~ (Let | Progn | Defun | Defvar | Defvar2 | Call) ~ close }
+  def SExpr  = rule { open ~ (Let | LetStar | Progn | Defun | Defvar | Defvar2 | Call) ~ close }
   def Parens = rule { open ~ Expression ~ close }
 
   def Call = rule {
@@ -44,12 +49,9 @@ class Compiler(val input: ParserInput) extends Parser {
 
   /* Deal with 'let' */
   def Let     = rule { "let" ~ LetDefs ~ Expression ~> { LET(_: _*)(_) } }
+  def LetStar = rule { "let*" ~ LetDefs ~ Expression ~> { _.foldRight(_) { LET(_)(_) } } }
   def LetDefs = rule { open ~ oneOrMore(Def).separatedBy(WhiteSpace) ~ close }
   def Def     = rule { open ~ Text ~ Expression ~ close ~> { (_, _) } }
-  def open    = rule { WhiteSpace ~ "(" ~ WhiteSpace }
-  def close   = rule { WhiteSpace ~ ")" ~ WhiteSpace }
-  def openS   = rule { WhiteSpace ~ "[" ~ WhiteSpace }
-  def closeS  = rule { WhiteSpace ~ "]" ~ WhiteSpace }
 
   /* Deal with 'defun' */
   def Defun    = rule { ("defun" | "λ") ~ Lambdas ~ Expression ~> { DEFUN(_: _*)(_) } }
