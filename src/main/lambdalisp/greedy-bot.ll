@@ -1,6 +1,7 @@
 (include prelude.ll)
 (include queue.ll)
 (include binary-tree.ll)
+(include coord.ll)
 
 (convert-list: [l]
   (let ((convert-list-aux [l res]
@@ -17,13 +18,13 @@
     (convert-matrix-aux m nil)))
 
 (get-matrix-pos: [matrix matrix-width pos]
-  (binary-tree-get matrix (+ (car pos) (* matrix-width (cdr pos)))))
+  (binary-tree-get matrix (+ (coord-x pos) (* matrix-width (coord-y pos)))))
 
 (set-matrix-pos: [matrix matrix-width pos v]
-  (binary-tree-set matrix (+ (car pos) (* matrix-width (cdr pos))) v))
+  (binary-tree-set matrix (+ (coord-x pos) (* matrix-width (coord-y pos))) v))
 
 (bfs: [from to map map-width map-height]
-  (let ((directions (list (cons 0 -1) (cons 1 0) (cons 0 1) (cons -1 0)))
+  (let ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
         (update-values [matrix positions v]
           (foldLeft matrix positions [m pos]
             (set-matrix-pos m map-width pos v))))
@@ -34,16 +35,16 @@
             (tif (queue-empty? q)
                  details-matrix
 
-                 (let ((current (debug (queue-front q)))
+                 (let ((current (queue-front q))
                        (next-q (queue-dequeue q)))
 
-                    (tif (and (= (car current) (car to)) (= (cdr current) (cdr to)))
-                         details-matrix
+                    (tif (coord-equal current to)
+                          details-matrix
 
                       (let ((current-dist (car (cdr (get-matrix-pos details-matrix map-width current))))
                             (neighbors (foldLeft (list) directions [next-steps direction]
 
-                         (let ((next-pos (cons (+ (car current) (car direction)) (+ (cdr current) (cdr direction)))))
+                         (let ((next-pos (coord-sum current direction)))
 
                            (tif (and (= (car (get-matrix-pos details-matrix map-width next-pos)) false)
                                      (not (= (get-matrix-pos map map-width next-pos) 0)))
@@ -69,7 +70,7 @@
       (progn
         (debug map-width)
         (debug map-height)
-        (debug (bfs (cons 11 16) (cons 1 1) (binary-tree-create (flatten1 map)) map-width map-height))
+        (debug (bfs (coord-create 11 16) (coord-create 1 1) (binary-tree-create (flatten1 map)) map-width map-height))
         (cons 0 direction))))
 
 (cons 0 main)

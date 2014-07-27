@@ -1,0 +1,14 @@
+(coord-create: [x y]
+  (cons x y))
+
+(coord-x: [coord]
+  (car coord))
+
+(coord-y: [coord]
+  (cdr coord))
+
+(coord-sum: [c1 c2]
+  (coord-create (+ (coord-x c1) (coord-x c2)) (+ (coord-y c1) (coord-y c2))))
+
+(coord-equal: [c1 c2]
+  (and (= (coord-x c1) (coord-x c2)) (= (coord-y c1) (coord-y c2))))
