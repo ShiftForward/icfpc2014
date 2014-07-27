@@ -16,7 +16,7 @@ class Compiler(val input: ParserInput) extends Parser {
   }
 
   def OExpr  = rule { Defun2 | Literal }
-  def SExpr  = rule { open ~ (Let | LetStar | Progn | Defun | Defvar | Defvar2 | Call) ~ close }
+  def SExpr  = rule { open ~ (Let | LetStar | Progn | Cond | Defun | Defvar | Defvar2 | Call) ~ close }
   def Parens = rule { open ~ Expression ~ close }
 
   def Call = rule {
@@ -52,6 +52,10 @@ class Compiler(val input: ParserInput) extends Parser {
   def LetStar = rule { "let*" ~ LetDefs ~ Expression ~> { _.foldRight(_) { LET(_)(_) } } }
   def LetDefs = rule { open ~ oneOrMore(Def).separatedBy(WhiteSpace) ~ close }
   def Def     = rule { open ~ Text ~ Expression ~ close ~> { (_, _) } }
+
+  def Cond     = rule { "cond" ~ oneOrMore(Conds).separatedBy(WhiteSpace) ~ CondElse ~> { _.foldRight(_) { case (e, acc) => IF(e._1, e._2, acc) } } }
+  def CondElse = rule { open ~ "else" ~ Expression ~ close }
+  def Conds    = rule { open ~ ! "else" ~ Expression ~ Expression ~ close ~> { (_, _) }}
 
   /* Deal with 'defun' */
   def Defun    = rule { ("defun" | "λ") ~ Lambdas ~ Expression ~> { DEFUN(_: _*)(_) } }

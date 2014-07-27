@@ -3,9 +3,11 @@
 (true: 1)
 (false: 0)
 
-; Basic tests
+; Predicates
 (zero?: [x] (= x 0))
 (empty?: [l] (and (atom? l) (= l nil)))
+(negative?: [x] (< x 0))
+(positive?: [x] (>= x 0))
 
 ; Higher-order functions over lists
 (foldLeft: [b l f]
@@ -20,6 +22,7 @@
 (filter: [l f] (reverse (foldLeft nil l [acc e] (if (f e) (cons e acc) acc))))
 (forall: [l f] (foldLeft true l [acc e] (and (f e) acc)))
 (exists: [l f] (foldLeft false l [acc e] (or (f e) acc)))
+(last: [l] (foldLeft nil l [acc e] e))
 
 (takeWhile: [l f]
   (let ((takeWhileAux [l f res]
@@ -35,11 +38,6 @@
 
 ; List manipulation
 (length: [l] (foldLeft 0 l [acc e] (+ acc 1)))
-
-(nth: [li n]
-  (tif (zero? n)
-       (car li)
-       (recur (cdr li) (- n 1))))
 
 (nth: [li n]
   (tif (zero? n)
@@ -62,9 +60,9 @@
 
 (range: [n m]
   (let ((rangeaux [m res]
-          (tif (= m 0)
+          (tif (< m 0)
                res 
-               (recur (- m 1) (cons m res)))))
+               (recur (- m 1) (cons (+ n m) res)))))
         (rangeaux (- m n) nil)))
 
 ; Math
@@ -76,6 +74,10 @@
 (mod: [n m]
   (- n (* (/ n m) m)))
 
+
+(abs: [x] 
+  (tif (positive? x) x (- 0 x)))
+
 (set: [l i v]
    (let ((setaux [l i v res in]
            (tif (empty? l)
@@ -84,4 +86,5 @@
                   (recur (cdr l) i v (cons v res) (+ in 1))
                   (recur (cdr l) i v (cons (car l) res) (+ in 1))))))
      (setaux l i v nil 0)))
+
 
