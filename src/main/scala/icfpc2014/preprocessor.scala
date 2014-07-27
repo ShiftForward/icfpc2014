@@ -10,7 +10,7 @@ object preprocessor extends App {
    * left: mov a,3
    */
   def findLabels(lines: List[String]): (Map[String, Int], List[String]) = {
-    val regex = """^(\w+): (.*)""".r
+    val regex = """^(\w+):\s(.*)""".r
     lines.zipWithIndex.foldRight(Map[String, Int](), List[String]()) { case ((line, i), (labels, lines)) =>
       line match {
         case regex(label, line) => (labels + (label -> i), line :: lines)
