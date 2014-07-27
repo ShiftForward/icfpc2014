@@ -2,20 +2,7 @@
 (include queue.ll)
 (include binary-tree.ll)
 (include coord.ll)
-
-(convert-list: [l]
-  (let ((convert-list-aux [l res]
-          (tif (atom? l)
-               (reverse res)
-               (recur (cdr l) (cons (car l) res)))))
-    (convert-list-aux l nil)))
-
-(convert-matrix: [m]
-  (let ((convert-matrix-aux [m res]
-          (tif (atom? m)
-               (reverse res)
-               (recur (cdr m) (cons (convert-list (car m)) res)))))
-    (convert-matrix-aux m nil)))
+(include game.ll)
 
 (get-matrix-pos: [matrix matrix-width pos]
   (binary-tree-get matrix (+ (coord-x pos) (* matrix-width (coord-y pos)))))
@@ -83,18 +70,30 @@
       (bfsaux (queue-enqueue (queue-create) from)
                initial-details-matrix))))
 
+(get-path: [from to map map-width map-height]
+  (bfs-get-path (bfs from to map map-width map-height) map-width map-height from to))
+
+(next-checkpoint: nil)
+
+(get-next-checkpoint: [location]
+  (if (or (empty? next-checkpoint) (coord-equal next-checkpoint location))
+      (progn
+        (defvar next-checkpoint (car position-power-pills))
+        (defvar position-power-pills (cdr position-power-pills))
+        next-checkpoint)
+      next-checkpoint))
+
 (main: [state]
-  (let* ((map (convert-matrix (car state)))
-         (map-width (length (car map)))
-         (map-height (length map))
-         (lambdaman (car (cdr state)))
+  (let* ((lambdaman (car (cdr state)))
          (ghosts (car (cdr (cdr state))))
          (fruit (cdr (cdr (cdr state))))
          (location (car (cdr lambdaman)))
-         (direction (car (cdr (cdr lambdaman)))))
+         (direction (car (cdr (cdr lambdaman))))
+         (binary-tree-map (binary-tree-create (flatten1 map)))
+         (checkpoint (get-next-checkpoint location)))
 
       (progn
-        (direction-to location (debug (car (bfs-get-path (bfs location (coord-create 1 1) (binary-tree-create (flatten1 map)) map-width map-height) map-width map-height location (coord-create 1 1))))))))
+        (direction-to location (car (get-path location checkpoint binary-tree-map map-width map-height))))))
 
 (progn
   (debug initial-state)
