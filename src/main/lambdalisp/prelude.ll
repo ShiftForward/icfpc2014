@@ -3,9 +3,11 @@
 (true: 1)
 (false: 0)
 
-; Basic tests
+; Predicates
 (zero?: [x] (= x 0))
 (empty?: [l] (and (atom? l) (= l nil)))
+(negative?: [x] (< x 0))
+(positive?: [x] (>= x 0))
 
 ; Higher-order functions over lists
 (foldLeft: [b l f]
@@ -42,11 +44,6 @@
        (car li)
        (recur (cdr li) (- n 1))))
 
-(nth: [li n]
-  (tif (zero? n)
-       (car li)
-       (recur (cdr li) (- n 1))))
-
 (nnth: [li i j]
   (tif (zero? i)
        (nth (car li) j)
@@ -76,3 +73,6 @@
 
 (mod: [n m]
   (- n (* (/ n m) m)))
+
+(abs: [x] 
+  (tif (positive? x) x (- 0 x)))
