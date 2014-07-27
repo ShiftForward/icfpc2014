@@ -14,16 +14,16 @@
 ;
 
 ; Accessors
-(heap-get-rank: [h] (car h))
-(heap-get-elem: [h] (cadr h))
-(heap-get-subl: [h] (caddr h))
-(heap-get-subr: [h] (cadddr h))
+(heap-get-rank:  [h] (car h))
+(heap-get-elem:  [h] (cadr h))
+(heap-get-subl:  [h] (caddr h))
+(heap-get-subr:  [h] (cadddr h))
 (heap-build: [rank elem subl subr] (list rank elem subl subr))
 
 ; Private inner workings
 (heap-rank: [h]
 	(tif (empty? h) 0
-		 (heap-get-rank h)))
+             (heap-get-rank h)))
 
 (heap-make: [x a b]
 	(tif (>= (heap-rank a) (heap-rank b))
@@ -40,7 +40,7 @@
 				    (b1 (heap-get-subr h1))
 				    (a2 (heap-get-subl h2))
 				    (b2 (heap-get-subr h2)))
-			       (tif (< x y) 
+			       (tif (< (car x) (car y))
 			       	    (heap-make x a1 (self b1 h2))
 			       	    (heap-make y a2 (self h1 b2)))))))
 
@@ -51,16 +51,16 @@
 
 (heap-find-min: [h]
 	(tif (heap-empty? h) nil
-		 (heap-get-elem h)))
+             (heap-get-elem h)))
 
 (heap-delete-min: [h]
 	(tif (heap-empty? h) nil
-		 (heap-merge (heap-get-subl h) (heap-get-subr h))))
+             (heap-merge (heap-get-subl h) (heap-get-subr h))))
 
 (heap-pop: [h]
 	(tif (heap-empty? h) nil
 		 (let ((x (heap-get-elem h))
-		 	   (r (heap-delete-min h)))
+		       (r (heap-delete-min h)))
 		 	  (cons x r))))
 
 ; Constructors
