@@ -43,5 +43,5 @@ object preprocessor extends App {
   val code = removeEmptyLines(source)
 
   val (labels, lines) = findLabels(code)
-  println(setAddresses(lines, labels).mkString("\n"))
+  println(setAddresses(lines, labels).map(_.trim).mkString("\n"))
 }
