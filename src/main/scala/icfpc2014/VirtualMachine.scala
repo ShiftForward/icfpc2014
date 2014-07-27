@@ -267,29 +267,34 @@ object Instruction {
 }
 
 object Program {
-  def allocGlobalSpace(space: Int) =
-    Vector(
+  def allocGlobalSpace(space: Int, isBot: Boolean) = {
+    val s = Vector(
       s"DUM $space",
       "LDC 0",
-      "LDF 7",
+      s"LDF ${if (isBot) 8 else 7}",
       "AP 1",
-      "LDF 18",
+      s"LDF ${if (isBot) 19 else 18}",
       s"RAP $space",
       "RTN",
       "LDC 0",
       "LD 0 0",
       s"LDC ${space - 1}",
       "CEQ",
-      "TSEL 17 12",
+      s"TSEL ${if (isBot) 18 else 17} ${if (isBot) 13 else 12}",
       "LD 0 0",
       "LDC 1",
       "ADD",
-      "LDF 7",
+      s"LDF ${if (isBot) 8 else 7}",
       "AP 1",
       "RTN")
+    if (isBot)
+      Vector("LD 0 0") ++ s ++ Vector("ST 0 0")
+    else
+      s
+  }
 
-  def apply(i: Instruction): String = {
-    val preSteps = allocGlobalSpace(50)
-    (preSteps ++ i.transpile(preSteps.length, List(), Map())._1 :+ "RTN\n").mkString("\n")
+  def apply(i: Instruction, isBot: Boolean = false): String = {
+    val preSteps = allocGlobalSpace(200, isBot)
+    (preSteps ++ i.transpile(preSteps.length, List(), if (isBot) Map("initial-state" -> 0) else Map())._1 :+ "RTN\n").mkString("\n")
   }
 }

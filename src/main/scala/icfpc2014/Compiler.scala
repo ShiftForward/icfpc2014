@@ -16,17 +16,15 @@ class Compiler(val input: ParserInput) extends Parser {
   }
 
   def OExpr  = rule { Defun2 | Literal }
-  def SExpr  = rule { open ~ (Let | LetStar | Progn | Cond | Defun | Defvar | Defvar2 | Call) ~ close }
+  def SExpr  = rule { open ~ (Let | LetStar | Progn | Cond | TCond | Defun | Defvar | Defvar2 | Destruct | Call) ~ close }
   def Parens = rule { open ~ Expression ~ close }
+
+  def Destruct = rule {
+    ch('c') ~ capture(oneOrMore(ch('a') | ch('d'))) ~ ch('r') ~ Expression ~> { _.foldRight(_) { (e, acc) => e match { case 'a' => CAR(acc); case 'd' => CDR(acc) } } }
+  }
 
   def Call = rule {
     "atom?"  ~ Expression ~> ATOM  |
-    "car"    ~ Expression ~> CAR   |
-    "caar"   ~ Expression ~> { l => CAR(CAR(l)) } |
-    "cadr"   ~ Expression ~> { l => CAR(CDR(l)) } |
-    "cdr"    ~ Expression ~> CDR   |
-    "cddr"   ~ Expression ~> { l => CDR(CDR(l)) } |
-    "cdar"   ~ Expression ~> { l => CDR(CAR(l)) } |
     "debug"  ~ Expression ~> DEBUG |
     "not"    ~ Expression ~> NOT   |
     ">"      ~ Param2     ~> GT    |
@@ -55,6 +53,8 @@ class Compiler(val input: ParserInput) extends Parser {
 
   def Cond     = rule { "cond" ~ oneOrMore(Conds).separatedBy(WhiteSpace) ~ CondElse ~>
                         { _.foldRight(_) { case (e, acc) => IF(e._1, e._2, acc) } } }
+  def TCond    = rule { "tcond" ~ oneOrMore(Conds).separatedBy(WhiteSpace) ~ CondElse ~>
+                        { _.foldRight(_) { case (e, acc) => TIF(e._1, e._2, acc) } } }
   def CondElse = rule { optional(open ~ "else" ~ Expression ~ close) ~> { _.getOrElse(CONSTANT(0)) } }
   def Conds    = rule { open ~ ! "else" ~ Expression ~ Expression ~ close ~> { (_, _) }}
 
@@ -75,7 +75,7 @@ class Compiler(val input: ParserInput) extends Parser {
   /* Lexic */
   def WhiteSpace = rule { zeroOrMore(ch(' ') | ch('\t') | ch('\n')) }
   def Literal    = rule { Variable | Number }
-  def Text       = rule { capture(oneOrMore(CharPredicate.Alpha | ch('?'))) }
+  def Text       = rule { capture(CharPredicate.Alpha ~ zeroOrMore(CharPredicate.AlphaNum | ch('?') | ch('-'))) }
   def TextN      = rule { zeroOrMore(Text).separatedBy(WhiteSpace) }
   def Variable   = rule { Text ~> VAR }
   def Number     = rule { capture(Digits) ~> { d => CONSTANT(d.toInt) } }

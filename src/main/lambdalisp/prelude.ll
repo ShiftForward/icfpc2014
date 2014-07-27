@@ -61,7 +61,7 @@
 (range: [n m]
   (let ((rangeaux [m res]
           (tif (< m 0)
-               res 
+               res
                (recur (- m 1) (cons (+ n m) res)))))
         (rangeaux (- m n) nil)))
 
@@ -75,7 +75,7 @@
   (- n (* (/ n m) m)))
 
 
-(abs: [x] 
+(abs: [x]
   (tif (positive? x) x (- 0 x)))
 
 (set: [l i v]
@@ -87,4 +87,48 @@
                   (recur (cdr l) i v (cons (car l) res) (+ in 1))))))
      (setaux l i v nil 0)))
 
+(append: [l v]
+   (let ((appendaux [l v res]
+           (tif (empty? l)
+                (reverse (cons v res))
+                (recur (cdr l) v (cons (car l) res)))))
+      (appendaux l v nil)))
 
+(concat: [l1 l2]
+  (let ((concat-aux [l1 l2]
+           (tif (empty? l1)
+                l2
+                (recur (cdr l1) (cons (car l1) l2)))))
+    (concat-aux (reverse l1) l2)))
+
+(fill: [n v]
+   (let ((fillaux [n v res]
+            (tif (= n 0)
+                 res
+                 (recur (- n 1) v (cons v res)))))
+      (fillaux n v nil)))
+
+(min: [l]
+   (foldLeft (car l) (cdr l) [a b] (if (< a b) a b)))
+
+(max: [l]
+   (foldLeft (car l) (cdr l) [a b] (if (> a b) a b)))
+
+(split: [l i]
+  (let ((split-aux [l1 i l2]
+          (tif (or (empty? l1) (= i 0))
+               (cons (reverse l2) l1)
+               (recur (cdr l1) (- i 1) (cons (car l1) l2)))))
+    (split-aux l i nil)))
+
+(flatten: [l]
+  (if (empty? l)
+      nil
+      (if (atom? l)
+          (cons l nil)
+          (concat (self (car l)) (self (cdr l))))))
+
+(flatten1: [l]
+  (tif (empty? l)
+      nil
+      (concat (car l) (self (cdr l)))))
