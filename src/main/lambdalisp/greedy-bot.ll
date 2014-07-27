@@ -23,13 +23,25 @@
 (set-matrix-pos: [matrix matrix-width pos v]
   (binary-tree-set matrix (+ (coord-x pos) (* matrix-width (coord-y pos))) v))
 
+(bfs-node: [visited distance previous]
+  (cons visited (cons distance previous)))
+
+(bfs-visited: [details-matrix width height pos]
+  (car (get-matrix-pos details-matrix width pos)))
+
+(bfs-distance: [details-matrix width height pos]
+  (car (cdr (get-matrix-pos details-matrix width pos))))
+
+(bfs-previous: [details-matrix width height pos]
+  (cdr (cdr (get-matrix-pos details-matrix width pos))))
+
 (bfs: [from to map map-width map-height]
   (let ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
         (update-values [matrix positions v]
           (foldLeft matrix positions [m pos]
             (set-matrix-pos m map-width pos v))))
 
-    (let ((initial-details-matrix (update-values (binary-tree-create (flatten1 (fill map-height (fill map-width (cons false (cons -1 (cons -1 -1))))))) (list from) (cons true (cons 0 (cons -1 -1)))))
+    (let ((initial-details-matrix (update-values (binary-tree-create (flatten1 (fill map-height (fill map-width (cons false (cons -1 (cons -1 -1))))))) (list from) (bfs-node true 0 (coord-create -1 -1))))
           (bfsaux [q details-matrix]
 
             (tif (queue-empty? q)
@@ -41,18 +53,18 @@
                     (tif (coord-equal current to)
                           details-matrix
 
-                      (let ((current-dist (car (cdr (get-matrix-pos details-matrix map-width current))))
+                      (let ((current-dist (bfs-distance details-matrix map-width map-height current))
                             (neighbors (foldLeft (list) directions [next-steps direction]
 
                          (let ((next-pos (coord-sum current direction)))
 
-                           (tif (and (= (car (get-matrix-pos details-matrix map-width next-pos)) false)
+                           (tif (and (= (bfs-visited details-matrix map-width map-height next-pos) false)
                                      (not (= (get-matrix-pos map map-width next-pos) 0)))
                                (cons next-pos next-steps)
                                next-steps)))))
 
                         (recur (queue-enqueue-all next-q neighbors)
-                               (update-values details-matrix neighbors (cons true (cons (+ current-dist 1) current))))))))))
+                               (update-values details-matrix neighbors (bfs-node true (+ current-dist 1) current)))))))))
 
       (bfsaux (queue-enqueue (queue-create) from)
                initial-details-matrix))))
