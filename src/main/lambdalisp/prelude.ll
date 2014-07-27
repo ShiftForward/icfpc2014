@@ -62,9 +62,9 @@
 
 (range: [n m]
   (let ((rangeaux [m res]
-          (tif (= m 0)
+          (tif (< m 0)
                res 
-               (recur (- m 1) (cons m res)))))
+               (recur (- m 1) (cons (+ n m) res)))))
         (rangeaux (- m n) nil)))
 
 ; Math
