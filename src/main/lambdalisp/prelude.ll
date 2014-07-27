@@ -41,11 +41,6 @@
        (car li)
        (recur (cdr li) (- n 1))))
 
-(nth: [li n]
-  (tif (zero? n)
-       (car li)
-       (recur (cdr li) (- n 1))))
-
 (nnth: [li i j]
   (tif (zero? i)
        (nth (car li) j)
@@ -104,3 +99,12 @@
 
 (max: [l]
    (foldLeft (car l) (cdr l) [a b] (if (> a b) a b)))
+
+(split: [l i]
+  (let ((split-aux [l1 i l2]
+          (tif (or (empty? l1) (= i 0))
+               (cons (reverse l2) l1)
+               (recur (cdr l1) (- i 1) (cons (car l1) l2)))))
+    (split-aux l i nil)))
+
+

@@ -289,7 +289,7 @@ object Program {
       "RTN")
 
   def apply(i: Instruction): String = {
-    val preSteps = allocGlobalSpace(50)
+    val preSteps = allocGlobalSpace(100)
     (preSteps ++ i.transpile(preSteps.length, List(), Map())._1 :+ "RTN\n").mkString("\n")
   }
 }
