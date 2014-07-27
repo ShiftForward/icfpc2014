@@ -11,6 +11,8 @@
 (set-matrix-pos: [matrix matrix-width pos v]
   (binary-tree-set matrix (+ (coord-x pos) (* matrix-width (coord-y pos))) v))
 
+(max-distance: 10)
+
 (astar-node: [visited distance previous]
   (cons visited (cons distance previous)))
 
@@ -41,7 +43,7 @@
   (foldLeft matrix positions [m pos]
             (set-matrix-pos m map-width pos v)))
 
-(astar: [from to game-map map-width map-height state]
+(astar: [from to game-map map-width map-height state max-distance]
   (let* ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
          (ghosts (state-ghosts state))
          (fright-mode? (exists ghosts [x] (= (car x) 1)))
@@ -59,7 +61,8 @@
 
                     (tif (coord-equal current to)
                           details-matrix
-
+                          (tif (> (coord-manhattan-distance from current) max-distance)
+                               (recur next-q details-matrix)
                       (let ((current-dist (astar-distance details-matrix map-width map-height current))
                             (neighbors (foldLeft (list) directions [next-steps direction]
 
@@ -71,13 +74,13 @@
                                next-steps)))))
 
                         (recur (foldLeft next-q neighbors [acc e] (heap-insert (cons (+ (coord-manhattan-distance e to) (+ current-dist 1)) e) acc))
-                               (update-values details-matrix neighbors (astar-node true (+ current-dist 1) current)))))))))
+                               (update-values details-matrix neighbors (astar-node true (+ current-dist 1) current))))))))))
 
       (astar-aux (heap-from-list (list (cons 0 from)))
                   initial-details-matrix))))
 
 (get-path: [from to game-map map-width map-height state]
-  (let ((astar-details (astar from to game-map map-width map-height state)))
+  (let ((astar-details (astar from to game-map map-width map-height state 600)))
     (if (= (astar-distance astar-details map-width map-height to) -1)
         nil
         (astar-get-path astar-details map-width map-height from to))))
@@ -90,7 +93,8 @@
     (defvar checkpoints (heap-create))
     (let* ((lambda-man (state-lambdaman state))
            (position (cadr lambda-man))
-           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height state))
+           (ghosts (state-ghosts state))
+           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height state max-distance))
            (game-map (state-map state))
            (row-update [row x y]
              (tif (empty? row)
@@ -100,7 +104,7 @@
                       (tcond ((and (= cell encoding-pill) (not (= cell-dist -1)))
                               (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-pill cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
-                             ((and (= cell encoding-power-pill) (not (= cell-dist -1)))
+                             ((and (not (state-fright-mode? state)) (and (= cell encoding-power-pill) (not (= cell-dist -1))))
                               (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-power-pill cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
                              ((and (and (> (state-fruit state) 0) (= cell encoding-fruit)) (not (= cell-dist -1)))
@@ -113,10 +117,13 @@
                   (progn
                     (row-update (car rows) 0 y)
                     (recur (cdr rows) 0 (+ y 1))))))
-      (col-update game-map 0 0))))
+      (progn 
+        (col-update game-map 0 0)
+        (foldLeft nil ghosts [acc x] (if (= (car x) 1) (defvar checkpoints (heap-insert (cons (- 0 (- points-ghosts (astar-distance astar-details map-width map-height (cadr x)))) (cadr x)) checkpoints)) nil))
+))))
 
 (get-next-checkpoint: [location state binary-tree-map]
-  (tif (or (empty? next-checkpoint) (coord-equal next-checkpoint location))
+  (tif (or (empty? next-checkpoint) (coord-equal next-checkpoint location) (state-fright-mode? state))
       (progn
         (get-checkpoints state binary-tree-map)
         (defvar next-checkpoint (cdr (heap-find-min checkpoints)))
