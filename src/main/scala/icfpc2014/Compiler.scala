@@ -20,7 +20,7 @@ class Compiler(val input: ParserInput) extends Parser {
   def Parens = rule { open ~ Expression ~ close }
 
   def Destruct = rule {
-    ch('c') ~ capture(oneOrMore(ch('a') | ch('d'))) ~ ch('r') ~ Expression ~> { _.foldLeft(_) { (acc, e) => e match { case 'a' => CAR(acc); case 'd' => CDR(acc) } } }
+    ch('c') ~ capture(oneOrMore(ch('a') | ch('d'))) ~ ch('r') ~ Expression ~> { _.foldRight(_) { (e, acc) => e match { case 'a' => CAR(acc); case 'd' => CDR(acc) } } }
   }
 
   def Call = rule {
