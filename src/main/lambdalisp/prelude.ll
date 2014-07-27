@@ -74,5 +74,17 @@
 (mod: [n m]
   (- n (* (/ n m) m)))
 
+
 (abs: [x] 
   (tif (positive? x) x (- 0 x)))
+
+(set: [l i v]
+   (let ((setaux [l i v res in]
+           (tif (empty? l)
+                (reverse res)
+                (tif (= i in)
+                  (recur (cdr l) i v (cons v res) (+ in 1))
+                  (recur (cdr l) i v (cons (car l) res) (+ in 1))))))
+     (setaux l i v nil 0)))
+
+
