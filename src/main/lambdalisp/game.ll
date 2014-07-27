@@ -19,10 +19,12 @@
 
 (state-map: [state]
   (convert-matrix (car state)))
+(state-fruit: [state]
+  (cdddr state))
 
-(map: (convert-matrix (state-map initial-state)))
-(map-width: (length (car map)))
-(map-height: (length map))
+(game-map: (convert-matrix (state-map initial-state)))
+(map-width: (length (car game-map)))
+(map-height: (length game-map))
 (map-area: (* map-width map-height))
 
 (encoding-wall: 0)
@@ -54,33 +56,3 @@
         ((and (< 1000 map-area) (<= map-area 1100)) 3000)
         ((and (< 1100 map-area) (<= map-area 1200)) 3000)
         (else 5000)))
-
-(position-pills: nil)
-(position-power-pills: nil)
-(position-fruits: nil)
-
-(position-update: [state]
-  (let* ((map (state-map state))
-         (row-update [row x y]
-           (tif (empty? row)
-                nil
-                (let ((cell (car row)))
-                    (tcond ((= cell encoding-pill)
-                            (progn (defvar position-pills (cons (coord-create x y) position-pills))
-                                   (recur (cdr row) (+ x 1) y)))
-                           ((= cell encoding-power-pill)
-                            (progn (defvar position-power-pills (cons (coord-create x y) position-power-pills))
-                                   (recur (cdr row) (+ x 1) y)))
-                           ((= cell encoding-fruit)
-                            (progn (defvar position-fruits (cons (coord-create x y) position-fruits))
-                                   (recur (cdr row) (+ x 1) y)))
-                           (else (recur (cdr row) (+ x 1) y))))))
-         (col-update [rows x y]
-           (tif (empty? rows)
-                nil
-                (progn
-                  (row-update (car rows) 0 y)
-                  (recur (cdr rows) 0 (+ y 1))))))
-    (col-update map 0 0)))
-
-(position-update initial-state)
