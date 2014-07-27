@@ -130,5 +130,5 @@
 
 (flatten1: [l]
   (tif (empty? l)
-      nil
-      (concat (car l) (self (cdr l)))))
+       nil
+       (concat (car l) (self (cdr l)))))
