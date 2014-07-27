@@ -1,0 +1,49 @@
+int 3
+int 6                               ; check current direction
+jeq %switchdir, b, [1] ; check if direction changed
+mov h, %go
+mov pc, %savedir
+
+; go in the direction of lambda-man
+go: int 3                           ; get ghost index
+    int 5                           ; get coordinates
+    mov c, a                        ; save ghost coordinates
+    mov d, b
+    int 1                           ; get lambda-man coordinates
+    mov e, a                        ; save lambda-man coordinates
+    mov f, b
+    jgt %left, c, e
+    jgt %up, d, f
+    jlt %right, c, e
+    mov pc, %down
+
+return: int 0
+        mov c, [0]
+        mov d, [1]
+        mov e, a
+        int 3
+        int 6                               ; check current direction
+        int 8
+        hlt
+
+savedir: jeq %ret, [0], b
+         mov [1], [0]               ; save direction
+         mov [0], b
+ret:     mov pc, h
+
+switchdir: jeq %left, b, 2
+           jeq %right, b, 0
+           jeq %up, b, 1
+           mov pc, %down
+
+up: mov a, 0
+    mov pc, %return
+
+down: mov a, 2
+      mov pc, %return
+
+left: mov a, 3
+      mov pc, %return
+
+right: mov a, 1
+       mov pc, %return
