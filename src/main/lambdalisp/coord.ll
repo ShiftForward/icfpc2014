@@ -12,3 +12,6 @@
 
 (coord-equal: [c1 c2]
   (and (= (coord-x c1) (coord-x c2)) (= (coord-y c1) (coord-y c2))))
+
+(coord-displacement: [c1 c2]
+  (coord-create (- (coord-x c2) (coord-x c1)) (- (coord-y c2) (coord-y c1))))

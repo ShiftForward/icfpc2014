@@ -42,6 +42,13 @@
               (cons to (self from (bfs-previous details-matrix width height to))))))
     (reverse (bfs-get-path-aux from to))))
 
+(direction-to: [from to]
+  (let ((disp (coord-displacement from to)))
+    (cond ((coord-equal disp (coord-create 0 -1)) (coord-create 0 0))
+          ((coord-equal disp (coord-create 1 0)) (coord-create 0 1))
+          ((coord-equal disp (coord-create 0 1)) (coord-create 0 2))
+          (else (coord-create 0 3)))))
+
 (bfs: [from to map map-width map-height]
   (let ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
         (update-values [matrix positions v]
@@ -87,9 +94,6 @@
          (direction (car (cdr (cdr lambdaman)))))
 
       (progn
-        (debug map-width)
-        (debug map-height)
-        (debug (bfs-get-path (bfs (coord-create 11 16) (coord-create 1 1) (binary-tree-create (flatten1 map)) map-width map-height) map-width map-height (coord-create 11 16) (coord-create 1 1)))
-        (cons 0 direction))))
+        (direction-to location (debug (car (bfs-get-path (bfs location (coord-create 1 1) (binary-tree-create (flatten1 map)) map-width map-height) map-width map-height location (coord-create 1 1))))))))
 
 (cons 0 main)
