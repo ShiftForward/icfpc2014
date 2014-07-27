@@ -96,4 +96,6 @@
       (progn
         (direction-to location (debug (car (bfs-get-path (bfs location (coord-create 1 1) (binary-tree-create (flatten1 map)) map-width map-height) map-width map-height location (coord-create 1 1))))))))
 
-(cons 0 main)
+(progn
+  (debug initial-state)
+  (cons 0 main))

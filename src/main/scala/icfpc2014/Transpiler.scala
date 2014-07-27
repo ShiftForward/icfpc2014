@@ -36,12 +36,14 @@ object Transpiler extends App {
     hs.map(h => buildIncludeGraph(h, path, Source.fromFile(path + h).getLines())).flatten
   }
 
-  val source = if (args.length == 1) {
+  val source = if (args.length >= 1) {
     val mainFile = new File(args(0))
     val path = mainFile.getParent + "/"
     val includes = tsort(buildIncludeGraph(args(0).split('/').last, path, Source.fromFile(mainFile).getLines()))
     "(progn " + getSourceBody(path, includes).map(_.takeWhile(_ != ';')).mkString("\n") + ")"
   } else Source.stdin.getLines().map(_.takeWhile(_ != ';')).mkString("\n")
 
-  println(Program(new Compiler(source).compile))
+  val isBot = (args.length >= 2 && args(1) == "--bot")
+
+  println(Program(new Compiler(source).compile, isBot))
 }

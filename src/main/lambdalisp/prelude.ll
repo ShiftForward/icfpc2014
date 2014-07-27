@@ -61,7 +61,7 @@
 (range: [n m]
   (let ((rangeaux [m res]
           (tif (< m 0)
-               res 
+               res
                (recur (- m 1) (cons (+ n m) res)))))
         (rangeaux (- m n) nil)))
 
@@ -75,7 +75,7 @@
   (- n (* (/ n m) m)))
 
 
-(abs: [x] 
+(abs: [x]
   (tif (positive? x) x (- 0 x)))
 
 (set: [l i v]
@@ -132,4 +132,3 @@
   (tif (empty? l)
       nil
       (concat (car l) (self (cdr l)))))
-
