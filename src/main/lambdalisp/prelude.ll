@@ -87,6 +87,13 @@
                 (recur (cdr l) v (cons (car l) res)))))
       (appendaux l v nil)))
 
+(concat: [l1 l2]
+  (let ((concat-aux [l1 l2]
+           (tif (empty? l1)
+                l2
+                (recur (cdr l1) (cons (car l1) l2)))))
+    (concat-aux (reverse l1) l2)))
+
 (fill: [n v]
    (let ((fillaux [n v res]
             (tif (= n 0)
@@ -107,4 +114,9 @@
                (recur (cdr l1) (- i 1) (cons (car l1) l2)))))
     (split-aux l i nil)))
 
-
+(flatten: [l]
+  (if (empty? l)
+      nil
+      (if (atom? l)
+          (cons l nil)
+          (concat (self (car l)) (self (cdr l))))))
