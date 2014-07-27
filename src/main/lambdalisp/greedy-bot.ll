@@ -24,11 +24,11 @@
   (cdr (cdr (get-matrix-pos details-matrix width pos))))
 
 (astar-get-path: [details-matrix width height from to]
-  (let ((astar-get-path-aux [from to]
+    (let ((astar-get-path-aux [from to]
           (if (coord-equal to from)
               nil
               (cons to (self from (astar-previous details-matrix width height to))))))
-    (reverse (astar-get-path-aux from to))))
+      (reverse (astar-get-path-aux from to))))
 
 (direction-to: [from to]
   (let ((disp (coord-displacement from to)))
@@ -77,7 +77,10 @@
                   initial-details-matrix))))
 
 (get-path: [from to game-map map-width map-height state]
-  (astar-get-path (astar from to game-map map-width map-height state) map-width map-height from to))
+  (let ((astar-details (astar from to game-map map-width map-height state)))
+    (if (= (astar-distance astar-details map-width map-height to) -1)
+        nil
+        (astar-get-path astar-details map-width map-height from to))))
 
 (next-checkpoint: nil)
 (checkpoints: (heap-create))
@@ -113,12 +116,17 @@
       (col-update game-map 0 0))))
 
 (get-next-checkpoint: [location state binary-tree-map]
-  (if (or (empty? next-checkpoint) (coord-equal next-checkpoint location))
+  (tif (or (empty? next-checkpoint) (coord-equal next-checkpoint location))
       (progn
         (get-checkpoints state binary-tree-map)
-        (defvar next-checkpoint (cdr (debug (heap-find-min checkpoints))))
-        next-checkpoint)
-      next-checkpoint))
+        (defvar next-checkpoint (cdr (heap-find-min checkpoints)))
+        (cons next-checkpoint (get-path location next-checkpoint binary-tree-map map-width map-height state)))
+      (let ((path (get-path location next-checkpoint binary-tree-map map-width map-height state)))
+         (tif (empty? path)
+             (progn
+               (defvar next-checkpoint nil)
+               (recur location state binary-tree-map))
+              (cons next-checkpoint path)))))
 
 (main: [state]
   (let* ((lambdaman (car (cdr state)))
@@ -127,8 +135,9 @@
          (location (car (cdr lambdaman)))
          (direction (car (cdr (cdr lambdaman))))
          (binary-tree-map (binary-tree-create (flatten1 game-map)))
-         (checkpoint (get-next-checkpoint location state binary-tree-map))
-         (path (get-path location checkpoint binary-tree-map map-width map-height state)))
+         (checkpoint-and-path (get-next-checkpoint location state binary-tree-map))
+         (checkpoint (car checkpoint-and-path))
+         (path (cdr checkpoint-and-path)))
 
       (progn
         (direction-to location (car path)))))
