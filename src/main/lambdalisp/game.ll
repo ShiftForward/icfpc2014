@@ -21,6 +21,10 @@
   (convert-matrix (car state)))
 (state-fruit: [state]
   (cdddr state))
+(state-lambdaman: [state]
+  (cadr state))
+(state-ghosts: [state]
+  (caddr state))
 
 (game-map: (convert-matrix (state-map initial-state)))
 (map-width: (length (car game-map)))

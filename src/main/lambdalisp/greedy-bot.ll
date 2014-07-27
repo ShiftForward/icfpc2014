@@ -70,7 +70,7 @@
                                (update-values details-matrix neighbors (astar-node true (+ current-dist 1) current)))))))))
 
       (astar-aux (heap-from-list (list (cons 0 from)))
-               initial-details-matrix))))
+                  initial-details-matrix))))
 
 (get-path: [from to game-map map-width map-height]
   (astar-get-path (astar from to game-map map-width map-height) map-width map-height from to))
@@ -78,22 +78,26 @@
 (next-checkpoint: nil)
 (checkpoints: (heap-create))
 
-(get-checkpoints: [state]
+(get-checkpoints: [state binary-tree-map]
   (progn 
     (defvar checkpoints (heap-create))
-    (let* ((game-map (state-map state))
+    (let* ((lambda-man (state-lambdaman state))
+           (position (cadr lambda-man))
+           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height))
+           (game-map (state-map state))
            (row-update [row x y]
              (tif (empty? row)
                   nil
-                  (let ((cell (car row)))
-                      (tcond ((= cell encoding-pill)
-                              (progn (defvar checkpoints (heap-insert (cons (- 0 points-pill) (coord-create x y)) checkpoints))
+                  (let ((cell (car row))
+                        (cell-dist (astar-distance astar-details map-width map-height (coord-create x y))))
+                      (tcond ((and (= cell encoding-pill) (not (= cell-dist -1)))
+                              (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-pill cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
-                             ((= cell encoding-power-pill)
-                              (progn (defvar checkpoints (heap-insert (cons (- 0 points-power-pill) (coord-create x y)) checkpoints))
+                             ((and (= cell encoding-power-pill) (not (= cell-dist -1)))
+                              (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-power-pill cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
-                             ((and (state-fruit state) (= cell encoding-fruit))
-                              (progn (defvar checkpoints (heap-insert (cons (- 0 points-fruit) (coord-create x y)) checkpoints))
+                             ((and (and (> (state-fruit state) 0) (= cell encoding-fruit)) (not (= cell-dist -1)))
+                              (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-fruit cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
                              (else (recur (cdr row) (+ x 1) y))))))
            (col-update [rows x y]
@@ -104,11 +108,11 @@
                     (recur (cdr rows) 0 (+ y 1))))))
       (col-update game-map 0 0))))
 
-(get-next-checkpoint: [location state]
+(get-next-checkpoint: [location state binary-tree-map]
   (if (or (empty? next-checkpoint) (coord-equal next-checkpoint location))
       (progn
-        (get-checkpoints state)
-        (defvar next-checkpoint (cdr (heap-find-min checkpoints)))
+        (get-checkpoints state binary-tree-map)
+        (defvar next-checkpoint (cdr (debug (heap-find-min checkpoints))))
         next-checkpoint)
       next-checkpoint))
 
@@ -119,7 +123,7 @@
          (location (car (cdr lambdaman)))
          (direction (car (cdr (cdr lambdaman))))
          (binary-tree-map (binary-tree-create (flatten1 game-map)))
-         (checkpoint (get-next-checkpoint location state)))
+         (checkpoint (get-next-checkpoint location state binary-tree-map)))
 
       (progn
         (direction-to location (car (get-path location checkpoint binary-tree-map map-width map-height))))))
