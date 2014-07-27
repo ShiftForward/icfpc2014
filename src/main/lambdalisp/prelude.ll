@@ -20,6 +20,7 @@
 (filter: [l f] (reverse (foldLeft nil l [acc e] (if (f e) (cons e acc) acc))))
 (forall: [l f] (foldLeft true l [acc e] (and (f e) acc)))
 (exists: [l f] (foldLeft false l [acc e] (or (f e) acc)))
+(last: [l] (foldLeft nil l [acc e] e))
 
 (takeWhile: [l f]
   (let ((takeWhileAux [l f res]
