@@ -4,6 +4,7 @@
 (include coord.ll)
 (include game.ll)
 (include heap.ll)
+(include random.ll)
 
 (get-matrix-pos: [matrix matrix-width pos]
   (binary-tree-get matrix (+ (coord-x pos) (* matrix-width (coord-y pos)))))
@@ -130,17 +131,41 @@
                (recur game-map location state binary-tree-map))
               (cons next-checkpoint path)))))
 
-(main: [state]
-  (let* ((lambdaman (car (cdr state)))
-         (location (car (cdr lambdaman)))
-         (direction (car (cdr (cdr lambdaman))))
-         (binary-tree-map (binary-tree-create (flatten1 game-map)))
-         (checkpoint-and-path (get-next-checkpoint game-map location state binary-tree-map))
-         (checkpoint (car checkpoint-and-path))
-         (path (cdr checkpoint-and-path)))
+(map-to-dir: [coord]
+  (cond ((coord-equal coord (coord-create 0 -1)) 0)
+        ((coord-equal coord (coord-create 1 0)) 1)
+        ((coord-equal coord (coord-create 0 1)) 2)
+        ((coord-equal coord (coord-create -1 0)) 3)))
 
-      (progn
-        (direction-to location (car path)))))
+(seed: (debug (foldLeft 0 (state-ghosts initial-state) [acc x] (+ acc (+ (coord-x (cadr x)) (coord-y (cadr x)))))))
+
+(main: [state]
+  (tif (> map-area 576)
+    (let* ((game-map (car state))
+           (lambdaman (car (cdr state)))
+           (location (car (cdr lambdaman)))
+           (direction (car (cdr (cdr lambdaman))))
+           (opposite-dir (cond ((= direction 0) (coord-create 0 1))
+                               ((= direction 1) (coord-create -1 0))
+                               ((= direction 2) (coord-create 0 -1))
+                               ((= direction 3) (coord-create 1 0))))
+           (directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
+           (valid-directions (filter directions [x] (and (not (= (nnth game-map (cdr (coord-sum location x)) (car (coord-sum location x))) 0)) (not (coord-equal x opposite-dir)))))
+           (valid-maps (map valid-directions [x] (map-to-dir x))))
+
+        (if (empty? valid-maps)
+            (cons 0 opposite-dir)
+            (cons 0 (nth valid-maps (mod (random) (length valid-maps))))))
+    (let* ((lambdaman (car (cdr state)))
+           (location (car (cdr lambdaman)))
+           (direction (car (cdr (cdr lambdaman))))
+           (binary-tree-map (binary-tree-create (flatten1 game-map)))
+           (checkpoint-and-path (get-next-checkpoint game-map location state binary-tree-map))
+           (checkpoint (car checkpoint-and-path))
+           (path (cdr checkpoint-and-path)))
+
+        (progn
+          (direction-to location (car path))))))
 
 (progn
   (cons 0 main))
