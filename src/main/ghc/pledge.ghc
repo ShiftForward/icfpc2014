@@ -1,0 +1,120 @@
+; Memory map is as follows:
+; 0   -> current direction
+; 1   -> current vitality
+; 2   -> current ghost x
+; 3   -> current ghost y
+; 4   -> current lambda-man x
+; 5   -> current lambda-man y
+; 6   -> pledge mode (0 | 1)
+; 7   -> sum of turns
+; 8   -> pledge direction
+; 9   -> last direction
+; 100 -> wanted direction
+debug: int 3
+       int 6
+       mov a, b
+       mov b, [6]
+       mov c, [7]
+       mov d, [8]
+       mov e, [9]
+       mov f, [100]
+       mov g, 0
+       mov h, 0
+       int 8
+
+init: int 3
+      int 6
+      mov [0], b
+      mov [1], a
+      int 3
+      int 5
+      mov [2], a
+      mov [3], b
+      int 1
+      mov [4], a
+      mov [5], a
+
+pledge_mode: jeq %go, [6], 0
+             mov a, [9]
+             sub a, [0]
+             add [7], a
+             jeq %pledge_disable, [0], [100]
+             mov a, [8]
+             mov pc, %check
+
+;; pledge_check: jeq %pledge_disable, [7], 0
+;;               mov a, [8]
+;;               mov pc, %check
+
+pledge_disable: mov [6], 0
+
+go: mov [100], 2
+    mov a, [100]
+
+check: jeq %c_up, a, 0
+       jeq %c_down, a, 2
+       jeq %c_right, a, 1
+       jeq %c_left, a, 3
+c_up: mov a, [2]
+      mov b, [3]
+      mov f, 55
+      ;; int 8
+      dec b
+      mov pc, %c_e
+c_down: mov a, [2]
+        mov b, [3]
+        mov f, 66
+        ;; int 8
+        inc b
+        mov pc, %c_e
+c_right: mov a, [2]
+         inc a
+         mov f, 77
+         ;; int 8
+         mov b, [3]
+         mov pc, %c_e
+c_left: mov a, [2]
+        mov f, 88
+        ;; int 8
+        dec a
+        mov b, [3]
+        mov pc, %c_e
+c_e: int 7
+     mov b, a
+     jeq %c_p, [6], 0
+     mov a, [8]
+c_p: mov a, [100]
+     jeq %pledge, b, 0
+     ;; mov f, 11
+     ;; int 8
+     mov pc, %return
+
+pledge: jeq %p_up, a, 0
+        jeq %p_down, a, 2
+        jeq %p_right, a, 1
+        jeq %p_left, a, 3
+p_up: mov a, 1
+      mov pc, %p_e
+p_down: mov a, 3
+        mov pc, %p_e
+p_right: mov a, 2
+         mov pc, %p_e
+p_left: mov a, 0
+        mov pc, %p_e
+p_e: mov [6], 1
+     mov [8], a
+     mov pc, %check
+     ;; mov g, a
+     ;; mov h, 99
+     ;; int 8
+     ;; mov pc, %return
+
+return: jeq %ret_go, [6], 0
+        mov a, [8]
+        int 0
+        mov [9], [0]
+        hlt
+ret_go: mov a, [100]
+        int 0
+        mov [9], [0]
+        hlt
