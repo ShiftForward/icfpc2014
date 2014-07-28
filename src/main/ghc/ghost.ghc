@@ -1,49 +1,123 @@
-int 3
-int 6                               ; check current direction
-jeq %switchdir, b, [1] ; check if direction changed
-mov h, %go
-mov pc, %savedir
+; Memory map is as follows:
+;
+; 0   -> last direction
+; 1   -> first to last direction
+; 2   -> second to last direction
+; 3   -> third to last direction
+; 64  -> current ghost direction
+; 65  -> current ghost x
+; 66  -> current ghost y
+; 67  -> current pacman x
+; 68  -> current pacman y
+; 69  -> starting ghost x
+; 70  -> starting ghost y
+; 100 -> wanted direction
+; 101 -> lock flag for chase inhibition
 
-; go in the direction of lambda-man
-go: int 3                           ; get ghost index
-    int 5                           ; get coordinates
-    mov c, a                        ; save ghost coordinates
-    mov d, b
-    int 1                           ; get lambda-man coordinates
-    mov e, a                        ; save lambda-man coordinates
-    mov f, b
-    jgt %left, c, e
-    jgt %up, d, f
-    jlt %right, c, e
-    mov pc, %down
+	 	int 3				   ; load current direction to index 64
+       	int 6
+       	mov [64], b
 
-return: int 0
-        mov c, [0]
-        mov d, [1]
-        mov e, a
-        int 3
-        int 6                               ; check current direction
-        int 8
-        hlt
+       	int 3				   ; load current position to (69, 70)
+       	int 4
+       	mov [69], a
+       	mov [70], b
 
-savedir: jeq %ret, [0], b
-         mov [1], [0]               ; save direction
-         mov [0], b
-ret:     mov pc, h
+       	int 3				   ; load current position to (65, 66)
+       	int 5
+       	mov [65], a
+       	mov [66], b
 
-switchdir: jeq %left, b, 2
-           jeq %right, b, 0
-           jeq %up, b, 1
-           mov pc, %down
+       	int 1                  ; load pacman to (67, 68)
+       	mov [67], a
+       	mov [68], b
 
-up: mov a, 0
-    mov pc, %return
+		jeq	%checky, [65], [69]  ; are we on a starting position? x's are equal?
+ 		mov pc, %start           ; nope...
+checky:	mov h, %start            ; in case we are, we continue at start
+		jeq %init, [66], [70]    ; are we on a starting position? y's are equal?
 
-down: mov a, 2
-      mov pc, %return
+start: 	jeq %switch, [64], [3]   ; are in locked in a loop?
+    	mov h, %save
 
-left: mov a, 3
-      mov pc, %return
+    	jeq %inib, [101], 1      ; are we inhibited?
+    	mov pc, %chase           ; if not proceed with chase
 
-right: mov a, 1
-       mov pc, %return
+inib: 	mov h, %save			 ; in case we clear, jump to save
+		jeq %init, [64], [100]   ; if we are inhibited, but in the direction we want, we clear
+		mov pc, %save			 ; otherwise, we continue
+
+switch: mov [101], 1             ; if we are trying to switch orthogonally, we are locked
+		jeq %right, [64], 0      ; |
+        jeq %up,    [64], 1      ; |
+        jeq %left,  [64], 2      ; |
+        jeq %down,  [64], 3      ; |
+
+up: 	mov [100], 0
+		mov pc, %save
+
+down: 	mov [100], 2
+      	mov pc, %save
+
+left: 	mov [100], 3
+      	mov pc, %save
+
+right: 	mov [100], 1
+       	mov pc, %save
+
+save: 	jeq %go, [64], [0] 		; still going the same way, proceed
+      	mov [3], [2]            ; we use a queue of length 3
+      	mov [2], [1]            ; |
+      	mov [1], [0]        	; |
+      	mov [0], [64]			; save direction
+
+go: 	mov h, %end
+		mov pc, %debug
+
+end:    mov a, [100]			; we always force the last direction we wanted to take
+		int 0
+		hlt
+
+chase:	jeq %chsud, [67], [65]  ; we are on the same x coordinate as the ghost, try vertical
+	    jgt %right, [67], [65]  ; pacman is to the right
+		jlt %left,  [67], [65]  ; pacman is to the left
+chsud:	jgt %down,  [68], [66]  ; pacman is below us
+		jlt %up,    [68], [66]  ; pacman is above us
+		mov pc, h
+
+init:	mov [100], 3		 	; we want to move left the first time
+		mov [101], 0			; we clear the lock
+		mov [0], 127			; we also clear direction queue to an invalid value
+		mov [1], 127			; |
+		mov [2], 127			; |
+		mov [3], 127			; |
+		mov pc, h
+
+debug: 	mov [255], a			; save all registers (except h)
+		mov [254], b
+		mov [253], c
+		mov [252], d
+		mov [251], e
+		mov [250], f
+		mov [249], g
+
+		int 3
+       	int 6
+       	mov a, [100]			 ; . x . . . . . . . wanted direction
+       	mov b, [65]				 ; . . x . . . . . . current x position
+       	mov c, [66]				 ; . . . x . . . . . current y position
+       	mov d, [64]				 ; . . . . x . . . . current direction
+       	mov e, [0]				 ; . . . . . x . . . last direction
+       	mov f, [1]				 ; . . . . . . x . . first to last direction
+       	mov g, [101]			 ; . . . . . . . x . lock mode
+       	int 8
+
+		mov a, [255]			 ; restore all registers (except h)
+		mov b, [254]
+		mov c, [253]
+		mov d, [252]
+		mov e, [251]
+		mov f, [250]
+		mov g, [249]
+
+       	mov pc, h
