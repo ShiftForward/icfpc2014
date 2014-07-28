@@ -54,3 +54,5 @@
         ((and (< 1000 map-area) (<= map-area 1100)) 3000)
         ((and (< 1100 map-area) (<= map-area 1200)) 3000)
         (else 5000)))
+
+
