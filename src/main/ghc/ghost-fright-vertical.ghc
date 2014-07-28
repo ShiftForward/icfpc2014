@@ -1,0 +1,108 @@
+; Memory map is as follows:
+;
+; 0   -> last direction
+; 1   -> first to last direction
+; 2   -> second to last direction
+; 3   -> third to last direction
+; 64  -> current ghost direction
+; 65  -> current ghost x 
+; 66  -> current ghost y
+; 67  -> current pacman x
+; 68  -> current pacman y
+; 69  -> starting ghost x
+; 70  -> starting ghost y
+; 100 -> wanted direction
+; 101 -> lock flag for chase inhibition
+; 102 -> vitality
+
+	 	    int 3				   ; load current direction to index 64
+       	int 6                  
+       	mov [64], b
+        mov [102], a
+
+       	int 3				   ; load current position to (69, 70)
+       	int 4
+       	mov [69], a
+       	mov [70], b
+
+       	int 3				   ; load current position to (65, 66)
+       	int 5
+       	mov [65], a
+       	mov [66], b
+
+       	int 1                  ; load pacman to (67, 68)
+       	mov [67], a
+       	mov [68], b
+
+		    jeq	%checky, [65], [69]  ; are we on a starting position? x's are equal?
+ 		    mov pc, %start           ; nope...
+checky:	mov h, %start            ; in case we are, we continue at start
+		    jeq %init, [66], [70]    ; are we on a starting position? y's are equal?
+    	
+start:  jeq %flight, [102], 1
+        mov pc, %chase           ; proceed with chase
+ 
+up: 	  mov [100], 0
+		    mov pc, %go
+
+down: 	mov [100], 2
+      	mov pc, %go
+
+left: 	mov [100], 3
+      	mov pc, %go
+
+right: 	mov [100], 1
+       	mov pc, %go
+  
+go: 	  mov h, %end
+		    mov pc, %debug
+
+end:    mov a, [100]			; we always force the last direction we wanted to take
+		    int 0
+		    hlt
+ 
+chase:	jeq %chsud, [68], [66]  ; we are on the same y coordinate as the ghost, try horizontal 
+	      jgt %down,  [68], [66]  ; pacman is below us
+		    jlt %up,    [68], [66]  ; pacman is above us
+chsud:  jgt %right, [67], [65]  ; pacman is to the right
+        jlt %left,  [67], [65]  ; pacman is to the left
+        mov pc, %go
+
+flight: jeq %chsud, [68], [66]  ; we are on the same y coordinate as the ghost, try vertical 
+        jlt %down,  [68], [66]  ; pacman is below us
+        jgt %up,    [68], [66]  ; pacman is above us
+chsud:  jlt %right, [67], [65]  ; pacman is to the right
+        jgt %left,  [67], [65]  ; pacman is to the left
+        mov pc, %go
+
+init:	  mov [100], 3		 	; we want to move left the first time
+		    mov pc, h
+
+debug: 	mov [255], a			; save all registers (except h)
+    		mov [254], b
+    		mov [253], c
+    		mov [252], d
+    		mov [251], e
+    		mov [250], f
+    		mov [249], g
+
+    		int 3
+       	int 6
+       	mov a, [100]			 ; . x . . . . . . . wanted direction 
+       	mov b, [65]				 ; . . x . . . . . . current x position
+       	mov c, [66]				 ; . . . x . . . . . current y position
+       	mov d, [64]				 ; . . . . x . . . . current direction 
+       	mov e, [0]				 ; . . . . . x . . . last direction
+       	mov f, [1]				 ; . . . . . . x . . first to last direction
+       	mov g, [101]			 ; . . . . . . . x . lock mode
+       	int 8
+	
+    		mov a, [255]			 ; restore all registers (except h)
+    		mov b, [254]
+    		mov c, [253]
+    		mov d, [252]
+    		mov e, [251]
+    		mov f, [250]
+    		mov g, [249]
+
+       	mov pc, h
