@@ -121,7 +121,7 @@ check: mov b,[0]
        mov e,0
        mov f,0
        mov g,0
-       int 8
+       ;; int 8
        jeq %c_up, a, 0
        jeq %c_down, a, 2
        jeq %c_right, a, 1
