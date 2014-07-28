@@ -1,0 +1,73 @@
+int 3				   ; load current direction to index 64
+int 6
+mov [64], b
+mov [102], a
+int 3				   ; load current position to (69, 70)
+int 4
+mov [69], a
+mov [70], b
+int 3				   ; load current position to (65, 66)
+int 5
+mov [65], a
+mov [66], b
+int 1                  ; load pacman to (67, 68)
+mov [67], a
+mov [68], b
+jeq	17, [65], [69]  ; are we on a starting position? x's are equal?
+mov pc, 19           ; nope...
+mov h, 19            ; in case we are, we continue at start
+jeq 46, [66], [70]    ; are we on a starting position? y's are equal?
+jeq 40, [102], 1
+mov pc, 34           ; proceed with chase
+mov [100], 0
+mov pc, 29
+mov [100], 2
+mov pc, 29
+mov [100], 3
+mov pc, 29
+mov [100], 1
+mov pc, 29
+mov h, 31
+mov pc, 48
+mov a, [100]			; we always force the last direction we wanted to take
+int 0
+hlt
+jeq 37, [67], [65]  ; we are on the same x coordinate as the ghost, try vertical
+jgt 27, [67], [65]  ; pacman is to the right
+jlt 25,  [67], [65]  ; pacman is to the left
+jgt 23,  [68], [66]  ; pacman is below us
+jlt 21,    [68], [66]  ; pacman is above us
+mov pc, 29
+jeq 37, [67], [65]  ; we are on the same x coordinate as the ghost, try vertical
+jlt 27, [67], [65]  ; pacman is to the right
+jgt 25,  [67], [65]  ; pacman is to the left
+jlt 23,  [68], [66]  ; pacman is below us
+jgt 21,    [68], [66]  ; pacman is above us
+mov pc, 29
+mov [100], 3		 	; we want to move left the first time
+mov pc, h
+mov [255], a			; save all registers (except h)
+mov [254], b
+mov [253], c
+mov [252], d
+mov [251], e
+mov [250], f
+mov [249], g
+int 3
+int 6
+mov a, [100]			 ; . x . . . . . . . wanted direction
+mov b, [65]				 ; . . x . . . . . . current x position
+mov c, [66]				 ; . . . x . . . . . current y position
+mov d, [64]				 ; . . . . x . . . . current direction
+mov e, [0]				 ; . . . . . x . . . last direction
+mov f, [1]				 ; . . . . . . x . . first to last direction
+mov g, [101]			 ; . . . . . . . x . lock mode
+int 8
+mov a, [255]			 ; restore all registers (except h)
+mov b, [254]
+mov c, [253]
+mov d, [252]
+mov e, [251]
+mov f, [250]
+mov g, [249]
+mov pc, h
