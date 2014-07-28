@@ -18,7 +18,10 @@
        (foldaux l f b)))
 
 (reverse: [l f] (foldLeft nil l [acc e] (cons e acc)))
-(map: [l f] (reverse (foldLeft nil l [acc e] (cons (f e) acc))))
+(map: [l f] 
+  (if (empty? l)
+      nil
+      (cons (f (car l)) (self (cdr l) f))))
 (filter: [l f] (reverse (foldLeft nil l [acc e] (if (f e) (cons e acc) acc))))
 (forall: [l f] (foldLeft true l [acc e] (and (f e) acc)))
 (exists: [l f] (foldLeft false l [acc e] (or (f e) acc)))
@@ -95,11 +98,9 @@
       (appendaux l v nil)))
 
 (concat: [l1 l2]
-  (let ((concat-aux [l1 l2]
-           (tif (empty? l1)
-                l2
-                (recur (cdr l1) (cons (car l1) l2)))))
-    (concat-aux (reverse l1) l2)))
+  (if (empty? l1)
+      l2
+      (cons (car l1) (self (cdr l1) l2))))
 
 (fill: [n v]
    (let ((fillaux [n v res]
@@ -115,11 +116,17 @@
    (foldLeft (car l) (cdr l) [a b] (if (> a b) a b)))
 
 (split: [l i]
-  (let ((split-aux [l1 i l2]
-          (tif (or (empty? l1) (= i 0))
-               (cons (reverse l2) l1)
-               (recur (cdr l1) (- i 1) (cons (car l1) l2)))))
-    (split-aux l i nil)))
+  (let* ((take1 [l i]
+           (if (or (empty? l) (= i 0))
+               nil
+               (cons (car l) (self (cdr l) (- i 1)))))
+         (take2 [l i]
+           (if (or (empty? l) (= i 0))
+               l
+               (self (cdr l) (- i 1))))
+         (l1 (take1 l i))
+         (l2 (take2 l i)))
+     (cons l1 l2)))
 
 (flatten: [l]
   (if (empty? l)
@@ -132,3 +139,5 @@
   (tif (empty? l)
        nil
        (concat (car l) (self (cdr l)))))
+
+

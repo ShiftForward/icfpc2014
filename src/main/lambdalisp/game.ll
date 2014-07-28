@@ -2,18 +2,14 @@
 (include coord.ll)
 
 (convert-list: [l]
-  (let ((convert-list-aux [l res]
-          (tif (atom? l)
-               (reverse res)
-               (recur (cdr l) (cons (car l) res)))))
-    (convert-list-aux l nil)))
+  (if (atom? l)
+      nil
+      (cons (car l) (self (cdr l)))))
 
 (convert-matrix: [m]
-  (let ((convert-matrix-aux [m res]
-          (tif (atom? m)
-               (reverse res)
-               (recur (cdr m) (cons (convert-list (car m)) res)))))
-    (convert-matrix-aux m nil)))
+  (if (atom? m)
+      nil
+      (cons (convert-list (car m)) (self (cdr m)))))
 
 (ghosts-eaten: 0)
 
