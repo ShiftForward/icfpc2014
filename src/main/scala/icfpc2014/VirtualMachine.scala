@@ -32,11 +32,11 @@ case class VAR(s: String) extends Instruction {
           case None =>
             throw new Exception(s"Unknown variable '$s'")
           case Some(i) =>
-            (Vector(s"LD ${locals.length} ${i}"), globals)
+            (Vector(s"LD ${locals.length} ${i} ; load var_${s}"), globals)
         }
 
       case i =>
-        (Vector(s"LD $i ${locals(i)(s)}"), globals)
+        (Vector(s"LD $i ${locals(i)(s)} ; load var_${s}"), globals)
     }
   }
 
@@ -124,7 +124,7 @@ case class LET(definitions: (String, Instruction)*)(i: Instruction) extends Inst
     val newPos = p + 4
     val (s, g) = i.transpile(newPos, nextLocals :: locals, nextGlobals)
     (instructions ++ Vector(
-      s"DUM ${definitions.length}",
+      s"DUM ${definitions.length} ; let (${definitions.map(_._1).mkString(" ")}})",
       s"LDF $newPos",
       s"RAP ${definitions.length}",
       "RTN") ++ s, g)
@@ -155,7 +155,7 @@ case class FUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction {
       (pos + s.length, instructions ++ s, g)
     }
     val (s, g) = label.transpile(p, locals, nextGlobals)
-    (preLabel ++ instructions ++ s :+ s"AP ${parameters.length + 1}", g)
+    (preLabel ++ instructions ++ s :+ s"AP ${parameters.length + 1} ; call fun_${label}", g)
   }
 
   override def toString = s"($label ${parameters.mkString(" ")})"
@@ -169,7 +169,7 @@ case class TFUNCALL(label: VAR)(parameters: (Instruction)*) extends Instruction 
       (pos + s.length, instructions ++ s, g)
     }
     val (s, g) = label.transpile(p, locals, nextGlobals)
-    (preLabel ++ instructions ++ s :+ s"TAP ${parameters.length + 1}", g)
+    (preLabel ++ instructions ++ s :+ s"TAP ${parameters.length + 1} ; call tfun_${label}", g)
   }
 
   override def toString = s"(recur ${parameters.mkString(" ")})"
@@ -180,10 +180,10 @@ case class IF(pred: Instruction, thenInst: Instruction, elseInst: Instruction) e
     val (ps, g1) = pred.transpile(pos, locals, globals)
     val pi = pos + ps.length + 3
     val (tst, g2)  = thenInst.transpile(pi, locals, g1)
-    val ts = tst :+ "JOIN"
+    val ts = tst :+ "JOIN ; merge then"
     val ti = pi + ts.length
     val (est, g3) = elseInst.transpile(ti, locals, g2)
-    val es = est :+ "JOIN"
+    val es = est :+ "JOIN : merge else"
     val ei = ti + es.length
     (ps ++ Vector(s"SEL $pi $ti", "LDC 1", s"TSEL $ei 0") ++ ts ++ es, g3)
   }
@@ -196,10 +196,10 @@ case class TIF(pred: Instruction, thenInst: Instruction, elseInst: Instruction) 
     val (ps, g1) = pred.transpile(pos, locals, globals)
     val pi = pos + ps.length + 1
     val (tst, g2)  = thenInst.transpile(pi, locals, g1)
-    val ts = tst :+ "RTN"
+    val ts = tst :+ "RTN ; return from then"
     val ti = pi + ts.length
     val (est, g3) = elseInst.transpile(ti, locals, g2)
-    val es = est :+ "RTN"
+    val es = est :+ "RTN ; return from else"
     val ei = ti + es.length
     (ps ++ Vector(s"TSEL $pi $ti") ++ ts ++ es, g3)
   }
@@ -245,7 +245,7 @@ case class DEFVAR(label: String, i: Instruction) extends Instruction {
   def transpile(pos: Int, locals: Locals, globals: Globals) = {
     val (s, g) = i.transpile(pos, locals, globals)
     val nextGlobal = g + (label -> g.getOrElse(label, g.size))
-    (s ++ Vector(s"ST ${locals.length} ${nextGlobal(label)}", s"LD ${locals.length} ${nextGlobal(label)}"), nextGlobal)
+    (s ++ Vector(s"ST ${locals.length} ${nextGlobal(label)} ; define var_${label}", s"LD ${locals.length} ${nextGlobal(label)}"), nextGlobal)
   }
 
   override def toString = s"(defvar $label $i)"
