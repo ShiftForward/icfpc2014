@@ -1,0 +1,179 @@
+; Memory map is as follows:
+; 0   -> current direction
+; 1   -> current vitality
+; 2   -> current ghost x
+; 3   -> current ghost y
+; 4   -> current lambda-man x
+; 5   -> current lambda-man y
+; 6   -> pledge mode (0 | 1)
+; 8   -> pledge direction
+; 9   -> new pledge direction
+; 10  -> tried new direction
+; 100 -> wanted direction
+debug: int 3
+       int 6
+       mov a, b
+       mov b, [6]
+       mov d, [8]
+       mov e, [9]
+       mov f, [100]
+       mov g, 0
+       ;; mov h, 0
+       inc h
+       ;; int 8
+
+init: int 3
+      int 6
+      mov [0], b
+      mov [1], a
+      int 3
+      int 5
+      mov [2], a
+      mov [3], b
+      int 1
+      mov [4], a
+      mov [5], a
+      mov [10], 0
+      ;; dump hugo's layout
+      int 3                                ; load current direction to index 64
+      int 6
+      mov [64], b
+      mov [102], a
+      int 3                                ; load current position to (69, 70)
+      int 4
+      mov [69], a
+      mov [70], b
+      int 3                                ; load current position to (65, 66)
+      int 5
+      mov [65], a
+      mov [66], b
+      int 1                  ; load pacman to (67, 68)
+      mov [67], a
+      mov [68], b
+
+jeq %checky, [65], [69]  ; are we on a starting position? x's are equal?
+mov pc, %start           ; nope...
+checky: mov h, %start            ; in case we are, we continue at start
+        jeq %init2, [66], [70]   ; are we on a starting position? y's are equal?
+
+start: jeq %flight, [102], 1
+       mov pc, %chase           ; proceed with chase
+
+up: mov [100], 0
+    mov pc, %go
+
+down: mov [100], 2
+      mov pc, %go
+
+left: mov [100], 3
+      mov pc, %go
+
+right: mov [100], 1
+       mov pc, %go
+
+init2: mov [100], 3 ; we want to move left the first time
+       mov pc, h
+
+go: mov pc, %pledge_mode
+
+chase: jeq %chsud, [68], [66]  ; we are on the same y coordinate as the ghost, try horizontal
+       jgt %down,  [68], [66]  ; pacman is below us
+       jlt %up,    [68], [66]  ; pacman is above us
+chsud: jgt %right, [67], [65]  ; pacman is to the right
+       jlt %left,  [67], [65]  ; pacman is to the left
+       mov pc, %go
+
+flight: jeq %chsud, [68], [66]  ; we are on the same y coordinate as the ghost, try vertical
+        jlt %down,  [68], [66]  ; pacman is below us
+        jgt %up,    [68], [66]  ; pacman is above us
+chsud:  jlt %right, [67], [65]  ; pacman is to the right
+        jgt %left,  [67], [65]  ; pacman is to the left
+        mov pc, %go
+
+pledge_mode: jeq %go2, [6], 0
+             jeq %pledge_disable, [0], [100]
+             jeq %pledge_new_direction, [10], 0
+             mov a, [8]
+             mov pc, %check
+pledge_new_direction: jeq %pn_up, [8], 0
+                      jeq %pn_down, [8], 2
+                      jeq %pn_right, [8], 1
+                      jeq %pn_left, [8], 3
+pn_up: mov a, 3
+       mov pc, %p_e
+pn_down: mov a, 1
+         mov pc, %p_e
+pn_right: mov a, 0
+          mov pc, %p_e
+pn_left: mov a, 2
+         mov pc, %p_e
+pn_e: mov [10], 1
+      mov [9], a
+      mov pc, %check
+
+pledge_disable: mov [6], 0
+
+go2: mov a, [100]
+
+check: mov b,[0]
+       mov c,0
+       mov d,0
+       mov e,0
+       mov f,0
+       mov g,0
+       ;; int 8
+       jeq %c_up, a, 0
+       jeq %c_down, a, 2
+       jeq %c_right, a, 1
+       jeq %c_left, a, 3
+c_up: mov a, [2]
+      mov b, [3]
+      dec b
+      mov pc, %c_e
+c_down: mov a, [2]
+        mov b, [3]
+        inc b
+        mov pc, %c_e
+c_right: mov a, [2]
+         mov b, [3]
+         inc a
+         mov pc, %c_e
+c_left: mov a, [2]
+        mov b, [3]
+        dec a
+        mov pc, %c_e
+c_e: int 7
+     mov b, a
+     jeq %c_new_direction, [10], 1
+     jeq %c_p, [6], 0
+     mov a, [8]
+     mov pc, %c_ex
+c_new_direction: mov pc, %pledge_mode
+c_p: mov a, [100]
+     mov pc, %c_ex
+c_ex: jeq %pledge, b, 0
+      mov pc, %return
+
+pledge: jeq %p_up, a, 0
+        jeq %p_down, a, 2
+        jeq %p_right, a, 1
+        jeq %p_left, a, 3
+p_up: mov a, 1
+      mov pc, %p_e
+p_down: mov a, 3
+        mov pc, %p_e
+p_right: mov a, 2
+         mov pc, %p_e
+p_left: mov a, 0
+        mov pc, %p_e
+p_e: mov [6], 1
+     mov [8], a
+     mov pc, %check
+
+return: jeq %ret_go, [6], 0
+        mov a, [8]
+        int 0
+        hlt
+ret_go: mov a, [100]
+        int 0
+        hlt

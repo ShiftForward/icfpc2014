@@ -5,7 +5,7 @@
 ; 2   -> second to last direction
 ; 3   -> third to last direction
 ; 64  -> current ghost direction
-; 65  -> current ghost x 
+; 65  -> current ghost x
 ; 66  -> current ghost y
 ; 67  -> current pacman x
 ; 68  -> current pacman y
@@ -15,7 +15,7 @@
 ; 101 -> lock flag for chase inhibition
 
 	 	int 3				   ; load current direction to index 64
-       	int 6                  
+       	int 6
        	mov [64], b
 
        	int 3				   ; load current position to (69, 70)
@@ -39,10 +39,10 @@ checky:	mov h, %start            ; in case we are, we continue at start
 
 start: 	jeq %switch, [64], [3]   ; are in locked in a loop?
     	mov h, %save
-    	
+
     	jeq %inib, [101], 1      ; are we inhibited?
     	mov pc, %chase           ; if not proceed with chase
- 
+
 inib: 	mov h, %save			 ; in case we clear, jump to save
 		jeq %init, [64], [100]   ; if we are inhibited, but in the direction we want, we clear
 		mov pc, %save			 ; otherwise, we continue
@@ -54,7 +54,7 @@ switch: mov [101], 1             ; if we are trying to switch orthogonally, we a
         jeq %down,  [64], 3      ; |
 
 up: 	mov [100], 0
-		mov pc, %save    	
+		mov pc, %save
 
 down: 	mov [100], 2
       	mov pc, %save
@@ -64,26 +64,26 @@ left: 	mov [100], 3
 
 right: 	mov [100], 1
        	mov pc, %save
- 
+
 save: 	jeq %go, [64], [0] 		; still going the same way, proceed
       	mov [3], [2]            ; we use a queue of length 3
       	mov [2], [1]            ; |
       	mov [1], [0]        	; |
       	mov [0], [64]			; save direction
- 
+
 go: 	mov h, %end
 		mov pc, %debug
 
 end:    mov a, [100]			; we always force the last direction we wanted to take
 		int 0
 		hlt
- 
-chase:	jeq %chsud, [67], [65]  ; we are on the same x coordinate as the ghost, try vertical 
+
+chase:	jeq %chsud, [67], [65]  ; we are on the same x coordinate as the ghost, try vertical
 	    jgt %right, [67], [65]  ; pacman is to the right
 		jlt %left,  [67], [65]  ; pacman is to the left
 chsud:	jgt %down,  [68], [66]  ; pacman is below us
 		jlt %up,    [68], [66]  ; pacman is above us
-		mov pc, h 
+		mov pc, h
 
 init:	mov [100], 3		 	; we want to move left the first time
 		mov [101], 0			; we clear the lock
@@ -103,15 +103,15 @@ debug: 	mov [255], a			; save all registers (except h)
 
 		int 3
        	int 6
-       	mov a, [100]			 ; . x . . . . . . . wanted direction 
+       	mov a, [100]			 ; . x . . . . . . . wanted direction
        	mov b, [65]				 ; . . x . . . . . . current x position
        	mov c, [66]				 ; . . . x . . . . . current y position
-       	mov d, [64]				 ; . . . . x . . . . current direction 
+       	mov d, [64]				 ; . . . . x . . . . current direction
        	mov e, [0]				 ; . . . . . x . . . last direction
        	mov f, [1]				 ; . . . . . . x . . first to last direction
        	mov g, [101]			 ; . . . . . . . x . lock mode
        	int 8
-	
+
 		mov a, [255]			 ; restore all registers (except h)
 		mov b, [254]
 		mov c, [253]
