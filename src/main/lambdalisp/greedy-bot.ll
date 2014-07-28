@@ -137,7 +137,7 @@
         ((coord-equal coord (coord-create 0 1)) 2)
         ((coord-equal coord (coord-create -1 0)) 3)))
 
-(seed: (debug (foldLeft 0 (state-ghosts initial-state) [acc x] (+ acc (+ (coord-x (cadr x)) (coord-y (cadr x)))))))
+(seed: (foldLeft 0 (state-ghosts initial-state) [acc x] (+ acc (+ (coord-x (cadr x)) (coord-y (cadr x))))))
 
 (main: [state]
   (tif (> map-area 576)
