@@ -11,8 +11,6 @@
 (set-matrix-pos: [matrix matrix-width pos v]
   (binary-tree-set matrix (+ (coord-x pos) (* matrix-width (coord-y pos))) v))
 
-(max-distance: 600)
-
 (astar-node: [visited distance previous]
   (cons visited (cons distance previous)))
 
@@ -43,7 +41,7 @@
   (foldLeft matrix positions [m pos]
             (set-matrix-pos m map-width pos v)))
 
-(astar: [from to game-map map-width map-height state max-distance]
+(astar: [from to game-map map-width map-height state]
   (let* ((directions (list (coord-create 0 -1) (coord-create 1 0) (coord-create 0 1) (coord-create -1 0)))
          (ghosts (state-ghosts state))
          (fright-mode? (exists ghosts [x] (= (car x) 1)))
@@ -61,8 +59,6 @@
 
                     (tif (coord-equal current to)
                           details-matrix
-                          (tif (> (coord-manhattan-distance from current) max-distance)
-                               (recur next-q details-matrix)
                       (let ((current-dist (astar-distance details-matrix map-width map-height current))
                             (neighbors (foldLeft (list) directions [next-steps direction]
 
@@ -74,7 +70,7 @@
                                next-steps)))))
 
                         (recur (foldLeft next-q neighbors [acc e] (heap-insert (cons (+ (coord-manhattan-distance e to) (+ current-dist 1)) e) acc))
-                               (update-values details-matrix neighbors (astar-node true (+ current-dist 1) current))))))))))
+                               (update-values details-matrix neighbors (astar-node true (+ current-dist 1) current)))))))))
 
       (astar-aux (heap-from-list (list (cons 0 from)))
                   initial-details-matrix))))
@@ -94,7 +90,7 @@
     (let* ((lambda-man (state-lambdaman state))
            (position (cadr lambda-man))
            (ghosts (state-ghosts state))
-           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height state max-distance))
+           (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height state))
            (row-update [row x y]
              (tif (empty? row)
                   nil
