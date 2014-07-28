@@ -23,10 +23,14 @@ This is Guru Meditation's entry to the
 
 Run `sbt assembly` to generate the compiler for the "lambda-man" and the address solver for "ghc". Use the included script `llc` to generate the bot we've submitted (`greedy-bot`) based on the functional programming language LambdaLisp™ (specifically created for ICFPC 2014):
 
-   ./llc src/main/lambdalisp/greedy-bot.ll --bot
+```
+./llc src/main/lambdalisp/greedy-bot.ll --bot
+```
 
 The `--bot` flag informs the compiler to generate code that loads the maze during startup. The code will be dumped to `stdout`. To generate the ghosts code:
 
-   ./lhc src/main/ghc/ghost-fright.ghc
+```
+./lhc src/main/ghc/ghost-fright.ghc
+```
 
 Again, the resulting code will be dumped to `stdout`.
