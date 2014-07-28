@@ -4,7 +4,7 @@ import java.io.File
 import scala.annotation.tailrec
 import scala.io.Source
 
-object Transpiler extends App {
+object LLCompiler extends App {
   def tsort[A](edges: Traversable[(A, A)]): Iterable[A] = {
     @tailrec
     def tsort(toPreds: Map[A, Set[A]], done: Iterable[A]): Iterable[A] = {
@@ -45,5 +45,8 @@ object Transpiler extends App {
 
   val isBot = args.length >= 2 && args(1) == "--bot"
 
-  println(Program(new Compiler(source).compile, isBot))
+  new LLParser(source).compile match {
+    case Some(result) => println(Program(result, isBot))
+    case None         => println("**** ABORT")
+  }
 }

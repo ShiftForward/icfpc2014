@@ -124,7 +124,7 @@ case class LET(definitions: (String, Instruction)*)(i: Instruction) extends Inst
     val newPos = p + 4
     val (s, g) = i.transpile(newPos, nextLocals :: locals, nextGlobals)
     (instructions ++ Vector(
-      s"DUM ${definitions.length} ; let (${definitions.map(_._1).mkString(" ")}})",
+      s"DUM ${definitions.length} ; let (${definitions.map(_._1).mkString(" ")})",
       s"LDF $newPos",
       s"RAP ${definitions.length}",
       "RTN") ++ s, g)
