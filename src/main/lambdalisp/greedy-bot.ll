@@ -24,11 +24,11 @@
   (cdr (cdr (get-matrix-pos details-matrix width pos))))
 
 (astar-get-path: [details-matrix width height from to]
-  (let ((astar-get-path-aux [from to]
+    (let ((astar-get-path-aux [from to]
           (if (coord-equal to from)
               nil
               (cons to (self from (astar-previous details-matrix width height to))))))
-    (reverse (astar-get-path-aux from to))))
+      (reverse (astar-get-path-aux from to))))
 
 (direction-to: [from to]
   (let ((disp (coord-displacement from to)))
@@ -59,7 +59,6 @@
 
                     (tif (coord-equal current to)
                           details-matrix
-
                       (let ((current-dist (astar-distance details-matrix map-width map-height current))
                             (neighbors (foldLeft (list) directions [next-steps direction]
 
@@ -77,18 +76,21 @@
                   initial-details-matrix))))
 
 (get-path: [from to game-map map-width map-height state]
-  (astar-get-path (astar from to game-map map-width map-height state) map-width map-height from to))
+  (let ((astar-details (astar from to game-map map-width map-height state 600)))
+    (if (= (astar-distance astar-details map-width map-height to) -1)
+        nil
+        (astar-get-path astar-details map-width map-height from to))))
 
 (next-checkpoint: nil)
 (checkpoints: (heap-create))
 
-(get-checkpoints: [state binary-tree-map]
+(get-checkpoints: [game-map state binary-tree-map]
   (progn 
     (defvar checkpoints (heap-create))
     (let* ((lambda-man (state-lambdaman state))
            (position (cadr lambda-man))
+           (ghosts (state-ghosts state))
            (astar-details (astar position (coord-create -1 -1) binary-tree-map map-width map-height state))
-           (game-map (state-map state))
            (row-update [row x y]
              (tif (empty? row)
                   nil
@@ -97,7 +99,7 @@
                       (tcond ((and (= cell encoding-pill) (not (= cell-dist -1)))
                               (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-pill cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
-                             ((and (= cell encoding-power-pill) (not (= cell-dist -1)))
+                             ((and (not (state-fright-mode? state)) (and (= cell encoding-power-pill) (not (= cell-dist -1))))
                               (progn (defvar checkpoints (heap-insert (cons (- 0 (- points-power-pill cell-dist)) (coord-create x y)) checkpoints))
                                      (recur (cdr row) (+ x 1) y)))
                              ((and (and (> (state-fruit state) 0) (= cell encoding-fruit)) (not (= cell-dist -1)))
@@ -110,25 +112,32 @@
                   (progn
                     (row-update (car rows) 0 y)
                     (recur (cdr rows) 0 (+ y 1))))))
-      (col-update game-map 0 0))))
+      (progn 
+        (col-update game-map 0 0)
+        (foldLeft nil ghosts [acc x] (if (= (car x) 1) (defvar checkpoints (heap-insert (cons (- 0 (- points-ghosts (astar-distance astar-details map-width map-height (cadr x)))) (cadr x)) checkpoints)) nil))
+))))
 
-(get-next-checkpoint: [location state binary-tree-map]
-  (if (or (empty? next-checkpoint) (coord-equal next-checkpoint location))
+(get-next-checkpoint: [game-map location state binary-tree-map]
+  (tif (or (empty? next-checkpoint) (coord-equal next-checkpoint location) (state-fright-mode? state))
       (progn
-        (get-checkpoints state binary-tree-map)
-        (defvar next-checkpoint (cdr (debug (heap-find-min checkpoints))))
-        next-checkpoint)
-      next-checkpoint))
+        (get-checkpoints game-map state binary-tree-map)
+        (defvar next-checkpoint (cdr (heap-find-min checkpoints)))
+        (cons next-checkpoint (get-path location next-checkpoint binary-tree-map map-width map-height state)))
+      (let ((path (get-path location next-checkpoint binary-tree-map map-width map-height state)))
+         (tif (empty? path)
+             (progn
+               (defvar next-checkpoint nil)
+               (recur game-map location state binary-tree-map))
+              (cons next-checkpoint path)))))
 
 (main: [state]
   (let* ((lambdaman (car (cdr state)))
-         (ghosts (car (cdr (cdr state))))
-         (fruit (cdr (cdr (cdr state))))
          (location (car (cdr lambdaman)))
          (direction (car (cdr (cdr lambdaman))))
          (binary-tree-map (binary-tree-create (flatten1 game-map)))
-         (checkpoint (get-next-checkpoint location state binary-tree-map))
-         (path (get-path location checkpoint binary-tree-map map-width map-height state)))
+         (checkpoint-and-path (get-next-checkpoint game-map location state binary-tree-map))
+         (checkpoint (car checkpoint-and-path))
+         (path (cdr checkpoint-and-path)))
 
       (progn
         (direction-to location (car path)))))

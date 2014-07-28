@@ -1,16 +1,15 @@
 (include prelude.ll)
 
 (binary-tree-create: [l]
-  (let ((binary-tree-create-aux [l i]
+  (let ((binary-tree-create-aux [l i len]
     (tif (empty? l)
          nil
-         (let* ((len (length l))
-                (m (/ len 2))
+         (let* ((m (/ len 2))
                 (s (split l m))
                 (left (car s))
                 (right (cdr s)))
-            (cons (cons (+ i m) (car right)) (cons (self left i) (self (cdr right) (+ i m 1))))))))
-     (binary-tree-create-aux l 0)))
+            (cons (cons (+ i m) (car right)) (cons (self left i m) (self (cdr right) (+ i m 1) (- (- len m) 1))))))))
+     (binary-tree-create-aux l 0 (length l))))
 
 (binary-tree-get: [b i]
   (let ((m (caar b)))
@@ -29,4 +28,3 @@
             (tif (< i m)
                  (cons (car b) (cons (self left i v) right))
                  (cons (car b) (cons left (self right i v))))))))
-

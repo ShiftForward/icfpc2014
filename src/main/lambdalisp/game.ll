@@ -25,6 +25,8 @@
   (cadr state))
 (state-ghosts: [state]
   (convert-list (caddr state)))
+(state-fright-mode?: [state]
+  (exists (state-ghosts state) [x] (= (car x) 1)))
 
 (game-map: (convert-matrix (state-map initial-state)))
 (map-width: (length (car game-map)))
@@ -41,11 +43,7 @@
 
 (points-pill: 10)
 (points-power-pill: 50)
-(points-ghosts: []
-  (cond ((= ghosts-eaten 0) 200)
-        ((= ghosts-eaten 1) 400)
-        ((= ghosts-eaten 2) 800)
-        (else 1600)))
+(points-ghosts: 200)
 (points-fruit:
   (cond ((<= map-area 100) 100)
         ((and (< 100 map-area) (<= map-area 200)) 300)
