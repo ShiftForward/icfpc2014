@@ -1,86 +1,146 @@
-int 3				   ; load current direction to index 64
+int 3
+int 6
+mov a, b
+mov b, [6]
+mov d, [8]
+mov e, [9]
+mov f, [100]
+mov g, 0
+inc h
+int 3
+int 6
+mov [0], b
+mov [1], a
+int 3
+int 5
+mov [2], a
+mov [3], b
+int 1
+mov [4], a
+mov [5], a
+mov [10], 0
+int 3                                ; load current direction to index 64
 int 6
 mov [64], b
-int 3				   ; load current position to (69, 70)
+mov [102], a
+int 3                                ; load current position to (69, 70)
 int 4
 mov [69], a
 mov [70], b
-int 3				   ; load current position to (65, 66)
+int 3                                ; load current position to (65, 66)
 int 5
 mov [65], a
 mov [66], b
 int 1                  ; load pacman to (67, 68)
 mov [67], a
 mov [68], b
-jeq	16, [65], [69]  ; are we on a starting position? x's are equal?
-mov pc, 18           ; nope...
-mov h, 18            ; in case we are, we continue at start
-jeq 54, [66], [70]    ; are we on a starting position? y's are equal?
-jeq 25, [64], [3]   ; are in locked in a loop?
-mov h, 38
-jeq 22, [101], 1      ; are we inhibited?
-mov pc, 48           ; if not proceed with chase
-mov h, 38			 ; in case we clear, jump to save
-jeq 54, [64], [100]   ; if we are inhibited, but in the direction we want, we clear
-mov pc, 38			 ; otherwise, we continue
-mov [101], 1             ; if we are trying to switch orthogonally, we are locked
-jeq 36, [64], 0      ; |
-jeq 30,    [64], 1      ; |
-jeq 34,  [64], 2      ; |
-jeq 32,  [64], 3      ; |
+jeq 38, [65], [69]  ; are we on a starting position? x's are equal?
+mov pc, 40           ; nope...
+mov h, 40            ; in case we are, we continue at start
+jeq 50, [66], [70]   ; are we on a starting position? y's are equal?
+jeq 59, [102], 1
+mov pc, 53           ; proceed with chase
 mov [100], 0
-mov pc, 38
+mov pc, 52
 mov [100], 2
-mov pc, 38
+mov pc, 52
 mov [100], 3
-mov pc, 38
+mov pc, 52
 mov [100], 1
-mov pc, 38
-jeq 43, [64], [0] 		; still going the same way, proceed
-mov [3], [2]            ; we use a queue of length 3
-mov [2], [1]            ; |
-mov [1], [0]        	; |
-mov [0], [64]			; save direction
-mov h, 45
-mov pc, 61
-mov a, [100]			; we always force the last direction we wanted to take
+mov pc, 52
+mov [100], 3 ; we want to move left the first time
+mov pc, h
+mov pc, 65
+jeq 56, [67], [65]  ; we are on the same y coordinate as the ghost, try horizontal
+jgt 48, [67], [65]  ; pacman is to the right
+jlt 46,  [67], [65]  ; pacman is to the left
+jgt 44,  [68], [66]  ; pacman is below us
+jlt 42,    [68], [66]  ; pacman is above us
+mov pc, 52
+jeq 56, [67], [65]  ; we are on the same y coordinate as the ghost, try vertical
+jlt 48, [67], [65]  ; pacman is to the right
+jgt 46,  [67], [65]  ; pacman is to the left
+jlt 44,  [68], [66]  ; pacman is below us
+jgt 42,    [68], [66]  ; pacman is above us
+mov pc, 52
+jeq 86, [6], 0
+jeq 85, [0], [100]
+jeq 70, [10], 0
+mov a, [8]
+mov pc, 87
+jeq 74, [8], 0
+jeq 76, [8], 2
+jeq 78, [8], 1
+jeq 80, [8], 3
+mov a, 3
+mov pc, 136
+mov a, 1
+mov pc, 136
+mov a, 0
+mov pc, 136
+mov a, 2
+mov pc, 136
+mov [10], 1
+mov [9], a
+mov pc, 87
+mov [6], 0
+mov a, [100]
+mov b,[0]
+mov c,0
+mov d,0
+mov e,0
+mov f,0
+mov g,0
+jeq 97, a, 0
+jeq 101, a, 2
+jeq 105, a, 1
+jeq 109, a, 3
+mov a, [2]
+mov b, [3]
+dec b
+mov pc, 113
+mov a, [2]
+mov b, [3]
+inc b
+mov pc, 113
+mov a, [2]
+mov b, [3]
+inc a
+mov pc, 113
+mov a, [2]
+mov b, [3]
+dec a
+mov pc, 113
+int 7
+mov b, a
+jeq 119, [10], 1
+jeq 120, [6], 0
+mov a, [8]
+mov pc, 122
+mov pc, 65
+mov a, [100]
+mov pc, 122
+jeq 124, b, 0
+mov pc, 139
+jeq 128, a, 0
+jeq 130, a, 2
+jeq 132, a, 1
+jeq 134, a, 3
+mov a, 1
+mov pc, 136
+mov a, 3
+mov pc, 136
+mov a, 2
+mov pc, 136
+mov a, 0
+mov pc, 136
+mov [6], 1
+mov [8], a
+mov pc, 87
+jeq 143, [6], 0
+mov a, [8]
 int 0
 hlt
-jeq 51, [67], [65]  ; we are on the same x coordinate as the ghost, try vertical
-jgt 36, [67], [65]  ; pacman is to the right
-jlt 34,  [67], [65]  ; pacman is to the left
-jgt 32,  [68], [66]  ; pacman is below us
-jlt 30,    [68], [66]  ; pacman is above us
-mov pc, h
-mov [100], 3		 	; we want to move left the first time
-mov [101], 0			; we clear the lock
-mov [0], 127			; we also clear direction queue to an invalid value
-mov [1], 127			; |
-mov [2], 127			; |
-mov [3], 127			; |
-mov pc, h
-mov [255], a			; save all registers (except h)
-mov [254], b
-mov [253], c
-mov [252], d
-mov [251], e
-mov [250], f
-mov [249], g
-int 3
-int 6
-mov a, [100]			 ; . x . . . . . . . wanted direction
-mov b, [65]				 ; . . x . . . . . . current x position
-mov c, [66]				 ; . . . x . . . . . current y position
-mov d, [64]				 ; . . . . x . . . . current direction
-mov e, [0]				 ; . . . . . x . . . last direction
-mov f, [1]				 ; . . . . . . x . . first to last direction
-mov g, [101]			 ; . . . . . . . x . lock mode
-int 8
-mov a, [255]			 ; restore all registers (except h)
-mov b, [254]
-mov c, [253]
-mov d, [252]
-mov e, [251]
-mov f, [250]
-mov g, [249]
-mov pc, h
+mov a, [100]
+int 0
+hlt
