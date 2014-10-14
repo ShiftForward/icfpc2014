@@ -20,47 +20,47 @@ RTN
 ST 0 0
 LDC 0
 LDC -2147483648
-ST 0 1
+ST 0 1 ; define var_nil
 LD 0 1
 CONS
 CDR
 LDC 1
-ST 0 2
+ST 0 2 ; define var_true
 LD 0 2
 CONS
 CDR
 LDC 0
-ST 0 3
+ST 0 3 ; define var_false
 LD 0 3
 CONS
 CDR
 LDF 39
 LDC 1
 TSEL 43 0
-LD 0 1
+LD 0 1 ; load var_x
 LDC 0
 CEQ
 RTN
-ST 0 4
+ST 0 4 ; define var_zero?
 LD 0 4
 CONS
 CDR
 LDF 50
 LDC 1
 TSEL 62 0
-LD 0 1
+LD 0 1 ; load var_l
 ATOM
 SEL 55 59
 LDC 1
 TSEL 61 0
-LD 0 1
-LD 1 1
+LD 0 1 ; load var_l
+LD 1 1 ; load var_nil
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 RTN
-ST 0 5
+ST 0 5 ; define var_empty?
 LD 0 5
 CONS
 CDR
@@ -68,21 +68,21 @@ LDF 69
 LDC 1
 TSEL 73 0
 LDC 0
-LD 0 1
+LD 0 1 ; load var_x
 CGT
 RTN
-ST 0 6
+ST 0 6 ; define var_negative?
 LD 0 6
 CONS
 CDR
 LDF 80
 LDC 1
 TSEL 84 0
-LD 0 1
+LD 0 1 ; load var_x
 LDC 0
 CGTE
 RTN
-ST 0 7
+ST 0 7 ; define var_positive?
 LD 0 7
 CONS
 CDR
@@ -92,196 +92,196 @@ TSEL 126 0
 LDF 94
 LDC 1
 TSEL 115 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 99 101
-LD 0 3
-RTN
-LD 0 0
-LD 0 1
+LD 0 3 ; load var_res
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 2
-LD 0 3
-LD 0 1
+LD 0 2 ; load var_f
+LD 0 2 ; load var_f
+LD 0 3 ; load var_res
+LD 0 1 ; load var_l
 CAR
-LD 0 2
-AP 3
-LD 0 0
-TAP 4
+LD 0 2 ; load var_f
+AP 3 ; call fun_f
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (foldaux})
 LDF 119
 RAP 1
 RTN
-LD 0 0
-LD 1 2
-LD 1 3
-LD 1 1
-LD 0 0
-AP 4
+LD 0 0 ; load var_foldaux
+LD 1 2 ; load var_l
+LD 1 3 ; load var_f
+LD 1 1 ; load var_b
+LD 0 0 ; load var_foldaux
+AP 4 ; call fun_foldaux
 RTN
-ST 0 8
+ST 0 8 ; define var_foldLeft
 LD 0 8
 CONS
 CDR
 LDF 133
 LDC 1
 TSEL 146 0
-LD 1 8
-LD 1 1
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 1 1 ; load var_nil
+LD 0 1 ; load var_l
 LDF 139
 LDC 1
 TSEL 143 0
-LD 0 2
-LD 0 1
+LD 0 2 ; load var_e
+LD 0 1 ; load var_acc
 CONS
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 9
+ST 0 9 ; define var_reverse
 LD 0 9
 CONS
 CDR
 LDF 153
 LDC 1
 TSEL 176 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 160 162
 LDC 1
 TSEL 175 0
-LD 1 1
-JOIN
-LD 0 2
-LD 0 1
+LD 1 1 ; load var_nil
+JOIN ; merge then
+LD 0 2 ; load var_f
+LD 0 1 ; load var_l
 CAR
-LD 0 2
-AP 2
-LD 0 0
-LD 0 1
+LD 0 2 ; load var_f
+AP 2 ; call fun_f
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 0
-AP 3
+LD 0 2 ; load var_f
+LD 0 0 ; load var_self
+AP 3 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-ST 0 10
+ST 0 10 ; define var_map
 LD 0 10
 CONS
 CDR
 LDF 183
 LDC 1
 TSEL 209 0
-LD 1 9
-LD 1 8
-LD 1 1
-LD 0 1
+LD 1 9 ; load var_reverse
+LD 1 8 ; load var_foldLeft
+LD 1 1 ; load var_nil
+LD 0 1 ; load var_l
 LDF 190
 LDC 1
 TSEL 204 0
-LD 1 2
-LD 0 2
-LD 1 2
-AP 2
+LD 1 2 ; load var_f
+LD 0 2 ; load var_e
+LD 1 2 ; load var_f
+AP 2 ; call fun_f
 SEL 197 201
 LDC 1
 TSEL 203 0
-LD 0 2
-LD 0 1
+LD 0 2 ; load var_e
+LD 0 1 ; load var_acc
 CONS
-JOIN
-LD 0 1
-JOIN
+JOIN ; merge then
+LD 0 1 ; load var_acc
+JOIN : merge else
 RTN
-LD 1 8
-AP 4
-LD 1 9
-AP 2
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
+LD 1 9 ; load var_reverse
+AP 2 ; call fun_reverse
 RTN
-ST 0 11
+ST 0 11 ; define var_filter
 LD 0 11
 CONS
 CDR
 LDF 216
 LDC 1
 TSEL 237 0
-LD 1 8
-LD 1 2
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 1 2 ; load var_true
+LD 0 1 ; load var_l
 LDF 222
 LDC 1
 TSEL 234 0
-LD 1 2
-LD 0 2
-LD 1 2
-AP 2
+LD 1 2 ; load var_f
+LD 0 2 ; load var_e
+LD 1 2 ; load var_f
+AP 2 ; call fun_f
 SEL 229 231
 LDC 1
 TSEL 233 0
-LD 0 1
-JOIN
+LD 0 1 ; load var_acc
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 12
+ST 0 12 ; define var_forall
 LD 0 12
 CONS
 CDR
 LDF 244
 LDC 1
 TSEL 265 0
-LD 1 8
-LD 1 3
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 1 3 ; load var_false
+LD 0 1 ; load var_l
 LDF 250
 LDC 1
 TSEL 262 0
-LD 1 2
-LD 0 2
-LD 1 2
-AP 2
+LD 1 2 ; load var_f
+LD 0 2 ; load var_e
+LD 1 2 ; load var_f
+AP 2 ; call fun_f
 SEL 257 259
 LDC 1
 TSEL 261 0
 LDC 1
-JOIN
-LD 0 1
-JOIN
+JOIN ; merge then
+LD 0 1 ; load var_acc
+JOIN : merge else
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 13
+ST 0 13 ; define var_exists
 LD 0 13
 CONS
 CDR
 LDF 272
 LDC 1
 TSEL 283 0
-LD 1 8
-LD 1 1
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 1 1 ; load var_nil
+LD 0 1 ; load var_l
 LDF 278
 LDC 1
 TSEL 280 0
-LD 0 2
+LD 0 2 ; load var_e
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 14
+ST 0 14 ; define var_last
 LD 0 14
 CONS
 CDR
@@ -291,163 +291,163 @@ TSEL 339 0
 LDF 293
 LDC 1
 TSEL 328 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 300 302
 LDC 1
 TSEL 310 0
 LDC 1
-JOIN
-LD 0 2
-LD 0 1
+JOIN ; merge then
+LD 0 2 ; load var_f
+LD 0 1 ; load var_l
 CAR
-LD 0 2
-AP 2
+LD 0 2 ; load var_f
+AP 2 ; call fun_f
 LDC 0
 CEQ
-JOIN
+JOIN : merge else
 TSEL 311 316
-LD 2 9
-LD 0 3
-LD 2 9
-AP 2
-RTN
-LD 0 0
-LD 0 1
+LD 2 9 ; load var_reverse
+LD 0 3 ; load var_res
+LD 2 9 ; load var_reverse
+AP 2 ; call fun_reverse
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 1
+LD 0 2 ; load var_f
+LD 0 1 ; load var_l
 CAR
-LD 0 3
+LD 0 3 ; load var_res
 CONS
-LD 0 0
-TAP 4
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (takeWhileAux})
 LDF 332
 RAP 1
 RTN
-LD 0 0
-LD 1 1
-LD 1 2
-LD 2 1
-LD 0 0
-AP 4
+LD 0 0 ; load var_takeWhileAux
+LD 1 1 ; load var_l
+LD 1 2 ; load var_f
+LD 2 1 ; load var_nil
+LD 0 0 ; load var_takeWhileAux
+AP 4 ; call fun_takeWhileAux
 RTN
-ST 0 15
+ST 0 15 ; define var_takeWhile
 LD 0 15
 CONS
 CDR
 LDF 346
 LDC 1
 TSEL 374 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 353 355
 LDC 1
 TSEL 363 0
 LDC 1
-JOIN
-LD 0 2
-LD 0 1
+JOIN ; merge then
+LD 0 2 ; load var_f
+LD 0 1 ; load var_l
 CAR
-LD 0 2
-AP 2
+LD 0 2 ; load var_f
+AP 2 ; call fun_f
 LDC 0
 CEQ
-JOIN
+JOIN : merge else
 TSEL 364 366
-LD 0 1
-RTN
-LD 0 0
-LD 0 1
+LD 0 1 ; load var_l
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 0
-TAP 3
+LD 0 2 ; load var_f
+LD 0 0 ; load var_self
+TAP 3 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-ST 0 16
+ST 0 16 ; define var_dropWhile
 LD 0 16
 CONS
 CDR
 LDF 381
 LDC 1
 TSEL 394 0
-LD 1 8
+LD 1 8 ; load var_foldLeft
 LDC 0
-LD 0 1
+LD 0 1 ; load var_l
 LDF 387
 LDC 1
 TSEL 391 0
-LD 0 1
+LD 0 1 ; load var_acc
 LDC 1
 ADD
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 17
+ST 0 17 ; define var_length
 LD 0 17
 CONS
 CDR
 LDF 401
 LDC 1
 TSEL 419 0
-LD 1 4
-LD 0 2
-LD 1 4
-AP 2
+LD 1 4 ; load var_zero?
+LD 0 2 ; load var_n
+LD 1 4 ; load var_zero?
+AP 2 ; call fun_zero?
 TSEL 406 409
-LD 0 1
+LD 0 1 ; load var_li
 CAR
-RTN
-LD 0 0
-LD 0 1
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_li
 CDR
-LD 0 2
+LD 0 2 ; load var_n
 LDC 1
 SUB
-LD 0 0
-TAP 3
+LD 0 0 ; load var_self
+TAP 3 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-ST 0 18
+ST 0 18 ; define var_nth
 LD 0 18
 CONS
 CDR
 LDF 426
 LDC 1
 TSEL 449 0
-LD 1 4
-LD 0 2
-LD 1 4
-AP 2
+LD 1 4 ; load var_zero?
+LD 0 2 ; load var_i
+LD 1 4 ; load var_zero?
+AP 2 ; call fun_zero?
 TSEL 431 438
-LD 1 18
-LD 0 1
+LD 1 18 ; load var_nth
+LD 0 1 ; load var_li
 CAR
-LD 0 3
-LD 1 18
-AP 3
-RTN
-LD 0 0
-LD 0 1
+LD 0 3 ; load var_j
+LD 1 18 ; load var_nth
+AP 3 ; call fun_nth
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_li
 CDR
-LD 0 2
+LD 0 2 ; load var_i
 LDC 1
 SUB
-LD 0 3
-LD 0 0
-TAP 4
+LD 0 3 ; load var_j
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-ST 0 19
+ST 0 19 ; define var_nnth
 LD 0 19
 CONS
 CDR
@@ -457,45 +457,45 @@ TSEL 497 0
 LDF 459
 LDC 1
 TSEL 486 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 464 466
-LD 2 1
-RTN
-LD 0 2
-LD 0 1
+LD 2 1 ; load var_nil
+RTN ; return from then
+LD 0 2 ; load var_f
+LD 0 1 ; load var_l
 CAR
-LD 0 2
-AP 2
+LD 0 2 ; load var_f
+AP 2 ; call fun_f
 TSEL 472 474
-LD 0 3
-RTN
-LD 0 0
-LD 0 1
+LD 0 3 ; load var_n
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 3
+LD 0 2 ; load var_f
+LD 0 3 ; load var_n
 LDC 1
 ADD
-LD 0 0
-TAP 4
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-DUM 1
+DUM 1 ; let (findaux})
 LDF 490
 RAP 1
 RTN
-LD 0 0
-LD 1 1
-LD 1 2
+LD 0 0 ; load var_findaux
+LD 1 1 ; load var_l
+LD 1 2 ; load var_f
 LDC 0
-LD 0 0
-AP 4
+LD 0 0 ; load var_findaux
+AP 4 ; call fun_findaux
 RTN
-ST 0 20
+ST 0 20 ; define var_find
 LD 0 20
 CONS
 CDR
@@ -506,98 +506,98 @@ LDF 507
 LDC 1
 TSEL 526 0
 LDC 0
-LD 0 1
+LD 0 1 ; load var_m
 CGT
 TSEL 511 513
-LD 0 2
-RTN
-LD 0 0
-LD 0 1
+LD 0 2 ; load var_res
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_m
 LDC 1
 SUB
-LD 1 1
-LD 0 1
+LD 1 1 ; load var_n
+LD 0 1 ; load var_m
 ADD
-LD 0 2
+LD 0 2 ; load var_res
 CONS
-LD 0 0
-TAP 3
+LD 0 0 ; load var_self
+TAP 3 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (rangeaux})
 LDF 530
 RAP 1
 RTN
-LD 0 0
-LD 1 2
-LD 1 1
+LD 0 0 ; load var_rangeaux
+LD 1 2 ; load var_m
+LD 1 1 ; load var_n
 SUB
-LD 2 1
-LD 0 0
-AP 3
+LD 2 1 ; load var_nil
+LD 0 0 ; load var_rangeaux
+AP 3 ; call fun_rangeaux
 RTN
-ST 0 21
+ST 0 21 ; define var_range
 LD 0 21
 CONS
 CDR
 LDF 545
 LDC 1
 TSEL 565 0
-LD 1 4
-LD 0 2
-LD 1 4
-AP 2
+LD 1 4 ; load var_zero?
+LD 0 2 ; load var_n
+LD 1 4 ; load var_zero?
+AP 2 ; call fun_zero?
 SEL 552 554
 LDC 1
 TSEL 564 0
 LDC 1
-JOIN
-LD 0 1
-LD 0 0
-LD 0 1
-LD 0 2
+JOIN ; merge then
+LD 0 1 ; load var_v
+LD 0 0 ; load var_self
+LD 0 1 ; load var_v
+LD 0 2 ; load var_n
 LDC 1
 SUB
-LD 0 0
-AP 3
+LD 0 0 ; load var_self
+AP 3 ; call fun_self
 MUL
-JOIN
+JOIN : merge else
 RTN
-ST 0 22
+ST 0 22 ; define var_pow
 LD 0 22
 CONS
 CDR
 LDF 572
 LDC 1
 TSEL 580 0
-LD 0 1
-LD 0 1
-LD 0 2
+LD 0 1 ; load var_n
+LD 0 1 ; load var_n
+LD 0 2 ; load var_m
 DIV
-LD 0 2
+LD 0 2 ; load var_m
 MUL
 SUB
 RTN
-ST 0 23
+ST 0 23 ; define var_mod
 LD 0 23
 CONS
 CDR
 LDF 587
 LDC 1
 TSEL 599 0
-LD 1 7
-LD 0 1
-LD 1 7
-AP 2
+LD 1 7 ; load var_positive?
+LD 0 1 ; load var_x
+LD 1 7 ; load var_positive?
+AP 2 ; call fun_positive?
 TSEL 592 594
-LD 0 1
-RTN
+LD 0 1 ; load var_x
+RTN ; return from then
 LDC 0
-LD 0 1
+LD 0 1 ; load var_x
 SUB
+RTN ; return from else
 RTN
-RTN
-ST 0 24
+ST 0 24 ; define var_abs
 LD 0 24
 CONS
 CDR
@@ -607,65 +607,65 @@ TSEL 667 0
 LDF 609
 LDC 1
 TSEL 654 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 614 619
-LD 2 9
-LD 0 4
-LD 2 9
-AP 2
-RTN
-LD 0 2
-LD 0 5
+LD 2 9 ; load var_reverse
+LD 0 4 ; load var_res
+LD 2 9 ; load var_reverse
+AP 2 ; call fun_reverse
+RTN ; return from then
+LD 0 2 ; load var_i
+LD 0 5 ; load var_in
 CEQ
 TSEL 623 637
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 3
-LD 0 3
-LD 0 4
+LD 0 2 ; load var_i
+LD 0 3 ; load var_v
+LD 0 3 ; load var_v
+LD 0 4 ; load var_res
 CONS
-LD 0 5
+LD 0 5 ; load var_in
 LDC 1
 ADD
-LD 0 0
-TAP 6
-RTN
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+TAP 6 ; call tfun_self
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 3
-LD 0 1
+LD 0 2 ; load var_i
+LD 0 3 ; load var_v
+LD 0 1 ; load var_l
 CAR
-LD 0 4
+LD 0 4 ; load var_res
 CONS
-LD 0 5
+LD 0 5 ; load var_in
 LDC 1
 ADD
-LD 0 0
-TAP 6
+LD 0 0 ; load var_self
+TAP 6 ; call tfun_self
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-DUM 1
+DUM 1 ; let (setaux})
 LDF 658
 RAP 1
 RTN
-LD 0 0
-LD 1 1
-LD 1 2
-LD 1 3
-LD 2 1
+LD 0 0 ; load var_setaux
+LD 1 1 ; load var_l
+LD 1 2 ; load var_i
+LD 1 3 ; load var_v
+LD 2 1 ; load var_nil
 LDC 0
-LD 0 0
-AP 6
+LD 0 0 ; load var_setaux
+AP 6 ; call fun_setaux
 RTN
-ST 0 25
+ST 0 25 ; define var_set
 LD 0 25
 CONS
 CDR
@@ -675,69 +675,69 @@ TSEL 712 0
 LDF 677
 LDC 1
 TSEL 701 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 682 689
-LD 2 9
-LD 0 2
-LD 0 3
+LD 2 9 ; load var_reverse
+LD 0 2 ; load var_v
+LD 0 3 ; load var_res
 CONS
-LD 2 9
-AP 2
-RTN
-LD 0 0
-LD 0 1
+LD 2 9 ; load var_reverse
+AP 2 ; call fun_reverse
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
-LD 0 1
+LD 0 2 ; load var_v
+LD 0 1 ; load var_l
 CAR
-LD 0 3
+LD 0 3 ; load var_res
 CONS
-LD 0 0
-TAP 4
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (appendaux})
 LDF 705
 RAP 1
 RTN
-LD 0 0
-LD 1 1
-LD 1 2
-LD 2 1
-LD 0 0
-AP 4
+LD 0 0 ; load var_appendaux
+LD 1 1 ; load var_l
+LD 1 2 ; load var_v
+LD 2 1 ; load var_nil
+LD 0 0 ; load var_appendaux
+AP 4 ; call fun_appendaux
 RTN
-ST 0 26
+ST 0 26 ; define var_append
 LD 0 26
 CONS
 CDR
 LDF 719
 LDC 1
 TSEL 739 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_l1
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 726 728
 LDC 1
 TSEL 738 0
-LD 0 2
-JOIN
-LD 0 1
+LD 0 2 ; load var_l2
+JOIN ; merge then
+LD 0 1 ; load var_l1
 CAR
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l1
 CDR
-LD 0 2
-LD 0 0
-AP 3
+LD 0 2 ; load var_l2
+LD 0 0 ; load var_self
+AP 3 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-ST 0 27
+ST 0 27 ; define var_concat
 LD 0 27
 CONS
 CDR
@@ -747,94 +747,94 @@ TSEL 778 0
 LDF 749
 LDC 1
 TSEL 767 0
-LD 0 1
+LD 0 1 ; load var_n
 LDC 0
 CEQ
 TSEL 753 755
-LD 0 3
-RTN
-LD 0 0
-LD 0 1
+LD 0 3 ; load var_res
+RTN ; return from then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_n
 LDC 1
 SUB
-LD 0 2
-LD 0 2
-LD 0 3
+LD 0 2 ; load var_v
+LD 0 2 ; load var_v
+LD 0 3 ; load var_res
 CONS
-LD 0 0
-TAP 4
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (fillaux})
 LDF 771
 RAP 1
 RTN
-LD 0 0
-LD 1 1
-LD 1 2
-LD 2 1
-LD 0 0
-AP 4
+LD 0 0 ; load var_fillaux
+LD 1 1 ; load var_n
+LD 1 2 ; load var_v
+LD 2 1 ; load var_nil
+LD 0 0 ; load var_fillaux
+AP 4 ; call fun_fillaux
 RTN
-ST 0 28
+ST 0 28 ; define var_fill
 LD 0 28
 CONS
 CDR
 LDF 785
 LDC 1
 TSEL 807 0
-LD 1 8
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 0 1 ; load var_l
 CAR
-LD 0 1
+LD 0 1 ; load var_l
 CDR
 LDF 793
 LDC 1
 TSEL 804 0
-LD 0 2
-LD 0 1
+LD 0 2 ; load var_b
+LD 0 1 ; load var_a
 CGT
 SEL 799 801
 LDC 1
 TSEL 803 0
-LD 0 1
-JOIN
-LD 0 2
-JOIN
+LD 0 1 ; load var_a
+JOIN ; merge then
+LD 0 2 ; load var_b
+JOIN : merge else
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 29
+ST 0 29 ; define var_min
 LD 0 29
 CONS
 CDR
 LDF 814
 LDC 1
 TSEL 836 0
-LD 1 8
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 0 1 ; load var_l
 CAR
-LD 0 1
+LD 0 1 ; load var_l
 CDR
 LDF 822
 LDC 1
 TSEL 833 0
-LD 0 1
-LD 0 2
+LD 0 1 ; load var_a
+LD 0 2 ; load var_b
 CGT
 SEL 828 830
 LDC 1
 TSEL 832 0
-LD 0 1
-JOIN
-LD 0 2
-JOIN
+LD 0 1 ; load var_a
+JOIN ; merge then
+LD 0 2 ; load var_b
+JOIN : merge else
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 30
+ST 0 30 ; define var_max
 LD 0 30
 CONS
 CDR
@@ -844,899 +844,899 @@ TSEL 938 0
 LDF 846
 LDC 1
 TSEL 877 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 853 855
 LDC 1
 TSEL 859 0
 LDC 1
-JOIN
-LD 0 2
+JOIN ; merge then
+LD 0 2 ; load var_i
 LDC 0
 CEQ
-JOIN
+JOIN : merge else
 SEL 862 864
 LDC 1
 TSEL 876 0
-LD 2 1
-JOIN
-LD 0 1
+LD 2 1 ; load var_nil
+JOIN ; merge then
+LD 0 1 ; load var_l
 CAR
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
+LD 0 2 ; load var_i
 LDC 1
 SUB
-LD 0 0
-AP 3
+LD 0 0 ; load var_self
+AP 3 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-DUM 1
+DUM 1 ; let (take1})
 LDF 881
 RAP 1
 RTN
 LDF 884
 LDC 1
 TSEL 912 0
-LD 3 5
-LD 0 1
-LD 3 5
-AP 2
+LD 3 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 3 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 891 893
 LDC 1
 TSEL 897 0
 LDC 1
-JOIN
-LD 0 2
+JOIN ; merge then
+LD 0 2 ; load var_i
 LDC 0
 CEQ
-JOIN
+JOIN : merge else
 SEL 900 902
 LDC 1
 TSEL 911 0
-LD 0 1
-JOIN
-LD 0 0
-LD 0 1
+LD 0 1 ; load var_l
+JOIN ; merge then
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 2
+LD 0 2 ; load var_i
 LDC 1
 SUB
-LD 0 0
-AP 3
-JOIN
+LD 0 0 ; load var_self
+AP 3 ; call fun_self
+JOIN : merge else
 RTN
-DUM 1
+DUM 1 ; let (take2})
 LDF 916
 RAP 1
 RTN
-LD 1 0
-LD 2 1
-LD 2 2
-LD 1 0
-AP 3
-DUM 1
+LD 1 0 ; load var_take1
+LD 2 1 ; load var_l
+LD 2 2 ; load var_i
+LD 1 0 ; load var_take1
+AP 3 ; call fun_take1
+DUM 1 ; let (l1})
 LDF 925
 RAP 1
 RTN
-LD 1 0
-LD 3 1
-LD 3 2
-LD 1 0
-AP 3
-DUM 1
+LD 1 0 ; load var_take2
+LD 3 1 ; load var_l
+LD 3 2 ; load var_i
+LD 1 0 ; load var_take2
+AP 3 ; call fun_take2
+DUM 1 ; let (l2})
 LDF 934
 RAP 1
 RTN
-LD 1 0
-LD 0 0
+LD 1 0 ; load var_l1
+LD 0 0 ; load var_l2
 CONS
 RTN
-ST 0 31
+ST 0 31 ; define var_split
 LD 0 31
 CONS
 CDR
 LDF 945
 LDC 1
 TSEL 979 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 952 954
 LDC 1
 TSEL 978 0
-LD 1 1
-JOIN
-LD 0 1
+LD 1 1 ; load var_nil
+JOIN ; merge then
+LD 0 1 ; load var_l
 ATOM
 SEL 959 963
 LDC 1
 TSEL 977 0
-LD 0 1
-LD 1 1
+LD 0 1 ; load var_l
+LD 1 1 ; load var_nil
 CONS
-JOIN
-LD 1 27
-LD 0 0
-LD 0 1
+JOIN ; merge then
+LD 1 27 ; load var_concat
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CAR
-LD 0 0
-AP 2
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+AP 2 ; call fun_self
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 0
-AP 2
-LD 1 27
-AP 3
-JOIN
-JOIN
+LD 0 0 ; load var_self
+AP 2 ; call fun_self
+LD 1 27 ; load var_concat
+AP 3 ; call fun_concat
+JOIN : merge else
+JOIN : merge else
 RTN
-ST 0 32
+ST 0 32 ; define var_flatten
 LD 0 32
 CONS
 CDR
 LDF 986
 LDC 1
 TSEL 1005 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 991 993
-LD 1 1
-RTN
-LD 1 27
-LD 0 1
+LD 1 1 ; load var_nil
+RTN ; return from then
+LD 1 27 ; load var_concat
+LD 0 1 ; load var_l
 CAR
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 0
-AP 2
-LD 1 27
-AP 3
+LD 0 0 ; load var_self
+AP 2 ; call fun_self
+LD 1 27 ; load var_concat
+AP 3 ; call fun_concat
+RTN ; return from else
 RTN
-RTN
-ST 0 33
+ST 0 33 ; define var_flatten1
 LD 0 33
 CONS
 CDR
 LDF 1012
 LDC 1
 TSEL 1016 0
-LD 1 1
-LD 1 1
+LD 1 1 ; load var_nil
+LD 1 1 ; load var_nil
 CONS
 RTN
-ST 0 34
+ST 0 34 ; define var_queue-create
 LD 0 34
 CONS
 CDR
 LDF 1023
 LDC 1
 TSEL 1035 0
-LD 1 17
-LD 0 1
+LD 1 17 ; load var_length
+LD 0 1 ; load var_q
 CAR
-LD 1 17
-AP 2
-LD 1 17
-LD 0 1
+LD 1 17 ; load var_length
+AP 2 ; call fun_length
+LD 1 17 ; load var_length
+LD 0 1 ; load var_q
 CDR
-LD 1 17
-AP 2
+LD 1 17 ; load var_length
+AP 2 ; call fun_length
 ADD
 RTN
-ST 0 35
+ST 0 35 ; define var_queue-length
 LD 0 35
 CONS
 CDR
 LDF 1042
 LDC 1
 TSEL 1048 0
-LD 1 5
-LD 0 1
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_q
 CAR
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 RTN
-ST 0 36
+ST 0 36 ; define var_queue-empty?
 LD 0 36
 CONS
 CDR
 LDF 1055
 LDC 1
 TSEL 1074 0
-LD 1 5
-LD 0 1
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_q
 CAR
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 1063 1071
 LDC 1
 TSEL 1073 0
-LD 1 9
-LD 0 1
+LD 1 9 ; load var_reverse
+LD 0 1 ; load var_q
 CDR
-LD 1 9
-AP 2
-LD 1 1
+LD 1 9 ; load var_reverse
+AP 2 ; call fun_reverse
+LD 1 1 ; load var_nil
 CONS
-JOIN
-LD 0 1
-JOIN
+JOIN ; merge then
+LD 0 1 ; load var_q
+JOIN : merge else
 RTN
-ST 0 37
+ST 0 37 ; define var_queue-checkf
 LD 0 37
 CONS
 CDR
 LDF 1081
 LDC 1
 TSEL 1092 0
-LD 1 37
-LD 0 1
+LD 1 37 ; load var_queue-checkf
+LD 0 1 ; load var_q
 CAR
-LD 0 2
-LD 0 1
+LD 0 2 ; load var_v
+LD 0 1 ; load var_q
 CDR
 CONS
 CONS
-LD 1 37
-AP 2
+LD 1 37 ; load var_queue-checkf
+AP 2 ; call fun_queue-checkf
 RTN
-ST 0 38
+ST 0 38 ; define var_queue-enqueue
 LD 0 38
 CONS
 CDR
 LDF 1099
 LDC 1
 TSEL 1114 0
-LD 1 8
-LD 0 1
-LD 0 2
+LD 1 8 ; load var_foldLeft
+LD 0 1 ; load var_q
+LD 0 2 ; load var_l
 LDF 1105
 LDC 1
 TSEL 1111 0
-LD 2 38
-LD 0 1
-LD 0 2
-LD 2 38
-AP 3
+LD 2 38 ; load var_queue-enqueue
+LD 0 1 ; load var_r
+LD 0 2 ; load var_v
+LD 2 38 ; load var_queue-enqueue
+AP 3 ; call fun_queue-enqueue
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 39
+ST 0 39 ; define var_queue-enqueue-all
 LD 0 39
 CONS
 CDR
 LDF 1121
 LDC 1
 TSEL 1131 0
-LD 1 37
-LD 0 1
+LD 1 37 ; load var_queue-checkf
+LD 0 1 ; load var_q
 CAR
 CDR
-LD 0 1
+LD 0 1 ; load var_q
 CDR
 CONS
-LD 1 37
-AP 2
+LD 1 37 ; load var_queue-checkf
+AP 2 ; call fun_queue-checkf
 RTN
-ST 0 40
+ST 0 40 ; define var_queue-dequeue
 LD 0 40
 CONS
 CDR
 LDF 1138
 LDC 1
 TSEL 1142 0
-LD 0 1
+LD 0 1 ; load var_q
 CAR
 CAR
 RTN
-ST 0 41
+ST 0 41 ; define var_queue-front
 LD 0 41
 CONS
 CDR
 LDC 1
-ST 0 42
+ST 0 42 ; define var_seed
 LD 0 42
 CONS
 CDR
 LDF 1154
 LDC 1
 TSEL 1179 0
-LD 1 22
+LD 1 22 ; load var_pow
 LDC 2
 LDC 31
-LD 1 22
-AP 3
+LD 1 22 ; load var_pow
+AP 3 ; call fun_pow
 LDC 1
 SUB
 LDC 48271
 LDC 0
-DUM 3
+DUM 3 ; let (m a c})
 LDF 1167
 RAP 3
 RTN
-LD 2 23
-LD 0 1
-LD 2 42
+LD 2 23 ; load var_mod
+LD 0 1 ; load var_a
+LD 2 42 ; load var_seed
 MUL
-LD 0 2
+LD 0 2 ; load var_c
 ADD
-LD 0 0
-LD 2 23
-AP 3
-ST 2 42
+LD 0 0 ; load var_m
+LD 2 23 ; load var_mod
+AP 3 ; call fun_mod
+ST 2 42 ; define var_seed
 LD 2 42
 RTN
-ST 0 43
+ST 0 43 ; define var_random
 LD 0 43
 CONS
 CDR
 LDF 1186
 LDC 1
 TSEL 1206 0
-LD 0 1
+LD 0 1 ; load var_n
 LDC 0
 CEQ
 SEL 1192 1194
 LDC 1
 TSEL 1205 0
-LD 1 1
-JOIN
-LD 1 43
-LD 1 43
-AP 1
-LD 0 0
-LD 0 1
+LD 1 1 ; load var_nil
+JOIN ; merge then
+LD 1 43 ; load var_random
+LD 1 43 ; load var_random
+AP 1 ; call fun_random
+LD 0 0 ; load var_self
+LD 0 1 ; load var_n
 LDC 1
 SUB
-LD 0 0
-AP 2
+LD 0 0 ; load var_self
+AP 2 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-ST 0 44
+ST 0 44 ; define var_genrandom
 LD 0 44
 CONS
 CDR
 LDF 1213
 LDC 1
 TSEL 1217 0
-LD 0 1
-LD 0 2
+LD 0 1 ; load var_x
+LD 0 2 ; load var_y
 CONS
 RTN
-ST 0 45
+ST 0 45 ; define var_coord-create
 LD 0 45
 CONS
 CDR
 LDF 1224
 LDC 1
 TSEL 1227 0
-LD 0 1
+LD 0 1 ; load var_coord
 CAR
 RTN
-ST 0 46
+ST 0 46 ; define var_coord-x
 LD 0 46
 CONS
 CDR
 LDF 1234
 LDC 1
 TSEL 1237 0
-LD 0 1
+LD 0 1 ; load var_coord
 CDR
 RTN
-ST 0 47
+ST 0 47 ; define var_coord-y
 LD 0 47
 CONS
 CDR
 LDF 1244
 LDC 1
 TSEL 1266 0
-LD 1 45
-LD 1 46
-LD 0 1
-LD 1 46
-AP 2
-LD 1 46
-LD 0 2
-LD 1 46
-AP 2
+LD 1 45 ; load var_coord-create
+LD 1 46 ; load var_coord-x
+LD 0 1 ; load var_c1
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 1 46 ; load var_coord-x
+LD 0 2 ; load var_c2
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
 ADD
-LD 1 47
-LD 0 1
-LD 1 47
-AP 2
-LD 1 47
-LD 0 2
-LD 1 47
-AP 2
+LD 1 47 ; load var_coord-y
+LD 0 1 ; load var_c1
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
+LD 1 47 ; load var_coord-y
+LD 0 2 ; load var_c2
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 ADD
-LD 1 45
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 RTN
-ST 0 48
+ST 0 48 ; define var_coord-sum
 LD 0 48
 CONS
 CDR
 LDF 1273
 LDC 1
 TSEL 1295 0
-LD 1 45
-LD 1 46
-LD 0 1
-LD 1 46
-AP 2
-LD 1 46
-LD 0 2
-LD 1 46
-AP 2
+LD 1 45 ; load var_coord-create
+LD 1 46 ; load var_coord-x
+LD 0 1 ; load var_c1
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 1 46 ; load var_coord-x
+LD 0 2 ; load var_c2
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
 SUB
-LD 1 47
-LD 0 1
-LD 1 47
-AP 2
-LD 1 47
-LD 0 2
-LD 1 47
-AP 2
+LD 1 47 ; load var_coord-y
+LD 0 1 ; load var_c1
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
+LD 1 47 ; load var_coord-y
+LD 0 2 ; load var_c2
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 SUB
-LD 1 45
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 RTN
-ST 0 49
+ST 0 49 ; define var_coord-subtract
 LD 0 49
 CONS
 CDR
 LDF 1302
 LDC 1
 TSEL 1327 0
-LD 1 46
-LD 0 1
-LD 1 46
-AP 2
-LD 1 46
-LD 0 2
-LD 1 46
-AP 2
+LD 1 46 ; load var_coord-x
+LD 0 1 ; load var_c1
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 1 46 ; load var_coord-x
+LD 0 2 ; load var_c2
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
 CEQ
 SEL 1314 1324
 LDC 1
 TSEL 1326 0
-LD 1 47
-LD 0 1
-LD 1 47
-AP 2
-LD 1 47
-LD 0 2
-LD 1 47
-AP 2
+LD 1 47 ; load var_coord-y
+LD 0 1 ; load var_c1
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
+LD 1 47 ; load var_coord-y
+LD 0 2 ; load var_c2
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 RTN
-ST 0 50
+ST 0 50 ; define var_coord-equal
 LD 0 50
 CONS
 CDR
 LDF 1334
 LDC 1
 TSEL 1356 0
-LD 1 45
-LD 1 46
-LD 0 2
-LD 1 46
-AP 2
-LD 1 46
-LD 0 1
-LD 1 46
-AP 2
+LD 1 45 ; load var_coord-create
+LD 1 46 ; load var_coord-x
+LD 0 2 ; load var_c2
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 1 46 ; load var_coord-x
+LD 0 1 ; load var_c1
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
 SUB
-LD 1 47
-LD 0 2
-LD 1 47
-AP 2
-LD 1 47
-LD 0 1
-LD 1 47
-AP 2
+LD 1 47 ; load var_coord-y
+LD 0 2 ; load var_c2
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
+LD 1 47 ; load var_coord-y
+LD 0 1 ; load var_c1
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 SUB
-LD 1 45
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 RTN
-ST 0 51
+ST 0 51 ; define var_coord-displacement
 LD 0 51
 CONS
 CDR
 LDF 1363
 LDC 1
 TSEL 1389 0
-LD 1 24
-LD 1 46
-LD 0 1
-LD 1 46
-AP 2
-LD 1 46
-LD 0 2
-LD 1 46
-AP 2
+LD 1 24 ; load var_abs
+LD 1 46 ; load var_coord-x
+LD 0 1 ; load var_c1
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 1 46 ; load var_coord-x
+LD 0 2 ; load var_c2
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
 SUB
-LD 1 24
-AP 2
-LD 1 24
-LD 1 47
-LD 0 1
-LD 1 47
-AP 2
-LD 1 47
-LD 0 2
-LD 1 47
-AP 2
+LD 1 24 ; load var_abs
+AP 2 ; call fun_abs
+LD 1 24 ; load var_abs
+LD 1 47 ; load var_coord-y
+LD 0 1 ; load var_c1
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
+LD 1 47 ; load var_coord-y
+LD 0 2 ; load var_c2
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 SUB
-LD 1 24
-AP 2
+LD 1 24 ; load var_abs
+AP 2 ; call fun_abs
 ADD
 RTN
-ST 0 52
+ST 0 52 ; define var_coord-manhattan-distance
 LD 0 52
 CONS
 CDR
 LDF 1396
 LDC 1
 TSEL 1399 0
-LD 0 1
+LD 0 1 ; load var_h
 CAR
 RTN
-ST 0 53
+ST 0 53 ; define var_heap-get-rank
 LD 0 53
 CONS
 CDR
 LDF 1406
 LDC 1
 TSEL 1410 0
-LD 0 1
+LD 0 1 ; load var_h
 CDR
 CAR
 RTN
-ST 0 54
+ST 0 54 ; define var_heap-get-elem
 LD 0 54
 CONS
 CDR
 LDF 1417
 LDC 1
 TSEL 1422 0
-LD 0 1
+LD 0 1 ; load var_h
 CDR
 CDR
 CAR
 RTN
-ST 0 55
+ST 0 55 ; define var_heap-get-subl
 LD 0 55
 CONS
 CDR
 LDF 1429
 LDC 1
 TSEL 1435 0
-LD 0 1
+LD 0 1 ; load var_h
 CDR
 CDR
 CDR
 CAR
 RTN
-ST 0 56
+ST 0 56 ; define var_heap-get-subr
 LD 0 56
 CONS
 CDR
 LDF 1442
 LDC 1
 TSEL 1452 0
-LD 0 1
-LD 0 2
-LD 0 3
-LD 0 4
+LD 0 1 ; load var_rank
+LD 0 2 ; load var_elem
+LD 0 3 ; load var_subl
+LD 0 4 ; load var_subr
 LDC -2147483648
 CONS
 CONS
 CONS
 CONS
 RTN
-ST 0 57
+ST 0 57 ; define var_heap-build
 LD 0 57
 CONS
 CDR
 LDF 1459
 LDC 1
 TSEL 1472 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_h
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 1464 1466
 LDC 0
+RTN ; return from then
+LD 1 53 ; load var_heap-get-rank
+LD 0 1 ; load var_h
+LD 1 53 ; load var_heap-get-rank
+AP 2 ; call fun_heap-get-rank
+RTN ; return from else
 RTN
-LD 1 53
-LD 0 1
-LD 1 53
-AP 2
-RTN
-RTN
-ST 0 58
+ST 0 58 ; define var_heap-rank
 LD 0 58
 CONS
 CDR
 LDF 1479
 LDC 1
 TSEL 1516 0
-LD 1 58
-LD 0 2
-LD 1 58
-AP 2
-LD 1 58
-LD 0 3
-LD 1 58
-AP 2
+LD 1 58 ; load var_heap-rank
+LD 0 2 ; load var_a
+LD 1 58 ; load var_heap-rank
+AP 2 ; call fun_heap-rank
+LD 1 58 ; load var_heap-rank
+LD 0 3 ; load var_b
+LD 1 58 ; load var_heap-rank
+AP 2 ; call fun_heap-rank
 CGTE
 TSEL 1489 1502
-LD 1 57
-LD 1 58
-LD 0 3
-LD 1 58
-AP 2
+LD 1 57 ; load var_heap-build
+LD 1 58 ; load var_heap-rank
+LD 0 3 ; load var_b
+LD 1 58 ; load var_heap-rank
+AP 2 ; call fun_heap-rank
 LDC 1
 ADD
-LD 0 1
-LD 0 2
-LD 0 3
-LD 1 57
-AP 5
-RTN
-LD 1 57
-LD 1 58
-LD 0 2
-LD 1 58
-AP 2
+LD 0 1 ; load var_x
+LD 0 2 ; load var_a
+LD 0 3 ; load var_b
+LD 1 57 ; load var_heap-build
+AP 5 ; call fun_heap-build
+RTN ; return from then
+LD 1 57 ; load var_heap-build
+LD 1 58 ; load var_heap-rank
+LD 0 2 ; load var_a
+LD 1 58 ; load var_heap-rank
+AP 2 ; call fun_heap-rank
 LDC 1
 ADD
-LD 0 1
-LD 0 3
-LD 0 2
-LD 1 57
-AP 5
+LD 0 1 ; load var_x
+LD 0 3 ; load var_b
+LD 0 2 ; load var_a
+LD 1 57 ; load var_heap-build
+AP 5 ; call fun_heap-build
+RTN ; return from else
 RTN
-RTN
-ST 0 59
+ST 0 59 ; define var_heap-make
 LD 0 59
 CONS
 CDR
 LDF 1523
 LDC 1
 TSEL 1596 0
-LD 1 5
-LD 0 2
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 2 ; load var_h2
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 1528 1530
-LD 0 1
-RTN
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 0 1 ; load var_h1
+RTN ; return from then
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_h1
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 1535 1537
-LD 0 2
-RTN
-LD 1 54
-LD 0 1
-LD 1 54
-AP 2
-LD 1 54
-LD 0 2
-LD 1 54
-AP 2
-LD 1 55
-LD 0 1
-LD 1 55
-AP 2
-LD 1 56
-LD 0 1
-LD 1 56
-AP 2
-LD 1 55
-LD 0 2
-LD 1 55
-AP 2
-LD 1 56
-LD 0 2
-LD 1 56
-AP 2
-DUM 6
+LD 0 2 ; load var_h2
+RTN ; return from then
+LD 1 54 ; load var_heap-get-elem
+LD 0 1 ; load var_h1
+LD 1 54 ; load var_heap-get-elem
+AP 2 ; call fun_heap-get-elem
+LD 1 54 ; load var_heap-get-elem
+LD 0 2 ; load var_h2
+LD 1 54 ; load var_heap-get-elem
+AP 2 ; call fun_heap-get-elem
+LD 1 55 ; load var_heap-get-subl
+LD 0 1 ; load var_h1
+LD 1 55 ; load var_heap-get-subl
+AP 2 ; call fun_heap-get-subl
+LD 1 56 ; load var_heap-get-subr
+LD 0 1 ; load var_h1
+LD 1 56 ; load var_heap-get-subr
+AP 2 ; call fun_heap-get-subr
+LD 1 55 ; load var_heap-get-subl
+LD 0 2 ; load var_h2
+LD 1 55 ; load var_heap-get-subl
+AP 2 ; call fun_heap-get-subl
+LD 1 56 ; load var_heap-get-subr
+LD 0 2 ; load var_h2
+LD 1 56 ; load var_heap-get-subr
+AP 2 ; call fun_heap-get-subr
+DUM 6 ; let (x y a1 b1 a2 b2})
 LDF 1565
 RAP 6
 RTN
-LD 0 1
+LD 0 1 ; load var_y
 CAR
-LD 0 0
+LD 0 0 ; load var_x
 CAR
 CGT
 TSEL 1571 1582
-LD 2 59
-LD 0 0
-LD 0 2
-LD 1 0
-LD 0 3
-LD 1 2
-LD 1 0
-AP 3
-LD 2 59
-AP 4
+LD 2 59 ; load var_heap-make
+LD 0 0 ; load var_x
+LD 0 2 ; load var_a1
+LD 1 0 ; load var_self
+LD 0 3 ; load var_b1
+LD 1 2 ; load var_h2
+LD 1 0 ; load var_self
+AP 3 ; call fun_self
+LD 2 59 ; load var_heap-make
+AP 4 ; call fun_heap-make
+RTN ; return from then
+LD 2 59 ; load var_heap-make
+LD 0 1 ; load var_y
+LD 0 4 ; load var_a2
+LD 1 0 ; load var_self
+LD 1 1 ; load var_h1
+LD 0 5 ; load var_b2
+LD 1 0 ; load var_self
+AP 3 ; call fun_self
+LD 2 59 ; load var_heap-make
+AP 4 ; call fun_heap-make
+RTN ; return from else
+RTN ; return from else
+RTN ; return from else
 RTN
-LD 2 59
-LD 0 1
-LD 0 4
-LD 1 0
-LD 1 1
-LD 0 5
-LD 1 0
-AP 3
-LD 2 59
-AP 4
-RTN
-RTN
-RTN
-RTN
-ST 0 60
+ST 0 60 ; define var_heap-merge
 LD 0 60
 CONS
 CDR
 LDF 1603
 LDC 1
 TSEL 1608 0
-LD 1 5
-LD 0 1
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 0 1 ; load var_h
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 RTN
-ST 0 61
+ST 0 61 ; define var_heap-empty?
 LD 0 61
 CONS
 CDR
 LDF 1615
 LDC 1
 TSEL 1627 0
-LD 1 60
-LD 1 57
+LD 1 60 ; load var_heap-merge
+LD 1 57 ; load var_heap-build
 LDC 1
-LD 0 1
-LD 1 1
-LD 1 1
-LD 1 57
-AP 5
-LD 0 2
-LD 1 60
-AP 3
+LD 0 1 ; load var_x
+LD 1 1 ; load var_nil
+LD 1 1 ; load var_nil
+LD 1 57 ; load var_heap-build
+AP 5 ; call fun_heap-build
+LD 0 2 ; load var_h
+LD 1 60 ; load var_heap-merge
+AP 3 ; call fun_heap-merge
 RTN
-ST 0 62
+ST 0 62 ; define var_heap-insert
 LD 0 62
 CONS
 CDR
 LDF 1634
 LDC 1
 TSEL 1647 0
-LD 1 61
-LD 0 1
-LD 1 61
-AP 2
+LD 1 61 ; load var_heap-empty?
+LD 0 1 ; load var_h
+LD 1 61 ; load var_heap-empty?
+AP 2 ; call fun_heap-empty?
 TSEL 1639 1641
-LD 1 1
+LD 1 1 ; load var_nil
+RTN ; return from then
+LD 1 54 ; load var_heap-get-elem
+LD 0 1 ; load var_h
+LD 1 54 ; load var_heap-get-elem
+AP 2 ; call fun_heap-get-elem
+RTN ; return from else
 RTN
-LD 1 54
-LD 0 1
-LD 1 54
-AP 2
-RTN
-RTN
-ST 0 63
+ST 0 63 ; define var_heap-find-min
 LD 0 63
 CONS
 CDR
 LDF 1654
 LDC 1
 TSEL 1674 0
-LD 1 61
-LD 0 1
-LD 1 61
-AP 2
+LD 1 61 ; load var_heap-empty?
+LD 0 1 ; load var_h
+LD 1 61 ; load var_heap-empty?
+AP 2 ; call fun_heap-empty?
 TSEL 1659 1661
-LD 1 1
+LD 1 1 ; load var_nil
+RTN ; return from then
+LD 1 60 ; load var_heap-merge
+LD 1 55 ; load var_heap-get-subl
+LD 0 1 ; load var_h
+LD 1 55 ; load var_heap-get-subl
+AP 2 ; call fun_heap-get-subl
+LD 1 56 ; load var_heap-get-subr
+LD 0 1 ; load var_h
+LD 1 56 ; load var_heap-get-subr
+AP 2 ; call fun_heap-get-subr
+LD 1 60 ; load var_heap-merge
+AP 3 ; call fun_heap-merge
+RTN ; return from else
 RTN
-LD 1 60
-LD 1 55
-LD 0 1
-LD 1 55
-AP 2
-LD 1 56
-LD 0 1
-LD 1 56
-AP 2
-LD 1 60
-AP 3
-RTN
-RTN
-ST 0 64
+ST 0 64 ; define var_heap-delete-min
 LD 0 64
 CONS
 CDR
 LDF 1681
 LDC 1
 TSEL 1705 0
-LD 1 61
-LD 0 1
-LD 1 61
-AP 2
+LD 1 61 ; load var_heap-empty?
+LD 0 1 ; load var_h
+LD 1 61 ; load var_heap-empty?
+AP 2 ; call fun_heap-empty?
 TSEL 1686 1688
-LD 1 1
-RTN
-LD 1 54
-LD 0 1
-LD 1 54
-AP 2
-LD 1 64
-LD 0 1
-LD 1 64
-AP 2
-DUM 2
+LD 1 1 ; load var_nil
+RTN ; return from then
+LD 1 54 ; load var_heap-get-elem
+LD 0 1 ; load var_h
+LD 1 54 ; load var_heap-get-elem
+AP 2 ; call fun_heap-get-elem
+LD 1 64 ; load var_heap-delete-min
+LD 0 1 ; load var_h
+LD 1 64 ; load var_heap-delete-min
+AP 2 ; call fun_heap-delete-min
+DUM 2 ; let (x r})
 LDF 1700
 RAP 2
 RTN
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_x
+LD 0 1 ; load var_r
 CONS
+RTN ; return from else
 RTN
-RTN
-ST 0 65
+ST 0 65 ; define var_heap-pop
 LD 0 65
 CONS
 CDR
 LDF 1712
 LDC 1
 TSEL 1714 0
-LD 1 1
+LD 1 1 ; load var_nil
 RTN
-ST 0 66
+ST 0 66 ; define var_heap-create
 LD 0 66
 CONS
 CDR
 LDF 1721
 LDC 1
 TSEL 1738 0
-LD 1 8
-LD 1 66
-LD 1 66
-AP 1
-LD 0 1
+LD 1 8 ; load var_foldLeft
+LD 1 66 ; load var_heap-create
+LD 1 66 ; load var_heap-create
+AP 1 ; call fun_heap-create
+LD 0 1 ; load var_l
 LDF 1729
 LDC 1
 TSEL 1735 0
-LD 2 62
-LD 0 2
-LD 0 1
-LD 2 62
-AP 3
+LD 2 62 ; load var_heap-insert
+LD 0 2 ; load var_e
+LD 0 1 ; load var_acc
+LD 2 62 ; load var_heap-insert
+AP 3 ; call fun_heap-insert
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 67
+ST 0 67 ; define var_heap-from-list
 LD 0 67
 CONS
 CDR
@@ -1746,730 +1746,730 @@ TSEL 1828 0
 LDF 1748
 LDC 1
 TSEL 1814 0
-LD 2 5
-LD 0 1
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 1 ; load var_l
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 1753 1755
-LD 2 1
-RTN
-LD 0 3
+LD 2 1 ; load var_nil
+RTN ; return from then
+LD 0 3 ; load var_len
 LDC 2
 DIV
-DUM 1
+DUM 1 ; let (m})
 LDF 1762
 RAP 1
 RTN
-LD 3 31
-LD 1 1
-LD 0 0
-LD 3 31
-AP 3
-DUM 1
+LD 3 31 ; load var_split
+LD 1 1 ; load var_l
+LD 0 0 ; load var_m
+LD 3 31 ; load var_split
+AP 3 ; call fun_split
+DUM 1 ; let (s})
 LDF 1771
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_s
 CAR
-DUM 1
+DUM 1 ; let (left})
 LDF 1777
 RAP 1
 RTN
-LD 1 0
+LD 1 0 ; load var_s
 CDR
-DUM 1
+DUM 1 ; let (right})
 LDF 1783
 RAP 1
 RTN
-LD 4 2
-LD 3 0
+LD 4 2 ; load var_i
+LD 3 0 ; load var_m
 ADD
-LD 0 0
+LD 0 0 ; load var_right
 CAR
 CONS
-LD 4 0
-LD 1 0
-LD 4 2
-LD 3 0
-LD 4 0
-AP 4
-LD 4 0
-LD 0 0
+LD 4 0 ; load var_self
+LD 1 0 ; load var_left
+LD 4 2 ; load var_i
+LD 3 0 ; load var_m
+LD 4 0 ; load var_self
+AP 4 ; call fun_self
+LD 4 0 ; load var_self
+LD 0 0 ; load var_right
 CDR
-LD 4 2
-LD 3 0
+LD 4 2 ; load var_i
+LD 3 0 ; load var_m
 ADD
 LDC 1
 ADD
-LD 4 3
-LD 3 0
+LD 4 3 ; load var_len
+LD 3 0 ; load var_m
 SUB
 LDC 1
 SUB
-LD 4 0
-AP 4
+LD 4 0 ; load var_self
+AP 4 ; call fun_self
 CONS
 CONS
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (binary-tree-create-aux})
 LDF 1818
 RAP 1
 RTN
-LD 0 0
-LD 1 1
+LD 0 0 ; load var_binary-tree-create-aux
+LD 1 1 ; load var_l
 LDC 0
-LD 2 17
-LD 1 1
-LD 2 17
-AP 2
-LD 0 0
-AP 4
+LD 2 17 ; load var_length
+LD 1 1 ; load var_l
+LD 2 17 ; load var_length
+AP 2 ; call fun_length
+LD 0 0 ; load var_binary-tree-create-aux
+AP 4 ; call fun_binary-tree-create-aux
 RTN
-ST 0 68
+ST 0 68 ; define var_binary-tree-create
 LD 0 68
 CONS
 CDR
 LDF 1835
 LDC 1
 TSEL 1872 0
-LD 0 1
+LD 0 1 ; load var_b
 CAR
 CAR
-DUM 1
+DUM 1 ; let (m})
 LDF 1842
 RAP 1
 RTN
-LD 1 2
-LD 0 0
+LD 1 2 ; load var_i
+LD 0 0 ; load var_m
 CEQ
 TSEL 1846 1850
-LD 1 1
+LD 1 1 ; load var_b
 CAR
 CDR
-RTN
-LD 0 0
-LD 1 2
+RTN ; return from then
+LD 0 0 ; load var_m
+LD 1 2 ; load var_i
 CGT
 TSEL 1854 1862
-LD 1 0
-LD 1 1
+LD 1 0 ; load var_self
+LD 1 1 ; load var_b
 CDR
 CAR
-LD 1 2
-LD 1 0
-TAP 3
-RTN
-LD 1 0
-LD 1 1
+LD 1 2 ; load var_i
+LD 1 0 ; load var_self
+TAP 3 ; call tfun_self
+RTN ; return from then
+LD 1 0 ; load var_self
+LD 1 1 ; load var_b
 CDR
 CDR
-LD 1 2
-LD 1 0
-TAP 3
+LD 1 2 ; load var_i
+LD 1 0 ; load var_self
+TAP 3 ; call tfun_self
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-ST 0 69
+ST 0 69 ; define var_binary-tree-get
 LD 0 69
 CONS
 CDR
 LDF 1879
 LDC 1
 TSEL 1937 0
-LD 0 1
+LD 0 1 ; load var_b
 CAR
 CAR
-DUM 1
+DUM 1 ; let (m})
 LDF 1886
 RAP 1
 RTN
-LD 1 2
-LD 0 0
+LD 1 2 ; load var_i
+LD 0 0 ; load var_m
 CEQ
 TSEL 1890 1897
-LD 0 0
-LD 1 3
+LD 0 0 ; load var_m
+LD 1 3 ; load var_v
 CONS
-LD 1 1
+LD 1 1 ; load var_b
 CDR
 CONS
-RTN
-LD 1 1
+RTN ; return from then
+LD 1 1 ; load var_b
 CDR
 CAR
-LD 1 1
+LD 1 1 ; load var_b
 CDR
 CDR
-DUM 2
+DUM 2 ; let (left right})
 LDF 1907
 RAP 2
 RTN
-LD 1 0
-LD 2 2
+LD 1 0 ; load var_m
+LD 2 2 ; load var_i
 CGT
 TSEL 1911 1923
-LD 2 1
+LD 2 1 ; load var_b
 CAR
-LD 2 0
-LD 0 0
-LD 2 2
-LD 2 3
-LD 2 0
-AP 4
-LD 0 1
+LD 2 0 ; load var_self
+LD 0 0 ; load var_left
+LD 2 2 ; load var_i
+LD 2 3 ; load var_v
+LD 2 0 ; load var_self
+AP 4 ; call fun_self
+LD 0 1 ; load var_right
 CONS
 CONS
-RTN
-LD 2 1
+RTN ; return from then
+LD 2 1 ; load var_b
 CAR
-LD 0 0
-LD 2 0
-LD 0 1
-LD 2 2
-LD 2 3
-LD 2 0
-AP 4
+LD 0 0 ; load var_left
+LD 2 0 ; load var_self
+LD 0 1 ; load var_right
+LD 2 2 ; load var_i
+LD 2 3 ; load var_v
+LD 2 0 ; load var_self
+AP 4 ; call fun_self
 CONS
 CONS
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-ST 0 70
+ST 0 70 ; define var_binary-tree-set
 LD 0 70
 CONS
 CDR
 LDF 1944
 LDC 1
 TSEL 1961 0
-LD 0 1
+LD 0 1 ; load var_l
 ATOM
 SEL 1949 1951
 LDC 1
 TSEL 1960 0
-LD 1 1
-JOIN
-LD 0 1
+LD 1 1 ; load var_nil
+JOIN ; merge then
+LD 0 1 ; load var_l
 CAR
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+LD 0 1 ; load var_l
 CDR
-LD 0 0
-AP 2
+LD 0 0 ; load var_self
+AP 2 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-ST 0 71
+ST 0 71 ; define var_convert-list
 LD 0 71
 CONS
 CDR
 LDF 1968
 LDC 1
 TSEL 1988 0
-LD 0 1
+LD 0 1 ; load var_m
 ATOM
 SEL 1973 1975
 LDC 1
 TSEL 1987 0
-LD 1 1
-JOIN
-LD 1 71
-LD 0 1
+LD 1 1 ; load var_nil
+JOIN ; merge then
+LD 1 71 ; load var_convert-list
+LD 0 1 ; load var_m
 CAR
-LD 1 71
-AP 2
-LD 0 0
-LD 0 1
+LD 1 71 ; load var_convert-list
+AP 2 ; call fun_convert-list
+LD 0 0 ; load var_self
+LD 0 1 ; load var_m
 CDR
-LD 0 0
-AP 2
+LD 0 0 ; load var_self
+AP 2 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-ST 0 72
+ST 0 72 ; define var_convert-matrix
 LD 0 72
 CONS
 CDR
 LDC 0
-ST 0 73
+ST 0 73 ; define var_ghosts-eaten
 LD 0 73
 CONS
 CDR
 LDF 2000
 LDC 1
 TSEL 2006 0
-LD 1 72
-LD 0 1
+LD 1 72 ; load var_convert-matrix
+LD 0 1 ; load var_state
 CAR
-LD 1 72
-AP 2
+LD 1 72 ; load var_convert-matrix
+AP 2 ; call fun_convert-matrix
 RTN
-ST 0 74
+ST 0 74 ; define var_state-map
 LD 0 74
 CONS
 CDR
 LDF 2013
 LDC 1
 TSEL 2018 0
-LD 0 1
+LD 0 1 ; load var_state
 CDR
 CDR
 CDR
 RTN
-ST 0 75
+ST 0 75 ; define var_state-fruit
 LD 0 75
 CONS
 CDR
 LDF 2025
 LDC 1
 TSEL 2029 0
-LD 0 1
+LD 0 1 ; load var_state
 CDR
 CAR
 RTN
-ST 0 76
+ST 0 76 ; define var_state-lambdaman
 LD 0 76
 CONS
 CDR
 LDF 2036
 LDC 1
 TSEL 2044 0
-LD 1 71
-LD 0 1
+LD 1 71 ; load var_convert-list
+LD 0 1 ; load var_state
 CDR
 CDR
 CAR
-LD 1 71
-AP 2
+LD 1 71 ; load var_convert-list
+AP 2 ; call fun_convert-list
 RTN
-ST 0 77
+ST 0 77 ; define var_state-ghosts
 LD 0 77
 CONS
 CDR
 LDF 2051
 LDC 1
 TSEL 2067 0
-LD 1 13
-LD 1 77
-LD 0 1
-LD 1 77
-AP 2
+LD 1 13 ; load var_exists
+LD 1 77 ; load var_state-ghosts
+LD 0 1 ; load var_state
+LD 1 77 ; load var_state-ghosts
+AP 2 ; call fun_state-ghosts
 LDF 2059
 LDC 1
 TSEL 2064 0
-LD 0 1
+LD 0 1 ; load var_x
 CAR
 LDC 1
 CEQ
 RTN
-LD 1 13
-AP 3
+LD 1 13 ; load var_exists
+AP 3 ; call fun_exists
 RTN
-ST 0 78
+ST 0 78 ; define var_state-fright-mode?
 LD 0 78
 CONS
 CDR
-LD 0 72
-LD 0 74
-LD 0 0
-LD 0 74
-AP 2
-LD 0 72
-AP 2
-ST 0 79
+LD 0 72 ; load var_convert-matrix
+LD 0 74 ; load var_state-map
+LD 0 0 ; load var_initial-state
+LD 0 74 ; load var_state-map
+AP 2 ; call fun_state-map
+LD 0 72 ; load var_convert-matrix
+AP 2 ; call fun_convert-matrix
+ST 0 79 ; define var_game-map
 LD 0 79
 CONS
 CDR
-LD 0 17
-LD 0 79
+LD 0 17 ; load var_length
+LD 0 79 ; load var_game-map
 CAR
-LD 0 17
-AP 2
-ST 0 80
+LD 0 17 ; load var_length
+AP 2 ; call fun_length
+ST 0 80 ; define var_map-width
 LD 0 80
 CONS
 CDR
-LD 0 17
-LD 0 79
-LD 0 17
-AP 2
-ST 0 81
+LD 0 17 ; load var_length
+LD 0 79 ; load var_game-map
+LD 0 17 ; load var_length
+AP 2 ; call fun_length
+ST 0 81 ; define var_map-height
 LD 0 81
 CONS
 CDR
-LD 0 80
-LD 0 81
+LD 0 80 ; load var_map-width
+LD 0 81 ; load var_map-height
 MUL
-ST 0 82
+ST 0 82 ; define var_map-area
 LD 0 82
 CONS
 CDR
 LDC 0
-ST 0 83
+ST 0 83 ; define var_encoding-wall
 LD 0 83
 CONS
 CDR
 LDC 1
-ST 0 84
+ST 0 84 ; define var_encoding-empty
 LD 0 84
 CONS
 CDR
 LDC 2
-ST 0 85
+ST 0 85 ; define var_encoding-pill
 LD 0 85
 CONS
 CDR
 LDC 3
-ST 0 86
+ST 0 86 ; define var_encoding-power-pill
 LD 0 86
 CONS
 CDR
 LDC 4
-ST 0 87
+ST 0 87 ; define var_encoding-fruit
 LD 0 87
 CONS
 CDR
 LDC 5
-ST 0 88
+ST 0 88 ; define var_encoding-lambda-man
 LD 0 88
 CONS
 CDR
 LDC 6
-ST 0 89
+ST 0 89 ; define var_encoding-ghost
 LD 0 89
 CONS
 CDR
 LDC 10
-ST 0 90
+ST 0 90 ; define var_points-pill
 LD 0 90
 CONS
 CDR
 LDC 50
-ST 0 91
+ST 0 91 ; define var_points-power-pill
 LD 0 91
 CONS
 CDR
 LDC 200
-ST 0 92
+ST 0 92 ; define var_points-ghosts
 LD 0 92
 CONS
 CDR
 LDC 100
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
 SEL 2162 2164
 LDC 1
 TSEL 2364 0
 LDC 100
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 100
 CGT
 SEL 2170 2174
 LDC 1
 TSEL 2176 0
 LDC 200
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2179 2181
 LDC 1
 TSEL 2363 0
 LDC 300
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 200
 CGT
 SEL 2187 2191
 LDC 1
 TSEL 2193 0
 LDC 300
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2196 2198
 LDC 1
 TSEL 2362 0
 LDC 500
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 300
 CGT
 SEL 2204 2208
 LDC 1
 TSEL 2210 0
 LDC 400
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2213 2215
 LDC 1
 TSEL 2361 0
 LDC 500
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 400
 CGT
 SEL 2221 2225
 LDC 1
 TSEL 2227 0
 LDC 500
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2230 2232
 LDC 1
 TSEL 2360 0
 LDC 700
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 500
 CGT
 SEL 2238 2242
 LDC 1
 TSEL 2244 0
 LDC 600
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2247 2249
 LDC 1
 TSEL 2359 0
 LDC 700
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 600
 CGT
 SEL 2255 2259
 LDC 1
 TSEL 2261 0
 LDC 700
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2264 2266
 LDC 1
 TSEL 2358 0
 LDC 1000
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 700
 CGT
 SEL 2272 2276
 LDC 1
 TSEL 2278 0
 LDC 800
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2281 2283
 LDC 1
 TSEL 2357 0
 LDC 1000
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 800
 CGT
 SEL 2289 2293
 LDC 1
 TSEL 2295 0
 LDC 900
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2298 2300
 LDC 1
 TSEL 2356 0
 LDC 2000
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 900
 CGT
 SEL 2306 2310
 LDC 1
 TSEL 2312 0
 LDC 1000
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2315 2317
 LDC 1
 TSEL 2355 0
 LDC 2000
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 1000
 CGT
 SEL 2323 2327
 LDC 1
 TSEL 2329 0
 LDC 1100
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2332 2334
 LDC 1
 TSEL 2354 0
 LDC 3000
-JOIN
-LD 0 82
+JOIN ; merge then
+LD 0 82 ; load var_map-area
 LDC 1100
 CGT
 SEL 2340 2344
 LDC 1
 TSEL 2346 0
 LDC 1200
-LD 0 82
+LD 0 82 ; load var_map-area
 CGTE
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 2349 2351
 LDC 1
 TSEL 2353 0
 LDC 3000
-JOIN
+JOIN ; merge then
 LDC 5000
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-JOIN
-ST 0 93
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+ST 0 93 ; define var_points-fruit
 LD 0 93
 CONS
 CDR
 LDF 2371
 LDC 1
 TSEL 2387 0
-LD 1 69
-LD 0 1
-LD 1 46
-LD 0 3
-LD 1 46
-AP 2
-LD 0 2
-LD 1 47
-LD 0 3
-LD 1 47
-AP 2
+LD 1 69 ; load var_binary-tree-get
+LD 0 1 ; load var_matrix
+LD 1 46 ; load var_coord-x
+LD 0 3 ; load var_pos
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 0 2 ; load var_matrix-width
+LD 1 47 ; load var_coord-y
+LD 0 3 ; load var_pos
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 MUL
 ADD
-LD 1 69
-AP 3
+LD 1 69 ; load var_binary-tree-get
+AP 3 ; call fun_binary-tree-get
 RTN
-ST 0 94
+ST 0 94 ; define var_get-matrix-pos
 LD 0 94
 CONS
 CDR
 LDF 2394
 LDC 1
 TSEL 2411 0
-LD 1 70
-LD 0 1
-LD 1 46
-LD 0 3
-LD 1 46
-AP 2
-LD 0 2
-LD 1 47
-LD 0 3
-LD 1 47
-AP 2
+LD 1 70 ; load var_binary-tree-set
+LD 0 1 ; load var_matrix
+LD 1 46 ; load var_coord-x
+LD 0 3 ; load var_pos
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 0 2 ; load var_matrix-width
+LD 1 47 ; load var_coord-y
+LD 0 3 ; load var_pos
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 MUL
 ADD
-LD 0 4
-LD 1 70
-AP 4
+LD 0 4 ; load var_v
+LD 1 70 ; load var_binary-tree-set
+AP 4 ; call fun_binary-tree-set
 RTN
-ST 0 95
+ST 0 95 ; define var_set-matrix-pos
 LD 0 95
 CONS
 CDR
 LDF 2418
 LDC 1
 TSEL 2424 0
-LD 0 1
-LD 0 2
-LD 0 3
+LD 0 1 ; load var_visited
+LD 0 2 ; load var_distance
+LD 0 3 ; load var_previous
 CONS
 CONS
 RTN
-ST 0 96
+ST 0 96 ; define var_astar-node
 LD 0 96
 CONS
 CDR
 LDF 2431
 LDC 1
 TSEL 2439 0
-LD 1 94
-LD 0 1
-LD 0 2
-LD 0 4
-LD 1 94
-AP 4
+LD 1 94 ; load var_get-matrix-pos
+LD 0 1 ; load var_details-matrix
+LD 0 2 ; load var_width
+LD 0 4 ; load var_pos
+LD 1 94 ; load var_get-matrix-pos
+AP 4 ; call fun_get-matrix-pos
 CAR
 RTN
-ST 0 97
+ST 0 97 ; define var_astar-visited
 LD 0 97
 CONS
 CDR
 LDF 2446
 LDC 1
 TSEL 2455 0
-LD 1 94
-LD 0 1
-LD 0 2
-LD 0 4
-LD 1 94
-AP 4
+LD 1 94 ; load var_get-matrix-pos
+LD 0 1 ; load var_details-matrix
+LD 0 2 ; load var_width
+LD 0 4 ; load var_pos
+LD 1 94 ; load var_get-matrix-pos
+AP 4 ; call fun_get-matrix-pos
 CDR
 CAR
 RTN
-ST 0 98
+ST 0 98 ; define var_astar-distance
 LD 0 98
 CONS
 CDR
 LDF 2462
 LDC 1
 TSEL 2471 0
-LD 1 94
-LD 0 1
-LD 0 2
-LD 0 4
-LD 1 94
-AP 4
+LD 1 94 ; load var_get-matrix-pos
+LD 0 1 ; load var_details-matrix
+LD 0 2 ; load var_width
+LD 0 4 ; load var_pos
+LD 1 94 ; load var_get-matrix-pos
+AP 4 ; call fun_get-matrix-pos
 CDR
 CDR
 RTN
-ST 0 99
+ST 0 99 ; define var_astar-previous
 LD 0 99
 CONS
 CDR
@@ -2479,491 +2479,491 @@ TSEL 2519 0
 LDF 2481
 LDC 1
 TSEL 2506 0
-LD 2 50
-LD 0 2
-LD 0 1
-LD 2 50
-AP 3
+LD 2 50 ; load var_coord-equal
+LD 0 2 ; load var_to
+LD 0 1 ; load var_from
+LD 2 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 2489 2491
 LDC 1
 TSEL 2505 0
-LD 2 1
-JOIN
-LD 0 2
-LD 0 0
-LD 0 1
-LD 2 99
-LD 1 1
-LD 1 2
-LD 1 3
-LD 0 2
-LD 2 99
-AP 5
-LD 0 0
-AP 3
+LD 2 1 ; load var_nil
+JOIN ; merge then
+LD 0 2 ; load var_to
+LD 0 0 ; load var_self
+LD 0 1 ; load var_from
+LD 2 99 ; load var_astar-previous
+LD 1 1 ; load var_details-matrix
+LD 1 2 ; load var_width
+LD 1 3 ; load var_height
+LD 0 2 ; load var_to
+LD 2 99 ; load var_astar-previous
+AP 5 ; call fun_astar-previous
+LD 0 0 ; load var_self
+AP 3 ; call fun_self
 CONS
-JOIN
+JOIN : merge else
 RTN
-DUM 1
+DUM 1 ; let (astar-get-path-aux})
 LDF 2510
 RAP 1
 RTN
-LD 2 9
-LD 0 0
-LD 1 4
-LD 1 5
-LD 0 0
-AP 3
-LD 2 9
-AP 2
+LD 2 9 ; load var_reverse
+LD 0 0 ; load var_astar-get-path-aux
+LD 1 4 ; load var_from
+LD 1 5 ; load var_to
+LD 0 0 ; load var_astar-get-path-aux
+AP 3 ; call fun_astar-get-path-aux
+LD 2 9 ; load var_reverse
+AP 2 ; call fun_reverse
 RTN
-ST 0 100
+ST 0 100 ; define var_astar-get-path
 LD 0 100
 CONS
 CDR
 LDF 2526
 LDC 1
 TSEL 2598 0
-LD 1 51
-LD 0 1
-LD 0 2
-LD 1 51
-AP 3
-DUM 1
+LD 1 51 ; load var_coord-displacement
+LD 0 1 ; load var_from
+LD 0 2 ; load var_to
+LD 1 51 ; load var_coord-displacement
+AP 3 ; call fun_coord-displacement
+DUM 1 ; let (disp})
 LDF 2535
 RAP 1
 RTN
-LD 2 50
-LD 0 0
-LD 2 45
+LD 2 50 ; load var_coord-equal
+LD 0 0 ; load var_disp
+LD 2 45 ; load var_coord-create
 LDC 0
 LDC -1
-LD 2 45
-AP 3
-LD 2 50
-AP 3
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 2 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 2547 2553
 LDC 1
 TSEL 2597 0
-LD 2 45
+LD 2 45 ; load var_coord-create
 LDC 0
 LDC 0
-LD 2 45
-AP 3
-JOIN
-LD 2 50
-LD 0 0
-LD 2 45
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
+LD 2 50 ; load var_coord-equal
+LD 0 0 ; load var_disp
+LD 2 45 ; load var_coord-create
 LDC 1
 LDC 0
-LD 2 45
-AP 3
-LD 2 50
-AP 3
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 2 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 2565 2571
 LDC 1
 TSEL 2596 0
-LD 2 45
+LD 2 45 ; load var_coord-create
 LDC 0
 LDC 1
-LD 2 45
-AP 3
-JOIN
-LD 2 50
-LD 0 0
-LD 2 45
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
+LD 2 50 ; load var_coord-equal
+LD 0 0 ; load var_disp
+LD 2 45 ; load var_coord-create
 LDC 0
 LDC 1
-LD 2 45
-AP 3
-LD 2 50
-AP 3
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 2 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 2583 2589
 LDC 1
 TSEL 2595 0
-LD 2 45
+LD 2 45 ; load var_coord-create
 LDC 0
 LDC 2
-LD 2 45
-AP 3
-JOIN
-LD 2 45
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
+LD 2 45 ; load var_coord-create
 LDC 0
 LDC 3
-LD 2 45
-AP 3
-JOIN
-JOIN
-JOIN
+LD 2 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
 RTN
-ST 0 101
+ST 0 101 ; define var_direction-to
 LD 0 101
 CONS
 CDR
 LDF 2605
 LDC 1
 TSEL 2622 0
-LD 1 8
-LD 0 1
-LD 0 2
+LD 1 8 ; load var_foldLeft
+LD 0 1 ; load var_matrix
+LD 0 2 ; load var_positions
 LDF 2611
 LDC 1
 TSEL 2619 0
-LD 2 95
-LD 0 1
-LD 2 80
-LD 0 2
-LD 1 3
-LD 2 95
-AP 5
+LD 2 95 ; load var_set-matrix-pos
+LD 0 1 ; load var_m
+LD 2 80 ; load var_map-width
+LD 0 2 ; load var_pos
+LD 1 3 ; load var_v
+LD 2 95 ; load var_set-matrix-pos
+AP 5 ; call fun_set-matrix-pos
 RTN
-LD 1 8
-AP 4
+LD 1 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 RTN
-ST 0 102
+ST 0 102 ; define var_update-values
 LD 0 102
 CONS
 CDR
 LDF 2629
 LDC 1
 TSEL 2908 0
-LD 1 45
+LD 1 45 ; load var_coord-create
 LDC 0
 LDC -1
-LD 1 45
-AP 3
-LD 1 45
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 45 ; load var_coord-create
 LDC 1
 LDC 0
-LD 1 45
-AP 3
-LD 1 45
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 45 ; load var_coord-create
 LDC 0
 LDC 1
-LD 1 45
-AP 3
-LD 1 45
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 45 ; load var_coord-create
 LDC -1
 LDC 0
-LD 1 45
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 LDC -2147483648
 CONS
 CONS
 CONS
 CONS
-DUM 1
+DUM 1 ; let (directions})
 LDF 2658
 RAP 1
 RTN
-LD 2 77
-LD 1 6
-LD 2 77
-AP 2
-DUM 1
+LD 2 77 ; load var_state-ghosts
+LD 1 6 ; load var_state
+LD 2 77 ; load var_state-ghosts
+AP 2 ; call fun_state-ghosts
+DUM 1 ; let (ghosts})
 LDF 2666
 RAP 1
 RTN
-LD 3 13
-LD 0 0
+LD 3 13 ; load var_exists
+LD 0 0 ; load var_ghosts
 LDF 2671
 LDC 1
 TSEL 2676 0
-LD 0 1
+LD 0 1 ; load var_x
 CAR
 LDC 1
 CEQ
 RTN
-LD 3 13
-AP 3
-DUM 1
+LD 3 13 ; load var_exists
+AP 3 ; call fun_exists
+DUM 1 ; let (fright-mode?})
 LDF 2682
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_fright-mode?
 SEL 2686 2688
 LDC 1
 TSEL 2705 0
-LD 3 3
-JOIN
-LD 4 102
-LD 3 3
-LD 4 10
-LD 1 0
+LD 3 3 ; load var_game-map
+JOIN ; merge then
+LD 4 102 ; load var_update-values
+LD 3 3 ; load var_game-map
+LD 4 10 ; load var_map
+LD 1 0 ; load var_ghosts
 LDF 2695
 LDC 1
 TSEL 2699 0
-LD 0 1
+LD 0 1 ; load var_g
 CDR
 CAR
 RTN
-LD 4 10
-AP 3
+LD 4 10 ; load var_map
+AP 3 ; call fun_map
 LDC 0
-LD 4 102
-AP 4
-JOIN
-DUM 1
+LD 4 102 ; load var_update-values
+AP 4 ; call fun_update-values
+JOIN : merge else
+DUM 1 ; let (game-map})
 LDF 2709
 RAP 1
 RTN
-LD 5 102
-LD 5 68
-LD 5 33
-LD 5 28
-LD 4 5
-LD 5 28
-LD 4 4
-LD 5 3
+LD 5 102 ; load var_update-values
+LD 5 68 ; load var_binary-tree-create
+LD 5 33 ; load var_flatten1
+LD 5 28 ; load var_fill
+LD 4 5 ; load var_map-height
+LD 5 28 ; load var_fill
+LD 4 4 ; load var_map-width
+LD 5 3 ; load var_false
 LDC -1
 LDC -1
 LDC -1
 CONS
 CONS
 CONS
-LD 5 28
-AP 3
-LD 5 28
-AP 3
-LD 5 33
-AP 2
-LD 5 68
-AP 2
-LD 4 1
+LD 5 28 ; load var_fill
+AP 3 ; call fun_fill
+LD 5 28 ; load var_fill
+AP 3 ; call fun_fill
+LD 5 33 ; load var_flatten1
+AP 2 ; call fun_flatten1
+LD 5 68 ; load var_binary-tree-create
+AP 2 ; call fun_binary-tree-create
+LD 4 1 ; load var_from
 LDC -2147483648
 CONS
-LD 5 96
-LD 5 2
+LD 5 96 ; load var_astar-node
+LD 5 2 ; load var_true
 LDC 0
-LD 5 45
+LD 5 45 ; load var_coord-create
 LDC -1
 LDC -1
-LD 5 45
-AP 3
-LD 5 96
-AP 4
-LD 5 102
-AP 4
+LD 5 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 5 96 ; load var_astar-node
+AP 4 ; call fun_astar-node
+LD 5 102 ; load var_update-values
+AP 4 ; call fun_update-values
 LDF 2749
 LDC 1
 TSEL 2891 0
-LD 6 61
-LD 0 1
-LD 6 61
-AP 2
+LD 6 61 ; load var_heap-empty?
+LD 0 1 ; load var_q
+LD 6 61 ; load var_heap-empty?
+AP 2 ; call fun_heap-empty?
 TSEL 2754 2756
-LD 0 2
-RTN
-LD 6 63
-LD 0 1
-LD 6 63
-AP 2
-DUM 1
+LD 0 2 ; load var_details-matrix
+RTN ; return from then
+LD 6 63 ; load var_heap-find-min
+LD 0 1 ; load var_q
+LD 6 63 ; load var_heap-find-min
+AP 2 ; call fun_heap-find-min
+DUM 1 ; let (current-element})
 LDF 2764
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_current-element
 CDR
-DUM 1
+DUM 1 ; let (current})
 LDF 2770
 RAP 1
 RTN
-LD 8 65
-LD 2 1
-LD 8 65
-AP 2
+LD 8 65 ; load var_heap-pop
+LD 2 1 ; load var_q
+LD 8 65 ; load var_heap-pop
+AP 2 ; call fun_heap-pop
 CDR
-DUM 1
+DUM 1 ; let (next-q})
 LDF 2779
 RAP 1
 RTN
-LD 9 50
-LD 1 0
-LD 8 2
-LD 9 50
-AP 3
+LD 9 50 ; load var_coord-equal
+LD 1 0 ; load var_current
+LD 8 2 ; load var_to
+LD 9 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 TSEL 2785 2787
-LD 3 2
-RTN
-LD 9 98
-LD 3 2
-LD 8 4
-LD 8 5
-LD 1 0
-LD 9 98
-AP 5
-LD 9 8
+LD 3 2 ; load var_details-matrix
+RTN ; return from then
+LD 9 98 ; load var_astar-distance
+LD 3 2 ; load var_details-matrix
+LD 8 4 ; load var_map-width
+LD 8 5 ; load var_map-height
+LD 1 0 ; load var_current
+LD 9 98 ; load var_astar-distance
+AP 5 ; call fun_astar-distance
+LD 9 8 ; load var_foldLeft
 LDC -2147483648
-LD 7 0
+LD 7 0 ; load var_directions
 LDF 2800
 LDC 1
 TSEL 2842 0
-LD 10 48
-LD 2 0
-LD 0 2
-LD 10 48
-AP 3
-DUM 1
+LD 10 48 ; load var_coord-sum
+LD 2 0 ; load var_current
+LD 0 2 ; load var_direction
+LD 10 48 ; load var_coord-sum
+AP 3 ; call fun_coord-sum
+DUM 1 ; let (next-pos})
 LDF 2809
 RAP 1
 RTN
-LD 11 97
-LD 5 2
-LD 10 4
-LD 10 5
-LD 0 0
-LD 11 97
-AP 5
-LD 11 3
+LD 11 97 ; load var_astar-visited
+LD 5 2 ; load var_details-matrix
+LD 10 4 ; load var_map-width
+LD 10 5 ; load var_map-height
+LD 0 0 ; load var_next-pos
+LD 11 97 ; load var_astar-visited
+AP 5 ; call fun_astar-visited
+LD 11 3 ; load var_false
 CEQ
 SEL 2821 2832
 LDC 1
 TSEL 2834 0
-LD 11 94
-LD 6 0
-LD 10 4
-LD 0 0
-LD 11 94
-AP 4
+LD 11 94 ; load var_get-matrix-pos
+LD 6 0 ; load var_game-map
+LD 10 4 ; load var_map-width
+LD 0 0 ; load var_next-pos
+LD 11 94 ; load var_get-matrix-pos
+AP 4 ; call fun_get-matrix-pos
 LDC 0
 CEQ
 LDC 0
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 TSEL 2835 2839
-LD 0 0
-LD 1 1
+LD 0 0 ; load var_next-pos
+LD 1 1 ; load var_next-steps
 CONS
+RTN ; return from then
+LD 1 1 ; load var_next-steps
+RTN ; return from else
 RTN
-LD 1 1
-RTN
-RTN
-LD 9 8
-AP 4
-DUM 2
+LD 9 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
+DUM 2 ; let (current-dist neighbors})
 LDF 2848
 RAP 2
 RTN
-LD 4 0
-LD 10 8
-LD 1 0
-LD 0 1
+LD 4 0 ; load var_self
+LD 10 8 ; load var_foldLeft
+LD 1 0 ; load var_next-q
+LD 0 1 ; load var_neighbors
 LDF 2855
 LDC 1
 TSEL 2871 0
-LD 11 62
-LD 11 52
-LD 0 2
-LD 10 2
-LD 11 52
-AP 3
-LD 1 0
+LD 11 62 ; load var_heap-insert
+LD 11 52 ; load var_coord-manhattan-distance
+LD 0 2 ; load var_e
+LD 10 2 ; load var_to
+LD 11 52 ; load var_coord-manhattan-distance
+AP 3 ; call fun_coord-manhattan-distance
+LD 1 0 ; load var_current-dist
 LDC 1
 ADD
 ADD
-LD 0 2
+LD 0 2 ; load var_e
 CONS
-LD 0 1
-LD 11 62
-AP 3
+LD 0 1 ; load var_acc
+LD 11 62 ; load var_heap-insert
+AP 3 ; call fun_heap-insert
 RTN
-LD 10 8
-AP 4
-LD 10 102
-LD 4 2
-LD 0 1
-LD 10 96
-LD 10 2
-LD 0 0
+LD 10 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
+LD 10 102 ; load var_update-values
+LD 4 2 ; load var_details-matrix
+LD 0 1 ; load var_neighbors
+LD 10 96 ; load var_astar-node
+LD 10 2 ; load var_true
+LD 0 0 ; load var_current-dist
 LDC 1
 ADD
-LD 2 0
-LD 10 96
-AP 4
-LD 10 102
-AP 4
-LD 4 0
-TAP 3
+LD 2 0 ; load var_current
+LD 10 96 ; load var_astar-node
+AP 4 ; call fun_astar-node
+LD 10 102 ; load var_update-values
+AP 4 ; call fun_update-values
+LD 4 0 ; load var_self
+TAP 3 ; call tfun_self
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-DUM 2
+DUM 2 ; let (initial-details-matrix astar-aux})
 LDF 2895
 RAP 2
 RTN
-LD 0 1
-LD 6 67
+LD 0 1 ; load var_astar-aux
+LD 6 67 ; load var_heap-from-list
 LDC 0
-LD 5 1
+LD 5 1 ; load var_from
 CONS
 LDC -2147483648
 CONS
-LD 6 67
-AP 2
-LD 0 0
-LD 0 1
-AP 3
+LD 6 67 ; load var_heap-from-list
+AP 2 ; call fun_heap-from-list
+LD 0 0 ; load var_initial-details-matrix
+LD 0 1 ; load var_astar-aux
+AP 3 ; call fun_astar-aux
 RTN
-ST 0 103
+ST 0 103 ; define var_astar
 LD 0 103
 CONS
 CDR
 LDF 2915
 LDC 1
 TSEL 2953 0
-LD 1 103
-LD 0 1
-LD 0 2
-LD 0 3
-LD 0 4
-LD 0 5
-LD 0 6
+LD 1 103 ; load var_astar
+LD 0 1 ; load var_from
+LD 0 2 ; load var_to
+LD 0 3 ; load var_game-map
+LD 0 4 ; load var_map-width
+LD 0 5 ; load var_map-height
+LD 0 6 ; load var_state
 LDC 600
-LD 1 103
-AP 8
-DUM 1
+LD 1 103 ; load var_astar
+AP 8 ; call fun_astar
+DUM 1 ; let (astar-details})
 LDF 2929
 RAP 1
 RTN
-LD 2 98
-LD 0 0
-LD 1 4
-LD 1 5
-LD 1 2
-LD 2 98
-AP 5
+LD 2 98 ; load var_astar-distance
+LD 0 0 ; load var_astar-details
+LD 1 4 ; load var_map-width
+LD 1 5 ; load var_map-height
+LD 1 2 ; load var_to
+LD 2 98 ; load var_astar-distance
+AP 5 ; call fun_astar-distance
 LDC -1
 CEQ
 SEL 2941 2943
 LDC 1
 TSEL 2952 0
-LD 2 1
-JOIN
-LD 2 100
-LD 0 0
-LD 1 4
-LD 1 5
-LD 1 1
-LD 1 2
-LD 2 100
-AP 6
-JOIN
+LD 2 1 ; load var_nil
+JOIN ; merge then
+LD 2 100 ; load var_astar-get-path
+LD 0 0 ; load var_astar-details
+LD 1 4 ; load var_map-width
+LD 1 5 ; load var_map-height
+LD 1 1 ; load var_from
+LD 1 2 ; load var_to
+LD 2 100 ; load var_astar-get-path
+AP 6 ; call fun_astar-get-path
+JOIN : merge else
 RTN
-ST 0 104
+ST 0 104 ; define var_get-path
 LD 0 104
 CONS
 CDR
-LD 0 1
-ST 0 105
+LD 0 1 ; load var_nil
+ST 0 105 ; define var_next-checkpoint
 LD 0 105
 CONS
 CDR
-LD 0 66
-LD 0 66
-AP 1
-ST 0 106
+LD 0 66 ; load var_heap-create
+LD 0 66 ; load var_heap-create
+AP 1 ; call fun_heap-create
+ST 0 106 ; define var_checkpoints
 LD 0 106
 CONS
 CDR
@@ -2971,707 +2971,707 @@ LDF 2972
 LDC 1
 TSEL 3323 0
 LDC 0
-LD 1 66
-LD 1 66
-AP 1
-ST 1 106
+LD 1 66 ; load var_heap-create
+LD 1 66 ; load var_heap-create
+AP 1 ; call fun_heap-create
+ST 1 106 ; define var_checkpoints
 LD 1 106
 CONS
 CDR
-LD 1 76
-LD 0 2
-LD 1 76
-AP 2
-DUM 1
+LD 1 76 ; load var_state-lambdaman
+LD 0 2 ; load var_state
+LD 1 76 ; load var_state-lambdaman
+AP 2 ; call fun_state-lambdaman
+DUM 1 ; let (lambda-man})
 LDF 2988
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_lambda-man
 CDR
 CAR
-DUM 1
+DUM 1 ; let (position})
 LDF 2995
 RAP 1
 RTN
-LD 3 77
-LD 2 2
-LD 3 77
-AP 2
-DUM 1
+LD 3 77 ; load var_state-ghosts
+LD 2 2 ; load var_state
+LD 3 77 ; load var_state-ghosts
+AP 2 ; call fun_state-ghosts
+DUM 1 ; let (ghosts})
 LDF 3003
 RAP 1
 RTN
-LD 4 103
-LD 1 0
-LD 4 45
+LD 4 103 ; load var_astar
+LD 1 0 ; load var_position
+LD 4 45 ; load var_coord-create
 LDC -1
 LDC -1
-LD 4 45
-AP 3
-LD 3 3
-LD 4 80
-LD 4 81
-LD 3 2
-LD 4 103
-AP 7
-DUM 1
+LD 4 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 3 3 ; load var_binary-tree-map
+LD 4 80 ; load var_map-width
+LD 4 81 ; load var_map-height
+LD 3 2 ; load var_state
+LD 4 103 ; load var_astar
+AP 7 ; call fun_astar
+DUM 1 ; let (astar-details})
 LDF 3020
 RAP 1
 RTN
 LDF 3023
 LDC 1
 TSEL 3226 0
-LD 6 5
-LD 0 1
-LD 6 5
-AP 2
+LD 6 5 ; load var_empty?
+LD 0 1 ; load var_row
+LD 6 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 3028 3030
-LD 6 1
-RTN
-LD 0 1
+LD 6 1 ; load var_nil
+RTN ; return from then
+LD 0 1 ; load var_row
 CAR
-LD 6 98
-LD 1 0
-LD 6 80
-LD 6 81
-LD 6 45
-LD 0 2
-LD 0 3
-LD 6 45
-AP 3
-LD 6 98
-AP 5
-DUM 2
+LD 6 98 ; load var_astar-distance
+LD 1 0 ; load var_astar-details
+LD 6 80 ; load var_map-width
+LD 6 81 ; load var_map-height
+LD 6 45 ; load var_coord-create
+LD 0 2 ; load var_x
+LD 0 3 ; load var_y
+LD 6 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 6 98 ; load var_astar-distance
+AP 5 ; call fun_astar-distance
+DUM 2 ; let (cell cell-dist})
 LDF 3047
 RAP 2
 RTN
-LD 0 0
-LD 7 85
+LD 0 0 ; load var_cell
+LD 7 85 ; load var_encoding-pill
 CEQ
 SEL 3053 3059
 LDC 1
 TSEL 3061 0
-LD 0 1
+LD 0 1 ; load var_cell-dist
 LDC -1
 CEQ
 LDC 0
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 TSEL 3062 3094
 LDC 0
-LD 7 62
+LD 7 62 ; load var_heap-insert
 LDC 0
-LD 7 90
-LD 0 1
+LD 7 90 ; load var_points-pill
+LD 0 1 ; load var_cell-dist
 SUB
 SUB
-LD 7 45
-LD 1 2
-LD 1 3
-LD 7 45
-AP 3
+LD 7 45 ; load var_coord-create
+LD 1 2 ; load var_x
+LD 1 3 ; load var_y
+LD 7 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 CONS
-LD 7 106
-LD 7 62
-AP 3
-ST 7 106
+LD 7 106 ; load var_checkpoints
+LD 7 62 ; load var_heap-insert
+AP 3 ; call fun_heap-insert
+ST 7 106 ; define var_checkpoints
 LD 7 106
 CONS
 CDR
-LD 1 0
-LD 1 1
+LD 1 0 ; load var_self
+LD 1 1 ; load var_row
 CDR
-LD 1 2
+LD 1 2 ; load var_x
 LDC 1
 ADD
-LD 1 3
-LD 1 0
-TAP 4
+LD 1 3 ; load var_y
+LD 1 0 ; load var_self
+TAP 4 ; call tfun_self
 CONS
 CDR
-RTN
-LD 7 78
-LD 6 2
-LD 7 78
-AP 2
+RTN ; return from then
+LD 7 78 ; load var_state-fright-mode?
+LD 6 2 ; load var_state
+LD 7 78 ; load var_state-fright-mode?
+AP 2 ; call fun_state-fright-mode?
 LDC 0
 CEQ
 SEL 3103 3118
 LDC 1
 TSEL 3120 0
-LD 0 0
-LD 7 86
+LD 0 0 ; load var_cell
+LD 7 86 ; load var_encoding-power-pill
 CEQ
 SEL 3109 3115
 LDC 1
 TSEL 3117 0
-LD 0 1
+LD 0 1 ; load var_cell-dist
 LDC -1
 CEQ
 LDC 0
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
-JOIN
+JOIN : merge else
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 TSEL 3121 3153
 LDC 0
-LD 7 62
+LD 7 62 ; load var_heap-insert
 LDC 0
-LD 7 91
-LD 0 1
+LD 7 91 ; load var_points-power-pill
+LD 0 1 ; load var_cell-dist
 SUB
 SUB
-LD 7 45
-LD 1 2
-LD 1 3
-LD 7 45
-AP 3
+LD 7 45 ; load var_coord-create
+LD 1 2 ; load var_x
+LD 1 3 ; load var_y
+LD 7 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 CONS
-LD 7 106
-LD 7 62
-AP 3
-ST 7 106
+LD 7 106 ; load var_checkpoints
+LD 7 62 ; load var_heap-insert
+AP 3 ; call fun_heap-insert
+ST 7 106 ; define var_checkpoints
 LD 7 106
 CONS
 CDR
-LD 1 0
-LD 1 1
+LD 1 0 ; load var_self
+LD 1 1 ; load var_row
 CDR
-LD 1 2
+LD 1 2 ; load var_x
 LDC 1
 ADD
-LD 1 3
-LD 1 0
-TAP 4
+LD 1 3 ; load var_y
+LD 1 0 ; load var_self
+TAP 4 ; call tfun_self
 CONS
 CDR
-RTN
-LD 7 75
-LD 6 2
-LD 7 75
-AP 2
+RTN ; return from then
+LD 7 75 ; load var_state-fruit
+LD 6 2 ; load var_state
+LD 7 75 ; load var_state-fruit
+AP 2 ; call fun_state-fruit
 LDC 0
 CGT
 SEL 3162 3166
 LDC 1
 TSEL 3168 0
-LD 0 0
-LD 7 87
+LD 0 0 ; load var_cell
+LD 7 87 ; load var_encoding-fruit
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 SEL 3171 3177
 LDC 1
 TSEL 3179 0
-LD 0 1
+LD 0 1 ; load var_cell-dist
 LDC -1
 CEQ
 LDC 0
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 TSEL 3180 3212
 LDC 0
-LD 7 62
+LD 7 62 ; load var_heap-insert
 LDC 0
-LD 7 93
-LD 0 1
+LD 7 93 ; load var_points-fruit
+LD 0 1 ; load var_cell-dist
 SUB
 SUB
-LD 7 45
-LD 1 2
-LD 1 3
-LD 7 45
-AP 3
+LD 7 45 ; load var_coord-create
+LD 1 2 ; load var_x
+LD 1 3 ; load var_y
+LD 7 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 CONS
-LD 7 106
-LD 7 62
-AP 3
-ST 7 106
+LD 7 106 ; load var_checkpoints
+LD 7 62 ; load var_heap-insert
+AP 3 ; call fun_heap-insert
+ST 7 106 ; define var_checkpoints
 LD 7 106
 CONS
 CDR
-LD 1 0
-LD 1 1
+LD 1 0 ; load var_self
+LD 1 1 ; load var_row
 CDR
-LD 1 2
+LD 1 2 ; load var_x
 LDC 1
 ADD
-LD 1 3
-LD 1 0
-TAP 4
+LD 1 3 ; load var_y
+LD 1 0 ; load var_self
+TAP 4 ; call tfun_self
 CONS
 CDR
-RTN
-LD 1 0
-LD 1 1
+RTN ; return from then
+LD 1 0 ; load var_self
+LD 1 1 ; load var_row
 CDR
-LD 1 2
+LD 1 2 ; load var_x
 LDC 1
 ADD
-LD 1 3
-LD 1 0
-TAP 4
+LD 1 3 ; load var_y
+LD 1 0 ; load var_self
+TAP 4 ; call tfun_self
+RTN ; return from else
+RTN ; return from else
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-RTN
-RTN
-DUM 1
+DUM 1 ; let (row-update})
 LDF 3230
 RAP 1
 RTN
 LDF 3233
 LDC 1
 TSEL 3263 0
-LD 7 5
-LD 0 1
-LD 7 5
-AP 2
+LD 7 5 ; load var_empty?
+LD 0 1 ; load var_rows
+LD 7 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 3238 3240
-LD 7 1
-RTN
+LD 7 1 ; load var_nil
+RTN ; return from then
 LDC 0
-LD 1 0
-LD 0 1
+LD 1 0 ; load var_row-update
+LD 0 1 ; load var_rows
 CAR
 LDC 0
-LD 0 3
-LD 1 0
-AP 4
+LD 0 3 ; load var_y
+LD 1 0 ; load var_row-update
+AP 4 ; call fun_row-update
 CONS
 CDR
-LD 0 0
-LD 0 1
+LD 0 0 ; load var_self
+LD 0 1 ; load var_rows
 CDR
 LDC 0
-LD 0 3
+LD 0 3 ; load var_y
 LDC 1
 ADD
-LD 0 0
-TAP 4
+LD 0 0 ; load var_self
+TAP 4 ; call tfun_self
 CONS
 CDR
+RTN ; return from else
 RTN
-RTN
-DUM 1
+DUM 1 ; let (col-update})
 LDF 3267
 RAP 1
 RTN
 LDC 0
-LD 0 0
-LD 6 1
+LD 0 0 ; load var_col-update
+LD 6 1 ; load var_game-map
 LDC 0
 LDC 0
-LD 0 0
-AP 4
+LD 0 0 ; load var_col-update
+AP 4 ; call fun_col-update
 CONS
 CDR
-LD 7 8
-LD 7 1
-LD 3 0
+LD 7 8 ; load var_foldLeft
+LD 7 1 ; load var_nil
+LD 3 0 ; load var_ghosts
 LDF 3282
 LDC 1
 TSEL 3316 0
-LD 0 2
+LD 0 2 ; load var_x
 CAR
 LDC 1
 CEQ
 SEL 3289 3313
 LDC 1
 TSEL 3315 0
-LD 8 62
+LD 8 62 ; load var_heap-insert
 LDC 0
-LD 8 92
-LD 8 98
-LD 3 0
-LD 8 80
-LD 8 81
-LD 0 2
+LD 8 92 ; load var_points-ghosts
+LD 8 98 ; load var_astar-distance
+LD 3 0 ; load var_astar-details
+LD 8 80 ; load var_map-width
+LD 8 81 ; load var_map-height
+LD 0 2 ; load var_x
 CDR
 CAR
-LD 8 98
-AP 5
+LD 8 98 ; load var_astar-distance
+AP 5 ; call fun_astar-distance
 SUB
 SUB
-LD 0 2
+LD 0 2 ; load var_x
 CDR
 CAR
 CONS
+LD 8 106 ; load var_checkpoints
+LD 8 62 ; load var_heap-insert
+AP 3 ; call fun_heap-insert
+ST 8 106 ; define var_checkpoints
 LD 8 106
-LD 8 62
-AP 3
-ST 8 106
-LD 8 106
-JOIN
-LD 8 1
-JOIN
+JOIN ; merge then
+LD 8 1 ; load var_nil
+JOIN : merge else
 RTN
-LD 7 8
-AP 4
+LD 7 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
 CONS
 CDR
 CONS
 CDR
 RTN
-ST 0 107
+ST 0 107 ; define var_get-checkpoints
 LD 0 107
 CONS
 CDR
 LDF 3330
 LDC 1
 TSEL 3428 0
-LD 1 5
-LD 1 105
-LD 1 5
-AP 2
+LD 1 5 ; load var_empty?
+LD 1 105 ; load var_next-checkpoint
+LD 1 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 3337 3339
 LDC 1
 TSEL 3345 0
 LDC 1
-JOIN
-LD 1 50
-LD 1 105
-LD 0 2
-LD 1 50
-AP 3
-JOIN
+JOIN ; merge then
+LD 1 50 ; load var_coord-equal
+LD 1 105 ; load var_next-checkpoint
+LD 0 2 ; load var_location
+LD 1 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
+JOIN : merge else
 SEL 3348 3350
 LDC 1
 TSEL 3355 0
 LDC 1
-JOIN
-LD 1 78
-LD 0 3
-LD 1 78
-AP 2
-JOIN
+JOIN ; merge then
+LD 1 78 ; load var_state-fright-mode?
+LD 0 3 ; load var_state
+LD 1 78 ; load var_state-fright-mode?
+AP 2 ; call fun_state-fright-mode?
+JOIN : merge else
 TSEL 3356 3388
 LDC 0
-LD 1 107
-LD 0 1
-LD 0 3
-LD 0 4
-LD 1 107
-AP 4
+LD 1 107 ; load var_get-checkpoints
+LD 0 1 ; load var_game-map
+LD 0 3 ; load var_state
+LD 0 4 ; load var_binary-tree-map
+LD 1 107 ; load var_get-checkpoints
+AP 4 ; call fun_get-checkpoints
 CONS
 CDR
-LD 1 63
-LD 1 106
-LD 1 63
-AP 2
+LD 1 63 ; load var_heap-find-min
+LD 1 106 ; load var_checkpoints
+LD 1 63 ; load var_heap-find-min
+AP 2 ; call fun_heap-find-min
 CDR
-ST 1 105
+ST 1 105 ; define var_next-checkpoint
 LD 1 105
 CONS
 CDR
-LD 1 105
-LD 1 104
-LD 0 2
-LD 1 105
-LD 0 4
-LD 1 80
-LD 1 81
-LD 0 3
-LD 1 104
-AP 7
+LD 1 105 ; load var_next-checkpoint
+LD 1 104 ; load var_get-path
+LD 0 2 ; load var_location
+LD 1 105 ; load var_next-checkpoint
+LD 0 4 ; load var_binary-tree-map
+LD 1 80 ; load var_map-width
+LD 1 81 ; load var_map-height
+LD 0 3 ; load var_state
+LD 1 104 ; load var_get-path
+AP 7 ; call fun_get-path
 CONS
 CONS
 CDR
-RTN
-LD 1 104
-LD 0 2
-LD 1 105
-LD 0 4
-LD 1 80
-LD 1 81
-LD 0 3
-LD 1 104
-AP 7
-DUM 1
+RTN ; return from then
+LD 1 104 ; load var_get-path
+LD 0 2 ; load var_location
+LD 1 105 ; load var_next-checkpoint
+LD 0 4 ; load var_binary-tree-map
+LD 1 80 ; load var_map-width
+LD 1 81 ; load var_map-height
+LD 0 3 ; load var_state
+LD 1 104 ; load var_get-path
+AP 7 ; call fun_get-path
+DUM 1 ; let (path})
 LDF 3401
 RAP 1
 RTN
-LD 2 5
-LD 0 0
-LD 2 5
-AP 2
+LD 2 5 ; load var_empty?
+LD 0 0 ; load var_path
+LD 2 5 ; load var_empty?
+AP 2 ; call fun_empty?
 TSEL 3406 3422
 LDC 0
-LD 2 1
-ST 2 105
+LD 2 1 ; load var_nil
+ST 2 105 ; define var_next-checkpoint
 LD 2 105
 CONS
 CDR
-LD 1 0
-LD 1 1
-LD 1 2
-LD 1 3
-LD 1 4
-LD 1 0
-TAP 5
+LD 1 0 ; load var_self
+LD 1 1 ; load var_game-map
+LD 1 2 ; load var_location
+LD 1 3 ; load var_state
+LD 1 4 ; load var_binary-tree-map
+LD 1 0 ; load var_self
+TAP 5 ; call tfun_self
 CONS
 CDR
-RTN
-LD 2 105
-LD 0 0
+RTN ; return from then
+LD 2 105 ; load var_next-checkpoint
+LD 0 0 ; load var_path
 CONS
+RTN ; return from else
+RTN ; return from else
 RTN
-RTN
-RTN
-ST 0 108
+ST 0 108 ; define var_get-next-checkpoint
 LD 0 108
 CONS
 CDR
 LDF 3435
 LDC 1
 TSEL 3497 0
-LD 1 50
-LD 0 1
-LD 1 45
+LD 1 50 ; load var_coord-equal
+LD 0 1 ; load var_coord
+LD 1 45 ; load var_coord-create
 LDC 0
 LDC -1
-LD 1 45
-AP 3
-LD 1 50
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 3447 3449
 LDC 1
 TSEL 3496 0
 LDC 0
-JOIN
-LD 1 50
-LD 0 1
-LD 1 45
+JOIN ; merge then
+LD 1 50 ; load var_coord-equal
+LD 0 1 ; load var_coord
+LD 1 45 ; load var_coord-create
 LDC 1
 LDC 0
-LD 1 45
-AP 3
-LD 1 50
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 3461 3463
 LDC 1
 TSEL 3495 0
 LDC 1
-JOIN
-LD 1 50
-LD 0 1
-LD 1 45
+JOIN ; merge then
+LD 1 50 ; load var_coord-equal
+LD 0 1 ; load var_coord
+LD 1 45 ; load var_coord-create
 LDC 0
 LDC 1
-LD 1 45
-AP 3
-LD 1 50
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 3475 3477
 LDC 1
 TSEL 3494 0
 LDC 2
-JOIN
-LD 1 50
-LD 0 1
-LD 1 45
+JOIN ; merge then
+LD 1 50 ; load var_coord-equal
+LD 0 1 ; load var_coord
+LD 1 45 ; load var_coord-create
 LDC -1
 LDC 0
-LD 1 45
-AP 3
-LD 1 50
-AP 3
+LD 1 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 1 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 SEL 3489 3491
 LDC 1
 TSEL 3493 0
 LDC 3
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
-JOIN
-JOIN
-JOIN
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
 RTN
-ST 0 109
+ST 0 109 ; define var_map-to-dir
 LD 0 109
 CONS
 CDR
-LD 0 8
+LD 0 8 ; load var_foldLeft
 LDC 0
-LD 0 77
-LD 0 0
-LD 0 77
-AP 2
+LD 0 77 ; load var_state-ghosts
+LD 0 0 ; load var_initial-state
+LD 0 77 ; load var_state-ghosts
+AP 2 ; call fun_state-ghosts
 LDF 3510
 LDC 1
 TSEL 3526 0
-LD 0 1
-LD 1 46
-LD 0 2
+LD 0 1 ; load var_acc
+LD 1 46 ; load var_coord-x
+LD 0 2 ; load var_x
 CDR
 CAR
-LD 1 46
-AP 2
-LD 1 47
-LD 0 2
+LD 1 46 ; load var_coord-x
+AP 2 ; call fun_coord-x
+LD 1 47 ; load var_coord-y
+LD 0 2 ; load var_x
 CDR
 CAR
-LD 1 47
-AP 2
+LD 1 47 ; load var_coord-y
+AP 2 ; call fun_coord-y
 ADD
 ADD
 RTN
-LD 0 8
-AP 4
-ST 0 42
+LD 0 8 ; load var_foldLeft
+AP 4 ; call fun_foldLeft
+ST 0 42 ; define var_seed
 LD 0 42
 CONS
 CDR
 LDF 3535
 LDC 1
 TSEL 3810 0
-LD 1 82
+LD 1 82 ; load var_map-area
 LDC 576
 CGT
 TSEL 3539 3743
-LD 0 1
+LD 0 1 ; load var_state
 CAR
-DUM 1
+DUM 1 ; let (game-map})
 LDF 3545
 RAP 1
 RTN
-LD 1 1
+LD 1 1 ; load var_state
 CDR
 CAR
-DUM 1
+DUM 1 ; let (lambdaman})
 LDF 3552
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_lambdaman
 CDR
 CAR
-DUM 1
+DUM 1 ; let (location})
 LDF 3559
 RAP 1
 RTN
-LD 1 0
+LD 1 0 ; load var_lambdaman
 CDR
 CDR
 CAR
-DUM 1
+DUM 1 ; let (direction})
 LDF 3567
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_direction
 LDC 0
 CEQ
 SEL 3573 3579
 LDC 1
 TSEL 3620 0
-LD 5 45
+LD 5 45 ; load var_coord-create
 LDC 0
 LDC 1
-LD 5 45
-AP 3
-JOIN
-LD 0 0
+LD 5 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
+LD 0 0 ; load var_direction
 LDC 1
 CEQ
 SEL 3585 3591
 LDC 1
 TSEL 3619 0
-LD 5 45
+LD 5 45 ; load var_coord-create
 LDC -1
 LDC 0
-LD 5 45
-AP 3
-JOIN
-LD 0 0
+LD 5 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
+LD 0 0 ; load var_direction
 LDC 2
 CEQ
 SEL 3597 3603
 LDC 1
 TSEL 3618 0
-LD 5 45
+LD 5 45 ; load var_coord-create
 LDC 0
 LDC -1
-LD 5 45
-AP 3
-JOIN
-LD 0 0
+LD 5 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
+LD 0 0 ; load var_direction
 LDC 3
 CEQ
 SEL 3609 3615
 LDC 1
 TSEL 3617 0
-LD 5 45
+LD 5 45 ; load var_coord-create
 LDC 1
 LDC 0
-LD 5 45
-AP 3
-JOIN
+LD 5 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+JOIN ; merge then
 LDC 0
-JOIN
-JOIN
-JOIN
-JOIN
-DUM 1
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+JOIN : merge else
+DUM 1 ; let (opposite-dir})
 LDF 3624
 RAP 1
 RTN
-LD 6 45
+LD 6 45 ; load var_coord-create
 LDC 0
 LDC -1
-LD 6 45
-AP 3
-LD 6 45
+LD 6 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 6 45 ; load var_coord-create
 LDC 1
 LDC 0
-LD 6 45
-AP 3
-LD 6 45
+LD 6 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 6 45 ; load var_coord-create
 LDC 0
 LDC 1
-LD 6 45
-AP 3
-LD 6 45
+LD 6 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
+LD 6 45 ; load var_coord-create
 LDC -1
 LDC 0
-LD 6 45
-AP 3
+LD 6 45 ; load var_coord-create
+AP 3 ; call fun_coord-create
 LDC -2147483648
 CONS
 CONS
 CONS
 CONS
-DUM 1
+DUM 1 ; let (directions})
 LDF 3653
 RAP 1
 RTN
-LD 7 11
-LD 0 0
+LD 7 11 ; load var_filter
+LD 0 0 ; load var_directions
 LDF 3658
 LDC 1
 TSEL 3692 0
-LD 8 19
-LD 6 0
-LD 8 48
-LD 4 0
-LD 0 1
-LD 8 48
-AP 3
+LD 8 19 ; load var_nnth
+LD 6 0 ; load var_game-map
+LD 8 48 ; load var_coord-sum
+LD 4 0 ; load var_location
+LD 0 1 ; load var_x
+LD 8 48 ; load var_coord-sum
+AP 3 ; call fun_coord-sum
 CDR
-LD 8 48
-LD 4 0
-LD 0 1
-LD 8 48
-AP 3
+LD 8 48 ; load var_coord-sum
+LD 4 0 ; load var_location
+LD 0 1 ; load var_x
+LD 8 48 ; load var_coord-sum
+AP 3 ; call fun_coord-sum
 CAR
-LD 8 19
-AP 4
+LD 8 19 ; load var_nnth
+AP 4 ; call fun_nnth
 LDC 0
 CEQ
 LDC 0
@@ -3679,142 +3679,142 @@ CEQ
 SEL 3681 3689
 LDC 1
 TSEL 3691 0
-LD 8 50
-LD 0 1
-LD 2 0
-LD 8 50
-AP 3
+LD 8 50 ; load var_coord-equal
+LD 0 1 ; load var_x
+LD 2 0 ; load var_opposite-dir
+LD 8 50 ; load var_coord-equal
+AP 3 ; call fun_coord-equal
 LDC 0
 CEQ
-JOIN
+JOIN ; merge then
 LDC 0
-JOIN
+JOIN : merge else
 RTN
-LD 7 11
-AP 3
-DUM 1
+LD 7 11 ; load var_filter
+AP 3 ; call fun_filter
+DUM 1 ; let (valid-directions})
 LDF 3698
 RAP 1
 RTN
-LD 8 10
-LD 0 0
+LD 8 10 ; load var_map
+LD 0 0 ; load var_valid-directions
 LDF 3703
 LDC 1
 TSEL 3708 0
-LD 9 109
-LD 0 1
-LD 9 109
-AP 2
+LD 9 109 ; load var_map-to-dir
+LD 0 1 ; load var_x
+LD 9 109 ; load var_map-to-dir
+AP 2 ; call fun_map-to-dir
 RTN
-LD 8 10
-AP 3
-DUM 1
+LD 8 10 ; load var_map
+AP 3 ; call fun_map
+DUM 1 ; let (valid-maps})
 LDF 3714
 RAP 1
 RTN
-LD 9 5
-LD 0 0
-LD 9 5
-AP 2
+LD 9 5 ; load var_empty?
+LD 0 0 ; load var_valid-maps
+LD 9 5 ; load var_empty?
+AP 2 ; call fun_empty?
 SEL 3721 3725
 LDC 1
 TSEL 3742 0
 LDC 0
-LD 3 0
+LD 3 0 ; load var_opposite-dir
 CONS
-JOIN
+JOIN ; merge then
 LDC 0
-LD 9 18
-LD 0 0
-LD 9 23
-LD 9 43
-LD 9 43
-AP 1
-LD 9 17
-LD 0 0
-LD 9 17
-AP 2
-LD 9 23
-AP 3
-LD 9 18
-AP 3
+LD 9 18 ; load var_nth
+LD 0 0 ; load var_valid-maps
+LD 9 23 ; load var_mod
+LD 9 43 ; load var_random
+LD 9 43 ; load var_random
+AP 1 ; call fun_random
+LD 9 17 ; load var_length
+LD 0 0 ; load var_valid-maps
+LD 9 17 ; load var_length
+AP 2 ; call fun_length
+LD 9 23 ; load var_mod
+AP 3 ; call fun_mod
+LD 9 18 ; load var_nth
+AP 3 ; call fun_nth
 CONS
-JOIN
-RTN
-LD 0 1
+JOIN : merge else
+RTN ; return from then
+LD 0 1 ; load var_state
 CDR
 CAR
-DUM 1
+DUM 1 ; let (lambdaman})
 LDF 3750
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_lambdaman
 CDR
 CAR
-DUM 1
+DUM 1 ; let (location})
 LDF 3757
 RAP 1
 RTN
-LD 1 0
+LD 1 0 ; load var_lambdaman
 CDR
 CDR
 CAR
-DUM 1
+DUM 1 ; let (direction})
 LDF 3765
 RAP 1
 RTN
-LD 4 68
-LD 4 33
-LD 4 79
-LD 4 33
-AP 2
-LD 4 68
-AP 2
-DUM 1
+LD 4 68 ; load var_binary-tree-create
+LD 4 33 ; load var_flatten1
+LD 4 79 ; load var_game-map
+LD 4 33 ; load var_flatten1
+AP 2 ; call fun_flatten1
+LD 4 68 ; load var_binary-tree-create
+AP 2 ; call fun_binary-tree-create
+DUM 1 ; let (binary-tree-map})
 LDF 3776
 RAP 1
 RTN
-LD 5 108
-LD 5 79
-LD 2 0
-LD 4 1
-LD 0 0
-LD 5 108
-AP 5
-DUM 1
+LD 5 108 ; load var_get-next-checkpoint
+LD 5 79 ; load var_game-map
+LD 2 0 ; load var_location
+LD 4 1 ; load var_state
+LD 0 0 ; load var_binary-tree-map
+LD 5 108 ; load var_get-next-checkpoint
+AP 5 ; call fun_get-next-checkpoint
+DUM 1 ; let (checkpoint-and-path})
 LDF 3787
 RAP 1
 RTN
-LD 0 0
+LD 0 0 ; load var_checkpoint-and-path
 CAR
-DUM 1
+DUM 1 ; let (checkpoint})
 LDF 3793
 RAP 1
 RTN
-LD 1 0
+LD 1 0 ; load var_checkpoint-and-path
 CDR
-DUM 1
+DUM 1 ; let (path})
 LDF 3799
 RAP 1
 RTN
 LDC 0
-LD 8 101
-LD 5 0
-LD 0 0
+LD 8 101 ; load var_direction-to
+LD 5 0 ; load var_location
+LD 0 0 ; load var_path
 CAR
-LD 8 101
-AP 3
+LD 8 101 ; load var_direction-to
+AP 3 ; call fun_direction-to
 CONS
 CDR
+RTN ; return from else
 RTN
-RTN
-ST 0 110
+ST 0 110 ; define var_main
 LD 0 110
 CONS
 CDR
 LDC 0
 LDC 0
-LD 0 110
+LD 0 110 ; load var_main
 CONS
 CONS
 CDR

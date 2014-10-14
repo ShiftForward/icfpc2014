@@ -3,7 +3,7 @@ package icfpc2014
 import org.parboiled2._
 import scala.util._
 
-class Compiler(val input: ParserInput) extends Parser {
+final class LLParser(val input: ParserInput) extends Parser {
   def open    = rule { WhiteSpace ~ "(" ~ WhiteSpace }
   def close   = rule { WhiteSpace ~ ")" ~ WhiteSpace }
   def openS   = rule { WhiteSpace ~ "[" ~ WhiteSpace }
@@ -81,8 +81,10 @@ class Compiler(val input: ParserInput) extends Parser {
   def Number     = rule { capture(Digits) ~> { d => CONSTANT(d.toInt) } }
   def Digits     = rule { optional("-") ~ oneOrMore(CharPredicate.Digit) }
 
-  def compile: Instruction = InputLine.run() match {
-    case Success(x: Instruction) => x
-    case _                       => null
+  def compile: Option[Instruction] = InputLine.run() match {
+    case Success(x: Instruction) => Some(x)
+    case Failure(e: ParseError)  =>
+      println(formatError(e, true, true, true, true))
+      None
   }
 }
