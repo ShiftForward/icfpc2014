@@ -34,3 +34,14 @@ The `--bot` flag informs the compiler to generate code that loads the maze durin
 ```
 
 Again, the resulting code will be dumped to `stdout`.
+
+## Solution
+
+We started by implementing a compiler for a simple Lisp, which we called `LambdaLisp`, that targeted the `General Compute Coprocessor`.
+
+After we had the compiler "mostly" working, we were able to start developing a basic standard library for the newly created `LambdaLisp`. The standard library includes combinators for lists (e.g. fold, map, forall, filter), as well as data strucutures (e.g. queues, binary-trees, heaps).
+
+We then implemented the `A*` search algorithm, which was used for path-finding by the `LambdaMan`.
+
+By the end of the contest, we started to implement a ghost AI. We implemented a simple assembler for the `GHost CPU` that allowed us to use labels and it would generate programs with the addressing calculated.
+The ghost AI goes in the direction of the `LambdaMan`, and runs away from him if freight mode was enabled. It uses the pledge algorithm for path-finding.
