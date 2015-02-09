@@ -45,7 +45,7 @@ Again, the resulting code will be dumped to `stdout`.
 We started by implementing a compiler for a simple Lisp, which we called
 `LambdaLisp`, that targeted the `General Compute Coprocessor`. The
 implementation of `LambdaLisp` was pretty much following through the
-specifications. In order to have a global namespace, we created an initial
+specification. In order to have a global namespace, we created an initial
 environment frame of configurable size filled with zeros. Whenever we were
 transpiling `LambdaLisp` to `GCC`, we kept a stack of names to environment
 positions for the local namespaces and a single map of names to environment
