@@ -86,9 +86,9 @@ And the generated `General Compute Coprocessor` assembly can be seen [here](http
 After a quick read of the implementation (and a somewhat befuddled feeling caused by
 the realisation that we would be implementing two compilers for two unknown processors
 in two days), we started designing a compiler (transpiler?) for a simple Lisp, which
-we called `LambdaLisp`, that targeted the `General Compute Coprocessor`. Some theoretically
-questions over what would be possible to do with with GCC were debated over a Sushi lunch,
-followed by a coordinated attack to the implementation of `LambdaLisp` (which was pretty much
+we called `LambdaLisp`, that targeted the `General Compute Coprocessor`. Some theoretical
+questions over what would be possible to do with the GCC were debated over a Sushi lunch,
+followed by a coordinated attack on the implementation of `LambdaLisp` (which was pretty much
 following through the specification). In order to have a global namespace, we created an initial
 environment frame of configurable size filled with zeros. Whenever we were
 transpiling `LambdaLisp` to `GCC`, we kept a stack of names to environment
@@ -99,13 +99,13 @@ environments. This allowed us to declare some global methods and variables that
 were available for the whole `LambdaLisp` program without producing a gigantic
 `LET`. One of the things we probably overlooked was not annotating the GCC generated
 code with flags of what and why was happening, until very late in the last day; something
-that could have probably helped us debug some late problems. Lesson learned for next time.
+that could have probably helped us debug the transpiler. Lesson learned for next time.
 We called the day when we started implementing our `LambdaLisp` prelude.
 
 ### Saturday
 
 Saturday turned out to be an exciting day. Two major things happened: first, we had the
-compiler "mostly" working, up to a point we were able to start developing a
+compiler "mostly" working, up to a point where we were able to start developing a
 basic standard library for the newly created `LambdaLisp`. A true "prelude" started
 gaining considerable weight. This standard library included combinators for lists
 (e.g. fold, map, forall, filter), as well as data structures (e.g. queues,
@@ -125,10 +125,10 @@ We called it a day when a topological sort for solving `.ll` dependencies became
 
 ### Sunday
 
-A day of mixing feelings. Our focus was clearly becoming the AI, and two days later
+A day of mixed feelings. Our focus was clearly becoming the AI, and two days later
 we were still completely disregarding GHC. We implemented the `A*` search algorithm,
 which was used for path-finding by the `LambdaMan`. Our strategy for the `LambdaMan`
-was as greedy as possible: try to get to the position that provided the larger amount of points
+was as greedy as possible: try to get to the position that provided the highest amount of points
 immediately, while avoiding the ghosts. This was not the smartest of strategies,
 since it would be useful to keep power pills uneaten while it wasn't possible to
 reach ghosts in time, but still provided decent scores for the Hall of Fame maps
@@ -138,23 +138,24 @@ By the time we got our strategy going, our luck turned around. We started strugg
 with the limit of instructions per program. We relied heavily on our standard
 library but our methods were sub-optimal regarding the produced instructions size.
 For example, we initially started by flattening the input map in order to insert
-it in a binary tree for  quicker index-based access and this operation by itself
+it in a binary tree for quicker index-based access and this operation by itself
 was enough to reach the instruction limit in larger maps. Consumed by a mix of
-tiredness and frustation, in a faint glimpse of hope, we decided to use the map
+tiredness and frustration, in a faint glimpse of hope, we decided to use the map
 size as the deciding factor of whether we would use the previously described
 strategy or a completely random one. This means that in a lot of the judge's
 maps a random strategy was in use.
 
-Only by the end of the contest, we started to implement a ghost AI. We implemented a
+Only by the end of the contest did we start to implement a ghost AI. We implemented a
 simple assembler for the `GHost CPU` that allowed us to use labels and it would
 generate programs with the addressing calculated.  The ghost AI goes in the
 direction of the `LambdaMan`, and runs away from him if freight mode was
-enabled. It uses the pledge algorithm for path-finding. It was not our finest moments,
+enabled. It uses the pledge algorithm for path-finding. It wasn't our finest moment,
 and we learned another valuable lesson: don't put all your eggs in the same basket.
 
 ## Conclusion
 
-All in all, it was a funny contest. We flirted for a while with the possibility of
-having GCC emulating GHC and using it for the AI. We  naively even talked about `Monte
+All in all, it was a fun contest. We flirted for a while with the possibility of
+having GCC emulating GHC and using it for the AI. We naively even talked about `Monte
 Carlo Tree Search` and stuff like that, before we realised we could never overcome
-the instruction limit of the GHC in time to rely on such "advanced" strategies. We certainly look forward for the 2015 edition.
+the instruction limit of the GHC in time to rely on such "advanced" strategies.
+We certainly look forward for the 2015 edition.
