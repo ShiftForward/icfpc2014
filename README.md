@@ -100,7 +100,7 @@ were available for the whole `LambdaLisp` program without producing a gigantic
 `LET`. One of the things we probably overlooked was not annotating the GCC generated
 code with flags of what and why was happening, until very late in the last day; something
 that could have probably helped us debug some late problems. Lesson learned for next time.
-We called the day when we started implementing our LambdaLisp prelude.
+We called the day when we started implementing our `LambdaLisp` prelude.
 
 ### Saturday
 
@@ -118,7 +118,7 @@ that could help us in this job: the famous "Purely Functional Data Structures" b
 Chris Okasaki. It was a delight to see our queues were already following his own
 guidelines.
 
-We ended Saturday by perhaps giving too much love and tender to our LambdaLisp
+We ended Saturday by perhaps giving too much love and tender to our `LambdaLisp`
 implementation, since we were already discussing syntactic shortcuts to things like
 lists, closures, `c[a|d]r`, and so on. But our morale was getting pretty high by then.
 We called it a day when a topological sort for solving `.ll` dependencies became our focus.
@@ -155,6 +155,6 @@ and we learned another valuable lesson: don't put all your eggs in the same bask
 ## Conclusion
 
 All in all, it was a funny contest. We flirted for a while with the possibility of
-having GCC emulating GHC and using it for the AI. We even naively talked about `monte
-carlo tree search` and stuff like that, before we realised we could never overcome
+having GCC emulating GHC and using it for the AI. We  naively even talked about `Monte
+Carlo Tree Search` and stuff like that, before we realised we could never overcome
 the instruction limit of the GHC in time to rely on such "advanced" strategies. We certainly look forward for the 2015 edition.
