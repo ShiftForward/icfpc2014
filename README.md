@@ -134,6 +134,8 @@ since it would be useful to keep power pills uneaten while it wasn't possible to
 reach ghosts in time, but still provided decent scores for the Hall of Fame maps
 (we were #1 in the ghostbusters map for a while).
 
+[!https://bitbucket.org/shiftforward/icfpc2014/issue-attachment/1/shiftforward/icfpc2014/1406733534.3/1/Screen%20Shot%202014-07-27%20at%2022.17.36.png]
+
 By the time we got our strategy going, our luck turned around. We started struggling
 with the limit of instructions per program. We relied heavily on our standard
 library but our methods were sub-optimal regarding the produced instructions size.
